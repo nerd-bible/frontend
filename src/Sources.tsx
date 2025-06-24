@@ -1,40 +1,47 @@
-import { makePersisted } from "@solid-primitives/storage";
+// import { makePersisted } from "@solid-primitives/storage";
+// import { tauriStorage } from "@solid-primitives/storage/tauri";
 import { createStore } from "solid-js/store";
-import * as v from "valibot";
 import { AutoField } from "./components/AutoField";
+import * as z from "zod/v4-mini";
 
-const gitRepo = v.pipe(
-	v.string(),
-	v.url(),
-	v.regex(/^https?:\/\//),
-	v.regex(/#.+/),
-);
-const git = v.object({
-	manuscripts: v.array(gitRepo),
-	rawManuscripts: v.array(gitRepo),
+z.config(z.locales.en());
+
+console.log(z.url({ protocol: /^https?$/ }));
+const gitRepo = z.object({
+	url: z.url({ protocol: /^https?$/ }),
+	branch: z.string(),
 });
-const rawGit = v.array(
-	v.object({
-		match: v.pipe(
-			v.string(),
-			v.nonEmpty(),
-			v.custom((input) => {
-				if (typeof input === "string") {
-					new RegExp(input);
-					return true;
-				}
-				return false;
-			}, "Please enter a valid Regex."),
+const git = z.object({
+	manuscripts: z.array(gitRepo),
+});
+const rawGit = z.array(
+	z.object({
+		match: z.string().check(
+			z.refine(
+				(input) => {
+					try {
+						new RegExp(input);
+						return true;
+					} catch {
+						return false;
+					}
+				},
+				{ error: "Please enter a valid Regex." },
+			),
 		),
-		hosts: v.array(v.pipe(v.string(), v.nonEmpty())),
+		hosts: z.array(z.string()).check(z.minLength(1)),
 	}),
 );
-const sources = v.object({ git, rawGit });
+const sources = z.object({ git, rawGit });
 
-const defaults: v.InferInput<typeof sources> = {
+const defaults: z.output<typeof sources> = {
 	git: {
-		manuscripts: ["https://github.com/nerd-bible/manuscripts#master"],
-		rawManuscripts: ["https://github.com/nerd-bible/manuscripts-raw#master"],
+		manuscripts: [
+			{
+				url: "https://github.com/nerd-bible/manuscripts",
+				branch: "master",
+			},
+		],
 	},
 	rawGit: [
 		{
@@ -56,18 +63,20 @@ const defaults: v.InferInput<typeof sources> = {
 	],
 };
 
-// const [gitUrls, setGitUrl] = makePersisted(
-// 	createStore({
-// 		"Raw manuscripts":
-// 	}),
-// 	{ name: "gitUrls" },
-// );
-
 export function Sources() {
+	// const [settings, setSettings] = makePersisted(createStore(defaults), {
+	// 	name: "sources",
+	// 	storage: tauriStorage(),
+	// });
 	const [settings, setSettings] = createStore(defaults);
 
 	return (
-		<form onSubmit={(ev) => ev.preventDefault()}>
+		<form
+			onSubmit={(ev) => {
+				ev.preventDefault();
+				console.log(new FormData(ev.currentTarget));
+			}}
+		>
 			<AutoField
 				name="sources"
 				schema={sources}

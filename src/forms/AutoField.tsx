@@ -1,37 +1,21 @@
-import * as v from "valibot";
+import * as z from "zod/v4/core";
 import { TextField } from "./TextField";
-import { For, Match, Switch, Show, createEffect, Index } from "solid-js";
+import { For, Match, Switch, Show, Index } from "solid-js";
 import { Button } from "./Button";
 import type { SetStoreFunction, Store } from "solid-js/store";
+import { empty } from "../forms/schema/empty";
 
-function getDefaults<T extends AnySchema>(schema: T): v.InferInput<T> {
-	switch (schema.type) {
-		case "string":
-		case "number":
-			return "";
-		case "array":
-			return [getDefaults((schema as v.ArraySchema<any, any>).item)];
-		case "object":
-			return Object.entries(
-				(schema as v.ObjectSchema<any, any>).entries,
-			).reduce((acc, [key, s]) => {
-				acc[key] = getDefaults(s as AnySchema);
-				return acc;
-			}, {} as Record<string, any>);
-	}
-}
-
-function AutoObject<T extends v.ObjectSchema<any, any>>(props: {
+function AutoObject<T extends z.$ZodObject>(props: {
 	schema: T;
-	value: Store<v.InferInput<T>>;
-	setValue: SetStoreFunction<v.InferInput<T>>;
+	value: Store<z.input<T>>;
+	setValue: SetStoreFunction<z.input<T>>;
 }) {
 	return (
-		<For each={Object.entries(props.schema.entries)}>
+		<For each={Object.entries(props.schema._zod.def.shape)}>
 			{([name, schema]) => (
 				<AutoField
 					name={name}
-					schema={schema as AnySchema}
+					schema={schema}
 					value={(props.value as any)[name]}
 					setValue={(...args: any[]) =>
 						// @ts-ignore
@@ -43,23 +27,17 @@ function AutoObject<T extends v.ObjectSchema<any, any>>(props: {
 	);
 }
 
-function AutoArray<T>(props: {
-	schema: v.ArraySchema<any, any>;
-	value: Store<T[]>;
-	setValue: SetStoreFunction<T[]>;
+function AutoArray<T extends z.$ZodArray>(props: {
+	schema: T,
+	value: Store<z.infer<T>[]>;
+	setValue: SetStoreFunction<z.infer<T>[]>;
 }) {
 	function swap(i: number) {
-		console.log("swap", i);
-		const arr = [...props.value];
+		const arr = props.value;
 		const tmp = arr[i];
-		arr[i] = arr[i + 1];
-		arr[i + 1] = tmp;
-		props.setValue(arr);
+		props.setValue(i, arr[i + 1]);
+		props.setValue(i + 1, tmp);
 	}
-
-	createEffect(() => {
-		console.log(props.value);
-	});
 
 	return (
 		<Index each={props.value}>
@@ -69,7 +47,7 @@ function AutoArray<T>(props: {
 					{/* <span class="self-center">m</span> */}
 					<AutoField
 						class="inline-flex flex-col sm:flex-row grow"
-						schema={props.schema.item}
+						schema={props.schema._zod.def.element}
 						value={v()}
 						setValue={(...args: any) => {
 							// @ts-ignore
@@ -106,7 +84,7 @@ function AutoArray<T>(props: {
 							class="btn-xs"
 							onPointerDown={() => {
 								const newArr = [...props.value];
-								newArr.splice(i + 1, 0, getDefaults(props.schema.item));
+								newArr.splice(i + 1, 0, empty(props.schema._zod.def.element));
 								props.setValue(newArr);
 							}}
 						>
@@ -119,16 +97,16 @@ function AutoArray<T>(props: {
 	);
 }
 
-type AnySchema = v.ObjectEntries[string];
-
-export function AutoField<T extends AnySchema>(props: {
+export function AutoField<T extends z.$ZodType>(props: {
 	name?: string;
 	schema: T;
-	value: Store<v.InferInput<T>>;
-	setValue: SetStoreFunction<v.InferInput<T>>;
+	value: Store<z.output<T>>;
+	setValue: SetStoreFunction<z.output<T>>;
 	class?: string;
 }) {
-	const t = props.schema.type;
+	const t = props.schema._zod.def.type;
+	if (props.schema._zod.def.checks) console.log("checks", props.name, props.schema._zod.def.checks)
+
 	return (
 		<Switch>
 			<Match when={t === "string"}>
@@ -136,11 +114,11 @@ export function AutoField<T extends AnySchema>(props: {
 					name={props.name}
 					class={props.class}
 					value={props.value as string}
-					type={props.name}
+					type={props.schema._zod.def.format}
 					validate={(input) =>
-						v
-							.safeParse(props.schema, input)
-							.issues?.map((issue) => issue.message)
+						z
+							.safeParse(props.schema, input, { reportInput: true })
+							.error?.issues?.map((issue) => issue.message)
 					}
 					onInput={(ev) => props.setValue(ev.currentTarget.value)}
 				/>
@@ -151,7 +129,7 @@ export function AutoField<T extends AnySchema>(props: {
 						<legend>{props.name}</legend>
 					</Show>
 					<AutoObject
-						schema={props.schema as v.ObjectSchema<any, any>}
+						schema={props.schema as unknown as z.$ZodObject}
 						value={props.value as any}
 						setValue={props.setValue as any}
 					/>
@@ -163,11 +141,20 @@ export function AutoField<T extends AnySchema>(props: {
 						<legend>{props.name}</legend>
 					</Show>
 					<AutoArray
-						schema={props.schema as v.ArraySchema<any, any>}
+						schema={props.schema as unknown as z.$ZodArray}
 						value={props.value as any[]}
 						setValue={props.setValue as SetStoreFunction<any[]>}
 					/>
 				</fieldset>
+			</Match>
+			<Match when={t === "optional"}>
+				<AutoField
+					name={props.name}
+					schema={(props.schema._zod.def as z.$ZodOptionalDef).innerType}
+					value={props.value}
+					setValue={props.setValue}
+					class={props.class}
+				/>
 			</Match>
 		</Switch>
 	);
