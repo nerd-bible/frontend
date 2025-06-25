@@ -4,9 +4,6 @@ import { createStore } from "solid-js/store";
 import { AutoField } from "./components/AutoField";
 import * as z from "zod/v4-mini";
 
-z.config(z.locales.en());
-
-console.log(z.url({ protocol: /^https?$/ }));
 const gitRepo = z.object({
 	url: z.url({ protocol: /^https?$/ }),
 	branch: z.string(),

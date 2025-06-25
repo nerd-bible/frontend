@@ -1,3 +1,5 @@
+import { registry } from "../registry";
+import * as z from "zod/v4/core";
 import clsx from "clsx";
 import {
 	createEffect,
@@ -6,21 +8,27 @@ import {
 	splitProps,
 	For,
 	Show,
+	mergeProps,
 } from "solid-js";
 import { computePosition, flip, shift, arrow, offset } from "@floating-ui/dom";
 
 type InputProps = JSX.HTMLElementTags["input"];
 
-type TextFieldProps = InputProps & {
-	validate?: (
-		v: string | number | string[] | undefined,
-	) => string[] | undefined;
+export type TextFieldProps = InputProps & {
+	label?: string;
+	schema: z.$ZodString;
+	setValue: (v: string | number) => void;
 };
 
 let counter = 0;
 
-export function TextField(props: TextFieldProps) {
-	const [_, rest] = splitProps(props, ["name", "class", "validate"]);
+export function TextControl(props: TextFieldProps) {
+	props = mergeProps(
+		props,
+		{ type: props.schema._zod.def.type },
+		registry.get(props.schema),
+	);
+	const [_, rest] = splitProps(props, ["name", "class"]);
 	const [error, setError] = createSignal<string[] | undefined>(undefined);
 	const [dirty, setDirty] = createSignal(false);
 
@@ -75,6 +83,18 @@ export function TextField(props: TextFieldProps) {
 		});
 	});
 
+	function getValue(ev: { currentTarget: HTMLInputElement }) {
+		const v = ev.currentTarget.value;
+		if (props.type === "number") return +v;
+		return v;
+	}
+
+	function validate(input: any) {
+		return z
+			.safeParse(props.schema, input, { reportInput: true })
+			.error?.issues?.map((issue) => issue.message);
+	}
+
 	return (
 		<span class="flex grow">
 			<label for={name}>{props.name}</label>
@@ -82,28 +102,32 @@ export function TextField(props: TextFieldProps) {
 				ref={input}
 				id={name}
 				name={props.name}
+				autocomplete="off"
 				aria-invalid={Boolean(error())}
 				aria-describedby={nameHint}
-				onBlur={(ev) => setError(props.validate?.(ev.currentTarget.value))}
-				onInput={(ev) => {
-					if (dirty() && error())
-						setError(props.validate?.(ev.currentTarget.value));
+				onBlur={(ev: { currentTarget: HTMLInputElement }) =>
+					setError(validate?.(getValue(ev)))
+				}
+				onInput={(ev: { currentTarget: HTMLInputElement }) => {
+					if (dirty() && error()) setError(validate?.(getValue(ev)));
 					setDirty(true);
+					props.setValue(getValue(ev));
 				}}
 				class={clsx("grow", props.class)}
 				{...rest}
 			/>
+			<p class="label">{props.label}</p>
 			<div
 				ref={tooltip}
 				id={nameHint}
 				role="tooltip"
-				class="bg-blue-50 absolute w-max"
+				class="bg-error-content absolute w-max text-primary-content"
 			>
 				<Show when={error()}>
-					<ul>
+					<ul class="p-2">
 						<For each={error()}>{(msg) => <li>{msg}</li>}</For>
 					</ul>
-					<div ref={arrowEle} class="absolute rotate-45 w-2 h-2 bg-blue-50" />
+					<div ref={arrowEle} class="absolute rotate-45 w-4 h-4 bg-inherit" />
 				</Show>
 			</div>
 		</span>
