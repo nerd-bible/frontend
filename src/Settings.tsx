@@ -1,28 +1,28 @@
 import { Sources } from "./Sources";
-import { createForm, registry } from "./forms/index";
-import * as z from "zod/v4-mini";
-
-z.config(z.locales.en());
+import { createForm, customRegistry, textRegistry } from "./forms/index";
+import * as z from "zod/v4";
 
 const mySchema = z.object({
-	name: z.string().register(registry, { propsOrComponent: { label: "Full name" } }),
-	age: z.number().check(z.minimum(0), z.maximum(120)),
+	name: z
+		.string()
+		.register(textRegistry, { label: "NAME", description: "xd" }),
+	age: z.number().min(0).max(120),
 });
 
 export function Settings() {
-	const [Controls, data] = createForm(mySchema);
+	// const [Controls, data] = createForm(mySchema);
+	//
+	// return (
+	// 	<form
+	// 		onSubmit={(ev) => {
+	// 			ev.preventDefault();
+	// 			console.log(data);
+	// 		}}
+	// 	>
+	// 		<Controls />
+	// 		<input type="submit" />
+	// 	</form>
+	// );
 
-	return (
-		<form
-			onSubmit={(ev) => {
-				ev.preventDefault();
-				console.log(data)
-			}}
-		>
-			<Controls />
-			<input type="submit" />
-		</form>
-	);
-
-	// return <Sources />;
+	return <Sources />;
 }

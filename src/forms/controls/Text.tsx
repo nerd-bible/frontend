@@ -1,4 +1,4 @@
-import { registry } from "../registry";
+import { textRegistry } from "../registry";
 import * as z from "zod/v4/core";
 import clsx from "clsx";
 import {
@@ -11,33 +11,44 @@ import {
 	mergeProps,
 } from "solid-js";
 import { computePosition, flip, shift, arrow, offset } from "@floating-ui/dom";
-
-type InputProps = JSX.HTMLElementTags["input"];
-
-export type TextFieldProps = InputProps & {
-	label?: string;
-	schema: z.$ZodString;
-	setValue: (v: string | number) => void;
-};
+import type { DynamicControlProps } from "./Dynamic";
+import { Dynamic } from "solid-js/web";
 
 let counter = 0;
 
-export function TextControl(props: TextFieldProps) {
+export function TextControl<T extends z.$ZodString | z.$ZodNumber>(
+	props: JSX.HTMLElementTags["input"] &
+		DynamicControlProps<T> & {
+			description?: string;
+			optional?: boolean;
+			inputEle?: "input" | "textarea";
+			schema: z.$ZodString | z.$ZodNumber;
+			setValue: (v: string | number) => void;
+		},
+) {
 	props = mergeProps(
+		{ inputEle: "input" } as const,
 		props,
 		{ type: props.schema._zod.def.type },
-		registry.get(props.schema),
+		textRegistry.get(props.schema) ?? {},
 	);
-	const [_, rest] = splitProps(props, ["name", "class"]);
+	const [_, rest] = splitProps(props, [
+		"name",
+		"class",
+		"schema",
+		"setValue",
+		"description",
+	]);
 	const [error, setError] = createSignal<string[] | undefined>(undefined);
 	const [dirty, setDirty] = createSignal(false);
 
-	let input!: HTMLInputElement;
+	let input!: HTMLInputElement | HTMLTextAreaElement;
 	let tooltip!: HTMLDivElement;
 	let arrowEle!: HTMLDivElement;
 
-	const name = `field${counter++}`;
-	const nameHint = `${name}-hint`;
+	const inputId = props.name ?? `field${counter++}`;
+	const descId = `${inputId}-desc`;
+	const toolTipId = `${inputId}-hint`;
 
 	const padding = (n: number) => {
 		const computedStyle = getComputedStyle(document.documentElement);
@@ -83,10 +94,10 @@ export function TextControl(props: TextFieldProps) {
 		});
 	});
 
-	function getValue(ev: { currentTarget: HTMLInputElement }) {
+	function getValue(ev: { currentTarget: typeof input }) {
 		const v = ev.currentTarget.value;
-		if (props.type === "number") return +v;
-		return v;
+		if (props.type === "string") return v;
+		return +v;
 	}
 
 	function validate(input: any) {
@@ -95,31 +106,42 @@ export function TextControl(props: TextFieldProps) {
 			.error?.issues?.map((issue) => issue.message);
 	}
 
+	const InputEle = props.inputEle ?? "input";
+
 	return (
 		<span class="flex grow">
-			<label for={name}>{props.name}</label>
-			<input
-				ref={input}
-				id={name}
-				name={props.name}
+			<label class="label" for={inputId}>
+				{props.label ?? props.name}
+				<Show when={!props.optional}>
+					<span class="text-red-500">*</span>
+				</Show>
+			</label>
+			<Dynamic
+				component={InputEle}
+				ref={input as any}
+				id={inputId}
 				autocomplete="off"
 				aria-invalid={Boolean(error())}
-				aria-describedby={nameHint}
-				onBlur={(ev: { currentTarget: HTMLInputElement }) =>
+				aria-describedby={`${descId} ${toolTipId}`}
+				onBlur={(ev: { currentTarget: typeof input }) =>
 					setError(validate?.(getValue(ev)))
 				}
-				onInput={(ev: { currentTarget: HTMLInputElement }) => {
+				onInput={(ev: { currentTarget: typeof input }) => {
 					if (dirty() && error()) setError(validate?.(getValue(ev)));
 					setDirty(true);
 					props.setValue(getValue(ev));
 				}}
-				class={clsx("grow", props.class)}
+				min={props.schema._zod.bag.minimum}
+				max={props.schema._zod.bag.maximum}
 				{...rest}
+				class={clsx("grow input", props.type === "range" && "range", props.class)}
 			/>
-			<p class="label">{props.label}</p>
+			<p class="label" id={descId}>
+				{props.description}
+			</p>
 			<div
 				ref={tooltip}
-				id={nameHint}
+				id={toolTipId}
 				role="tooltip"
 				class="bg-error-content absolute w-max text-primary-content"
 			>

@@ -1,15 +1,16 @@
-import { DynamicControl } from "./Dynamic";
+import type * as z from "zod/v4/core";
+import { DynamicControl, type DynamicControlProps } from "./Dynamic";
 
 export function OptionalControl<T extends z.$ZodType>(
-	props: TextFieldProps & ControlProps<T>,
+	props: DynamicControlProps<T>,
 ) {
 	return (
 		<DynamicControl
-			name={props.name}
+			{...props}
+			optional
 			schema={(props.schema._zod.def as z.$ZodOptionalDef).innerType}
-			value={props.value}
+			// @ts-ignore
 			setValue={props.setValue}
-			class={props.class}
 		/>
 	);
 }
