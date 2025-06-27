@@ -6,8 +6,8 @@ export function OptionalControl<T extends z.$ZodType>(
 ) {
 	return (
 		<DynamicControl
-			{...props}
 			optional
+			{...props}
 			schema={(props.schema._zod.def as z.$ZodOptionalDef).innerType}
 			// @ts-ignore
 			setValue={props.setValue}

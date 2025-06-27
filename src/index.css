@@ -2,11 +2,13 @@
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/preflight.css" layer(base);
 @import "tailwindcss/utilities.css" layer(utilities);
+@import "./forms/forms.css";
 
 @plugin "daisyui" {
 	/* biome-ignore lint/correctness/noUnknownProperty: <explanation> */
 	themes: light --default, dark --prefersdark;
 	/* biome-ignore lint/correctness/noUnknownProperty: <explanation> */
-	/* include: "button"; */
+	exclude: "skeleton";
 }
 
+button { @apply btn }

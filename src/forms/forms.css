@@ -1,0 +1,52 @@
+.text-control {
+	label { @apply label block; }
+
+	input, textarea { @apply w-full }
+}
+
+.required-field {
+	@apply text-red-500;
+	&::before { content: '*' }
+}
+
+.array-control {
+	display: flex;
+	align-items: center;
+	@apply gap-4;
+
+	& > *:nth-child(2) { flex-grow: 1; }
+	& > button { display: block; }
+}
+
+.array-controls > button {
+	display: block;
+}
+
+form {
+	@apply p-4;
+
+	fieldset { @apply fieldset }
+	fieldset > legend { @apply fieldset-legend }
+
+	& > fieldset > legend { @apply text-xl; }
+	& > fieldset > fieldset > legend { @apply text-lg; }
+	& > fieldset > fieldset > fieldset > fieldset > legend { @apply text-sm; }
+	& > fieldset > fieldset > fieldset > fieldset > fieldset > legend { @apply text-xs; }
+
+	& div[role="tooltip"] {
+		@apply bg-error-content absolute w-max text-primary-content z-10;
+		ul { @apply p-2 }
+		.arrow { @apply absolute rotate-45 w-4 h-4 bg-inherit; }
+	}
+
+	input { @apply input }
+	textarea { @apply textarea }
+	input[type="range"] { @apply range }
+	button { @apply btn-xs }
+}
+
+.git {
+	@apply join;
+
+	> *:nth-child(1) { flex-grow: 1; }
+}

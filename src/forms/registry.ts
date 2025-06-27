@@ -19,6 +19,7 @@ export const arrayRegistry = z.registry<
 	z.$ZodArray
 >();
 
+// TODO: hookup
 export const customRegistry = z.registry<{
 	component: Component<{ schema: z.$output }>;
 }>();

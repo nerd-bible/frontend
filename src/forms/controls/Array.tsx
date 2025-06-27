@@ -8,34 +8,31 @@ export function ArrayControl<T extends z.$ZodArray>(
 	props: JSX.HTMLElementTags["fieldset"] & DynamicControlProps<T>,
 ) {
 	props = mergeProps(props, arrayRegistry.get(props.schema) ?? {});
-	const [_, fieldsetProps] = splitProps(props, [
-		"name",
-		"label",
-		"schema",
-		"value",
-		"setValue",
-	]);
+	const [controlProps, _, fieldsetProps] = splitProps(
+		props,
+		["schema", "value", "setValue"],
+		["name", "label"],
+	);
 
 	function swap(i: number) {
 		const arr = [...props.value];
 		const tmp = arr[i];
 		arr[i] = arr[i + 1];
 		arr[i + 1] = tmp;
-		props.setValue(arr);
+		props.setValue(arr as any);
 	}
 
 	return (
 		<fieldset {...fieldsetProps}>
 			<Show when={props.label ?? props.name}>
-				<legend class="flex justify-between w-full">
+				<legend>
 					{props.label ?? props.name}
 					<button
 						type="button"
-						class="btn-xs"
 						onPointerDown={() => {
 							const newArr = [...props.value];
-							newArr.unshift(empty(props.schema._zod.def.element));
-							props.setValue(newArr);
+							newArr.push(empty(props.schema._zod.def.element));
+							props.setValue(newArr as any);
 						}}
 					>
 						+
@@ -44,52 +41,62 @@ export function ArrayControl<T extends z.$ZodArray>(
 			</Show>
 			<Index each={props.value}>
 				{(v, i) => (
-					<div>
-						{/** TODO: https://solid-dnd.com/?example=Sortable%2520list%2520%28vertical%29#examples */}
-						{/* <span class="self-center">m</span> */}
-						<DynamicControl
-							label={
-								<div class="array-controls">
-									<button
-										type="button"
-										class="btn-xs"
-										onPointerDown={() => swap(i - 1)}
-										disabled={i === 0}
-									>
-										⬆
-									</button>
-									<button
-										type="button"
-										class="btn-xs"
-										onPointerDown={() => swap(i)}
-										disabled={i === props.value.length - 1}
-									>
-										⬇
-									</button>
-									<button
-										type="button"
-										class="btn-xs"
-										onPointerDown={() => {
-											const newArr = [...props.value];
-											newArr.splice(i, 1);
-											props.setValue(newArr);
-										}}
-										disabled={props.value.length === 1}
-									>
-										x
-									</button>
-								</div>
-							}
-							schema={props.schema._zod.def.element}
-							value={v()}
-							setValue={(...args: any) => {
-								// @ts-ignore
-								props.setValue(i, ...args);
-							}}
-						/>
-					</div>
+					<ArrayControlItem v={v()} i={i} swap={swap} {...controlProps} />
 				)}
 			</Index>
 		</fieldset>
+	);
+}
+
+function ArrayControlItem(
+	props: DynamicControlProps<any> & {
+		swap(i: number): void;
+		v: any;
+		i: number;
+	},
+) {
+	return (
+		<div class="array-control">
+			{/** TODO: Drag and drop. Keyboard arrow up/down. */}
+			{/** TODO: Couldn't get https://solid-dnd.com/?example=Sortable%2520list%2520%28vertical%29#examples
+						to work in an afternoon because it requires ids that are not list
+						indices to show where item will go while dragging */}
+			<div class="array-controls">
+				<button
+					type="button"
+					onPointerDown={() => props.swap(props.i - 1)}
+					disabled={props.i === 0}
+				>
+					⬆
+				</button>
+				<button
+					type="button"
+					onPointerDown={() => props.swap(props.i)}
+					disabled={props.i === props.value.length - 1}
+				>
+					⬇
+				</button>
+			</div>
+			<DynamicControl
+				label=""
+				schema={props.schema._zod.def.element}
+				value={props.v}
+				setValue={(...args: any) => {
+					// @ts-ignore
+					props.setValue(i, ...args);
+				}}
+			/>
+			<button
+				type="button"
+				onPointerDown={() => {
+					const newArr = [...props.value];
+					newArr.splice(props.i, 1);
+					props.setValue(newArr);
+				}}
+				disabled={props.value.length === 1}
+			>
+				x
+			</button>
+		</div>
 	);
 }

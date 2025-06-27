@@ -1,6 +1,5 @@
 import { textRegistry } from "../registry";
 import * as z from "zod/v4/core";
-import clsx from "clsx";
 import {
 	createEffect,
 	createSignal,
@@ -38,6 +37,7 @@ export function TextControl<T extends z.$ZodString | z.$ZodNumber>(
 		"schema",
 		"setValue",
 		"description",
+		"inputEle",
 	]);
 	const [error, setError] = createSignal<string[] | undefined>(undefined);
 	const [dirty, setDirty] = createSignal(false);
@@ -46,7 +46,7 @@ export function TextControl<T extends z.$ZodString | z.$ZodNumber>(
 	let tooltip!: HTMLDivElement;
 	let arrowEle!: HTMLDivElement;
 
-	const inputId = props.name ?? `field${counter++}`;
+	const inputId = props.id ?? `${props.name}${counter++}`;
 	const descId = `${inputId}-desc`;
 	const toolTipId = `${inputId}-hint`;
 
@@ -109,11 +109,11 @@ export function TextControl<T extends z.$ZodString | z.$ZodNumber>(
 	const InputEle = props.inputEle ?? "input";
 
 	return (
-		<span class="flex grow">
-			<label class="label" for={inputId}>
+		<span class="text-control">
+			<label for={inputId}>
 				{props.label ?? props.name}
 				<Show when={!props.optional}>
-					<span class="text-red-500">*</span>
+					<span class="required-field" />
 				</Show>
 			</label>
 			<Dynamic
@@ -133,23 +133,14 @@ export function TextControl<T extends z.$ZodString | z.$ZodNumber>(
 				}}
 				min={props.schema._zod.bag.minimum}
 				max={props.schema._zod.bag.maximum}
+				rows={3}
 				{...rest}
-				class={clsx("grow input", props.type === "range" && "range", props.class)}
 			/>
-			<p class="label" id={descId}>
-				{props.description}
-			</p>
-			<div
-				ref={tooltip}
-				id={toolTipId}
-				role="tooltip"
-				class="bg-error-content absolute w-max text-primary-content"
-			>
+			<p id={descId}>{props.description}</p>
+			<div ref={tooltip} id={toolTipId} role="tooltip">
 				<Show when={error()}>
-					<ul class="p-2">
-						<For each={error()}>{(msg) => <li>{msg}</li>}</For>
-					</ul>
-					<div ref={arrowEle} class="absolute rotate-45 w-4 h-4 bg-inherit" />
+					<ul><For each={error()}>{(msg) => <li>{msg}</li>}</For></ul>
+					<div class="arrow" ref={arrowEle} />
 				</Show>
 			</div>
 		</span>

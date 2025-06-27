@@ -1,49 +1,55 @@
 // import { makePersisted } from "@solid-primitives/storage";
 // import { tauriStorage } from "@solid-primitives/storage/tauri";
 import * as z from "zod/v4";
-import { createForm, textRegistry } from "./forms";
+import {
+	arrayRegistry,
+	createForm,
+	objectRegistry,
+	textRegistry,
+} from "./forms";
 import { createStore } from "solid-js/store";
 
-const gitRepo = z.object({
-	url: z.url({ protocol: /^https?$/ }),
-	branch: z.string(),
+const sources = z.object({
+	manuscripts: z
+		.array(
+			z.object({
+				url: z.url({ protocol: /^https?$/ }),
+				branch: z.string(),
+			}).register(objectRegistry, { class: "git" }),
+		)
+		.register(arrayRegistry, { label: "Manuscripts" }),
+	rawGit: z
+		.array(
+			z.object({
+				match: z.string().check(
+					z.refine(
+						(input) => {
+							try {
+								new RegExp(input);
+								return true;
+							} catch {
+								return false;
+							}
+						},
+						{ error: "Please enter a valid Regex." },
+					),
+				),
+				hosts: z
+					.string()
+					.check(z.minLength(1))
+					.register(textRegistry, { inputEle: "textarea" }),
+			}),
+		)
+		.register(arrayRegistry, { label: "Git mirrors" }),
 });
-const git = z.object({
-	manuscripts: z.array(gitRepo),
-});
-
-const rawGit = z.array(
-	z.object({
-		match: z.string().check(
-			z.refine(
-				(input) => {
-					try {
-						new RegExp(input);
-						return true;
-					} catch {
-						return false;
-					}
-				},
-				{ error: "Please enter a valid Regex." },
-			),
-		),
-		hosts: z
-			.string()
-			.check(z.minLength(1))
-			.register(textRegistry, { inputEle: "textarea" }),
-	}),
-);
-const sources = z.object({ git, rawGit });
 
 const defaults: z.output<typeof sources> = {
-	git: {
-		manuscripts: [
-			{
-				url: "https://github.com/nerd-bible/manuscripts",
-				branch: "master",
-			},
-		],
-	},
+	manuscripts: [
+		{
+			url: "https://github.com/nerd-bible/manuscripts",
+			branch: "master",
+		},
+	],
 	rawGit: [
 		{
 			match: "https://github.com/(?<user>[^/]+)/(?<repo>.+)(.git)?",
