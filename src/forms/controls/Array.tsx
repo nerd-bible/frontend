@@ -3,6 +3,17 @@ import { Show, Index, type JSX, mergeProps, splitProps } from "solid-js";
 import { DynamicControl, type DynamicControlProps } from "./Dynamic";
 import { arrayRegistry } from "../registry";
 import { empty } from "../empty";
+import { useDragDropContext } from "@thisbeyond/solid-dnd";
+import {
+	DragDropProvider,
+	DragDropSensors,
+	DragOverlay,
+	SortableProvider,
+	createSortable,
+	closestCenter,
+} from "@thisbeyond/solid-dnd";
+
+type Id = string | number; // for solid-dnd
 
 export function ArrayControl<T extends z.$ZodArray>(
 	props: JSX.HTMLElementTags["fieldset"] & DynamicControlProps<T>,
@@ -13,13 +24,16 @@ export function ArrayControl<T extends z.$ZodArray>(
 		["schema", "value", "setValue"],
 		["name", "label"],
 	);
+	const ids = () => props.value.map((_, i) => (i + 1) as Id);
 
 	function swap(i: number) {
+		if (i < 0 || i >= props.value.length - 1) return false;
 		const arr = [...props.value];
 		const tmp = arr[i];
 		arr[i] = arr[i + 1];
 		arr[i + 1] = tmp;
 		props.setValue(arr as any);
+		return true;
 	}
 
 	return (
@@ -39,44 +53,90 @@ export function ArrayControl<T extends z.$ZodArray>(
 					</button>
 				</legend>
 			</Show>
-			<Index each={props.value}>
-				{(v, i) => (
-					<ArrayControlItem v={v()} i={i} swap={swap} {...controlProps} />
-				)}
-			</Index>
+
+			<DragDropProvider
+				onDragEnd={({ draggable, droppable }) => {
+					if (draggable && droppable) {
+						const currentItems = ids();
+						const fromIndex = currentItems.indexOf(draggable.id);
+						const toIndex = currentItems.indexOf(droppable.id);
+						if (fromIndex !== toIndex) {
+							const updatedItems = [...props.value];
+							updatedItems.splice(
+								toIndex,
+								0,
+								...updatedItems.splice(fromIndex, 1),
+							);
+							props.setValue(updatedItems as any);
+						}
+					}
+				}}
+				collisionDetector={closestCenter}
+			>
+				<DragDropSensors />
+				<SortableProvider ids={ids()}>
+					<Index each={props.value}>
+						{(v, i) => (
+							<ArrayControlItem
+								v={v()}
+								i={i + 1}
+								swap={swap}
+								{...controlProps}
+							/>
+						)}
+					</Index>
+				</SortableProvider>
+
+				<DragOverlay>{""}</DragOverlay>
+			</DragDropProvider>
 		</fieldset>
 	);
 }
 
 function ArrayControlItem(
 	props: DynamicControlProps<any> & {
-		swap(i: number): void;
+		swap(i: number): boolean;
 		v: any;
 		i: number;
 	},
 ) {
+	const sortable = (props.i ? createSortable(props.i) : () => {}) as Partial<
+		ReturnType<typeof createSortable>
+	>;
+	const state = useDragDropContext();
+
 	return (
-		<div class="array-control">
-			{/** TODO: Drag and drop. Keyboard arrow up/down. */}
-			{/** TODO: Couldn't get https://solid-dnd.com/?example=Sortable%2520list%2520%28vertical%29#examples
-						to work in an afternoon because it requires ids that are not list
-						indices to show where item will go while dragging */}
-			<div class="array-controls">
-				<button
-					type="button"
-					onPointerDown={() => props.swap(props.i - 1)}
-					disabled={props.i === 0}
-				>
-					⬆
-				</button>
-				<button
-					type="button"
-					onPointerDown={() => props.swap(props.i)}
-					disabled={props.i === props.value.length - 1}
-				>
-					⬇
-				</button>
-			</div>
+		<div
+			class="array-control"
+			use:sortable
+			classList={{
+				"opacity-25": sortable.isActiveDraggable,
+				"transition-transform": Boolean(state?.[0].active.draggable),
+			}}
+		>
+			<button
+				type="button"
+				disabled={props.value.length === 1}
+				onKeyDown={(ev) => {
+					if (ev.key === "ArrowUp") {
+						if (props.swap(props.i - 2)) {
+							const button = ev.currentTarget.parentElement
+								?.previousElementSibling?.firstElementChild as
+								| HTMLButtonElement
+								| undefined;
+							button?.focus?.();
+						}
+					} else if (ev.key === "ArrowDown") {
+						if (props.swap(props.i - 1)) {
+							const button = ev.currentTarget.parentElement?.nextElementSibling
+								?.firstElementChild as HTMLButtonElement | undefined;
+							button?.focus?.();
+						}
+					}
+				}}
+			>
+				≡
+			</button>
 			<DynamicControl
 				label=""
 				schema={props.schema._zod.def.element}

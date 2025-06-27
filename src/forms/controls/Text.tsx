@@ -8,22 +8,21 @@ import {
 	For,
 	Show,
 	mergeProps,
+	createUniqueId,
 } from "solid-js";
 import { computePosition, flip, shift, arrow, offset } from "@floating-ui/dom";
 import type { DynamicControlProps } from "./Dynamic";
 import { Dynamic } from "solid-js/web";
 
-let counter = 0;
-
 export function TextControl<T extends z.$ZodString | z.$ZodNumber>(
 	props: JSX.HTMLElementTags["input"] &
-		DynamicControlProps<T> & {
-			description?: string;
-			optional?: boolean;
-			inputEle?: "input" | "textarea";
-			schema: z.$ZodString | z.$ZodNumber;
-			setValue: (v: string | number) => void;
-		},
+	DynamicControlProps<T> & {
+		description?: string;
+		optional?: boolean;
+		inputEle?: "input" | "textarea";
+		schema: z.$ZodString | z.$ZodNumber;
+		setValue: (v: string | number) => void;
+	},
 ) {
 	props = mergeProps(
 		{ inputEle: "input" } as const,
@@ -46,7 +45,7 @@ export function TextControl<T extends z.$ZodString | z.$ZodNumber>(
 	let tooltip!: HTMLDivElement;
 	let arrowEle!: HTMLDivElement;
 
-	const inputId = props.id ?? `${props.name}${counter++}`;
+	const inputId = props.id ?? `${props.name}${createUniqueId()}`;
 	const descId = `${inputId}-desc`;
 	const toolTipId = `${inputId}-hint`;
 
@@ -70,28 +69,28 @@ export function TextControl<T extends z.$ZodString | z.$ZodNumber>(
 				arrow({ element: arrowEle }),
 			],
 		}).then(({ x, y, placement, middlewareData }) => {
-			Object.assign(tooltip.style, {
-				left: `${x}px`,
-				top: `${y}px`,
-			});
-
-			if (middlewareData.arrow) {
-				const staticSide = {
-					top: "bottom",
-					right: "left",
-					bottom: "top",
-					left: "right",
-				}[placement.split("-")[0] as "top"];
-
-				Object.assign(arrowEle.style, {
-					left: `${middlewareData.arrow.x}px`,
-					top: `${middlewareData.arrow.y}px`,
-					right: "",
-					bottom: "",
-					[staticSide]: "-4px",
+				Object.assign(tooltip.style, {
+					left: `${x}px`,
+					top: `${y}px`,
 				});
-			}
-		});
+
+				if (middlewareData.arrow) {
+					const staticSide = {
+						top: "bottom",
+						right: "left",
+						bottom: "top",
+						left: "right",
+					}[placement.split("-")[0] as "top"];
+
+					Object.assign(arrowEle.style, {
+						left: `${middlewareData.arrow.x}px`,
+						top: `${middlewareData.arrow.y}px`,
+						right: "",
+						bottom: "",
+						[staticSide]: "-4px",
+					});
+				}
+			});
 	});
 
 	function getValue(ev: { currentTarget: typeof input }) {

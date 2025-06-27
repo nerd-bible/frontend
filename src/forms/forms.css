@@ -18,10 +18,6 @@
 	& > button { display: block; }
 }
 
-.array-controls > button {
-	display: block;
-}
-
 form {
 	@apply p-4;
 
