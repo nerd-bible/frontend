@@ -1,6 +1,6 @@
 // import { makePersisted } from "@solid-primitives/storage";
 // import { tauriStorage } from "@solid-primitives/storage/tauri";
-import * as z from "zod/v4";
+import * as z from "zod";
 import {
 	arrayRegistry,
 	createForm,
@@ -75,17 +75,7 @@ export function Sources() {
 	// 	name: "sources",
 	// 	storage: tauriStorage(),
 	// });
-	const [Controls, data] = createForm(sources, createStore(defaults));
+	const [Form, data] = createForm(sources, createStore(defaults));
 
-	return (
-		<form
-			onSubmit={(ev) => {
-				ev.preventDefault();
-				console.log(data);
-			}}
-		>
-			<Controls name="Sources" />
-			<input type="submit" />
-		</form>
-	);
+	return <Form />
 }

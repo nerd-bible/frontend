@@ -1,0 +1,41 @@
+<head>
+	<meta charset="UTF-8">
+<style>
+	div {
+		font-family: "Noto Serif Hebrew";
+	}
+	h1 {
+		margin: 0;
+		font-size: 32px;
+	}
+	.diacritic {
+		font-kerning: normal;
+	}
+	.add {
+		color: green;
+	}
+	.remove {
+		color: red;
+	}
+	.container {
+		display: inline-grid
+	}
+	.combine {
+		grid-row: 1;
+		grid-column: 1;
+	}
+	</style>
+</head>
+<div style="font-size:64px" lang="he">
+	<h1>raw</h1>
+	<span class="combine" style="color:green">או&#x05B9;</span>
+	<span class="combine" style="color:red">א&#x05B9;ו</span>
+	<h1>zero-width joiner</h1>
+	א<span class="diacritic remove">&#x200b;&#x05B9;</span>ו<span class="diacritic add">&#x200b;&#x05B9;</span>
+	<h1>layered, bad idea...</h1>
+	<div class="container">
+		<span class="combine" style="color:green">או&#x05B9;</span>
+		<span class="combine" style="color:red">א&#x05B9;ו</span>
+		<span class="combine">או</span>
+	</div>
+</div>

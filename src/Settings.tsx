@@ -1,6 +1,6 @@
 import { Sources } from "./Sources";
 import { createForm, customRegistry, textRegistry } from "./forms/index";
-import * as z from "zod/v4";
+import * as z from "zod";
 
 const mySchema = z.object({
 	name: z

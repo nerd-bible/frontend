@@ -1,7 +1,8 @@
-import { DynamicControl, type DynamicControlProps } from "./controls/Dynamic";
-import type * as z from "zod/v4/core";
+import type * as z from "zod";
 import { type Store, type SetStoreFunction, createStore } from "solid-js/store";
 import { empty } from "./empty";
+import { Form } from "./Form";
+import type { JSX } from "solid-js";
 
 export * from "./registry";
 
@@ -12,14 +13,7 @@ export function createForm<T extends z.$ZodObject>(
 	store ??= createStore(empty(schema));
 
 	return [
-		(props: Partial<DynamicControlProps<T>>) => (
-			<DynamicControl<T>
-				{...props}
-				schema={schema}
-				value={store[0]}
-				setValue={store[1]}
-			/>
-		),
+		(props: JSX.HTMLElementTags["form"]) => <Form schema={schema} value={store[0]} setValue={store[1]} {...props} />,
 		store[0],
 		store[1],
 	] as const;

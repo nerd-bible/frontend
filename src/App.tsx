@@ -1,7 +1,8 @@
 // import { invoke, isTauri } from "@tauri-apps/api/core";
-import { Router, Route } from "@solidjs/router";
-import { Settings } from "./Settings";
+import { Route, Router } from "@solidjs/router";
+import { ConLLUEditor } from "./ConLLU";
 import { Home } from "./Home";
+import { Settings } from "./Settings";
 
 function App() {
 	// async function greet() {
@@ -11,6 +12,7 @@ function App() {
 	return (
 		<Router>
 			<Route path="/" component={Home} />
+			<Route path="/conllu" component={ConLLUEditor} />
 			<Route path="/settings" component={Settings} />
 		</Router>
 	);

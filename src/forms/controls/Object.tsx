@@ -1,18 +1,19 @@
-import type * as z from "zod/v4/core";
+import type * as z from "zod";
 import { DynamicControl, type DynamicControlProps } from "./Dynamic";
-import { Show, For, type JSX, mergeProps, splitProps } from "solid-js";
+import { Show, For, mergeProps, splitProps } from "solid-js";
 import { objectRegistry } from "../registry";
 
 export function ObjectControl<T extends z.$ZodObject>(
-	props: JSX.HTMLElementTags["fieldset"] & DynamicControlProps<T>
+	props: DynamicControlProps<T, "fieldset">
 ) {
-	props = mergeProps(props, objectRegistry.get(props.schema) ?? {});
+	props = mergeProps(props, objectRegistry.get(props.schema) as any ?? {});
 	const [_, fieldsetProps] = splitProps(props, [
 		"name",
 		"label",
 		"schema",
 		"value",
 		"setValue",
+		"hintId",
 	]);
 
 	return (
@@ -30,6 +31,7 @@ export function ObjectControl<T extends z.$ZodObject>(
 							// @ts-ignore
 							props.setValue(name as any, ...args)
 						}
+						hintId={props.hintId}
 					/>
 				)}
 			</For>

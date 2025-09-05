@@ -30,7 +30,7 @@ form {
 	& > fieldset > fieldset > fieldset > fieldset > fieldset > legend { @apply text-xs; }
 
 	& div[role="tooltip"] {
-		@apply bg-error-content absolute w-max text-primary-content z-10;
+		@apply bg-error-content absolute w-max text-primary-content z-1;
 		ul { @apply p-2 }
 		.arrow { @apply absolute rotate-45 w-4 h-4 bg-inherit; }
 	}
@@ -38,7 +38,6 @@ form {
 	input { @apply input }
 	textarea { @apply textarea }
 	input[type="range"] { @apply range }
-	button { @apply btn-xs }
 }
 
 .git {

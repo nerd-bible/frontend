@@ -1,39 +1,45 @@
-import type * as z from "zod/v4/core";
-import { Show, Index, type JSX, mergeProps, splitProps } from "solid-js";
+import type * as z from "zod";
+import { Show, mergeProps, splitProps, batch, For } from "solid-js";
 import { DynamicControl, type DynamicControlProps } from "./Dynamic";
 import { arrayRegistry } from "../registry";
 import { empty } from "../empty";
-import { useDragDropContext } from "@thisbeyond/solid-dnd";
-import {
-	DragDropProvider,
-	DragDropSensors,
-	DragOverlay,
-	SortableProvider,
-	createSortable,
-	closestCenter,
-} from "@thisbeyond/solid-dnd";
-
-type Id = string | number; // for solid-dnd
+import { Dropdown } from "../../components/Dropdown";
 
 export function ArrayControl<T extends z.$ZodArray>(
-	props: JSX.HTMLElementTags["fieldset"] & DynamicControlProps<T>,
+	props: DynamicControlProps<T, "fieldset">,
 ) {
-	props = mergeProps(props, arrayRegistry.get(props.schema) ?? {});
+	props = mergeProps(props, arrayRegistry.get(props.schema) as any ?? {});
+
 	const [controlProps, _, fieldsetProps] = splitProps(
 		props,
-		["schema", "value", "setValue"],
+		["schema", "value", "setValue", "hintId"],
 		["name", "label"],
 	);
-	const ids = () => props.value.map((_, i) => (i + 1) as Id);
 
-	function swap(i: number) {
-		if (i < 0 || i >= props.value.length - 1) return false;
-		const arr = [...props.value];
-		const tmp = arr[i];
-		arr[i] = arr[i + 1];
-		arr[i + 1] = tmp;
-		props.setValue(arr as any);
+	function swapInner(i: number, j: number, arr: any[], setArr: any) {
+		if (i === j) return false;
+
+		const updatedItems = [...arr];
+		updatedItems.splice(
+			j,
+			0,
+			...updatedItems.splice(i, 1),
+		);
+		setArr(updatedItems);
+
 		return true;
+	}
+
+	function swap(i: number, j: number) {
+		return swapInner(i, j, props.value, props.setValue);
+	}
+
+	function deleteInner(i: number, arr: any[], setArr: any) {
+		setArr(arr.filter((_, j) => i !== j));
+	}
+
+	function deleteItem(i: number) {
+		deleteInner(i, props.value, props.setValue);
 	}
 
 	return (
@@ -43,116 +49,77 @@ export function ArrayControl<T extends z.$ZodArray>(
 					{props.label ?? props.name}
 					<button
 						type="button"
-						onPointerDown={() => {
+						onPointerDown={() => batch(() => {
 							const newArr = [...props.value];
-							newArr.push(empty(props.schema._zod.def.element));
+							const emptyItem = empty(props.schema._zod.def.element);
+							newArr.push(emptyItem);
 							props.setValue(newArr as any);
-						}}
+						})}
 					>
 						+
 					</button>
 				</legend>
 			</Show>
-
-			<DragDropProvider
-				onDragEnd={({ draggable, droppable }) => {
-					if (draggable && droppable) {
-						const currentItems = ids();
-						const fromIndex = currentItems.indexOf(draggable.id);
-						const toIndex = currentItems.indexOf(droppable.id);
-						if (fromIndex !== toIndex) {
-							const updatedItems = [...props.value];
-							updatedItems.splice(
-								toIndex,
-								0,
-								...updatedItems.splice(fromIndex, 1),
-							);
-							props.setValue(updatedItems as any);
-						}
-					}
-				}}
-				collisionDetector={closestCenter}
-			>
-				<DragDropSensors />
-				<SortableProvider ids={ids()}>
-					<Index each={props.value}>
-						{(v, i) => (
-							<ArrayControlItem
-								v={v()}
-								i={i + 1}
-								swap={swap}
-								{...controlProps}
-							/>
-						)}
-					</Index>
-				</SortableProvider>
-
-				<DragOverlay>{""}</DragOverlay>
-			</DragDropProvider>
+			<For each={props.value}>
+				{(v, i) => (
+					<ArrayControlItem
+						v={v}
+						i={i()}
+						swap={swap}
+						delete={() => deleteItem(i())}
+						{...controlProps}
+					/>
+				)}
+			</For>
 		</fieldset>
 	);
 }
 
 function ArrayControlItem(
-	props: DynamicControlProps<any> & {
-		swap(i: number): boolean;
+	props: DynamicControlProps<any, any> & {
+		swap(i: number, j: number): boolean;
+		delete(): void;
 		v: any;
 		i: number;
 	},
 ) {
-	const sortable = (props.i ? createSortable(props.i) : () => {}) as Partial<
-		ReturnType<typeof createSortable>
-	>;
-	const state = useDragDropContext();
+	let ref!: HTMLDivElement;
+
+	function moveUp() {
+		if (props.swap(props.i, props.i - 1)) {
+			const button = ref.previousElementSibling?.querySelector("button");
+			button?.focus?.();
+		}
+	}
+	function moveDown() {
+		if (props.swap(props.i, props.i + 1)) {
+			const button = ref.nextElementSibling?.querySelector("button");
+			console.log("moveDown", button);
+			button?.focus();
+		}
+	}
 
 	return (
-		<div
-			class="array-control"
-			use:sortable
-			classList={{
-				"opacity-25": sortable.isActiveDraggable,
-				"transition-transform": Boolean(state?.[0].active.draggable),
-			}}
-		>
-			<button
-				type="button"
+		<div class="array-control" ref={ref}>
+			<Dropdown
 				disabled={props.value.length === 1}
-				onKeyDown={(ev) => {
-					if (ev.key === "ArrowUp") {
-						if (props.swap(props.i - 2)) {
-							const button = ev.currentTarget.parentElement
-								?.previousElementSibling?.firstElementChild as
-								| HTMLButtonElement
-								| undefined;
-							button?.focus?.();
-						}
-					} else if (ev.key === "ArrowDown") {
-						if (props.swap(props.i - 1)) {
-							const button = ev.currentTarget.parentElement?.nextElementSibling
-								?.firstElementChild as HTMLButtonElement | undefined;
-							button?.focus?.();
-						}
-					}
-				}}
+				button="≡"
 			>
-				≡
-			</button>
+				<button type="button" disabled={props.i === 0} onClick={moveUp}>↑</button>
+				<button type="button" disabled={props.i === props.value.length - 1} onClick={moveDown}>↓</button>
+			</Dropdown>
 			<DynamicControl
 				label=""
 				schema={props.schema._zod.def.element}
 				value={props.v}
 				setValue={(...args: any) => {
 					// @ts-ignore
-					props.setValue(i, ...args);
+					props.setValue(props.i, ...args);
 				}}
 			/>
 			<button
 				type="button"
-				onPointerDown={() => {
-					const newArr = [...props.value];
-					newArr.splice(props.i, 1);
-					props.setValue(newArr);
-				}}
+				onPointerDown={props.delete}
 				disabled={props.value.length === 1}
 			>
 				x

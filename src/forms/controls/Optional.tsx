@@ -1,4 +1,4 @@
-import type * as z from "zod/v4/core";
+import type * as z from "zod";
 import { DynamicControl, type DynamicControlProps } from "./Dynamic";
 
 export function OptionalControl<T extends z.$ZodType>(

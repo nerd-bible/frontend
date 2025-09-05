@@ -1,34 +1,29 @@
 import { textRegistry } from "../registry";
-import * as z from "zod/v4/core";
+import type * as z from "zod";
 import {
-	createEffect,
-	createSignal,
-	type JSX,
 	splitProps,
-	For,
 	Show,
 	mergeProps,
 	createUniqueId,
 } from "solid-js";
-import { computePosition, flip, shift, arrow, offset } from "@floating-ui/dom";
 import type { DynamicControlProps } from "./Dynamic";
 import { Dynamic } from "solid-js/web";
+import { Errors } from "../Errors";
 
 export function TextControl<T extends z.$ZodString | z.$ZodNumber>(
-	props: JSX.HTMLElementTags["input"] &
-	DynamicControlProps<T> & {
-		description?: string;
-		optional?: boolean;
-		inputEle?: "input" | "textarea";
-		schema: z.$ZodString | z.$ZodNumber;
-		setValue: (v: string | number) => void;
-	},
+	props: DynamicControlProps<T, "input"> & {
+			description?: string;
+			optional?: boolean;
+			inputEle?: "input" | "textarea";
+			schema: z.$ZodString | z.$ZodNumber;
+			value: string | number;
+			setValue: (v: string | number) => void;
+		},
 ) {
 	props = mergeProps(
-		{ inputEle: "input" } as const,
 		props,
 		{ type: props.schema._zod.def.type },
-		textRegistry.get(props.schema) ?? {},
+		textRegistry.get(props.schema) as any ?? {},
 	);
 	const [_, rest] = splitProps(props, [
 		"name",
@@ -37,111 +32,48 @@ export function TextControl<T extends z.$ZodString | z.$ZodNumber>(
 		"setValue",
 		"description",
 		"inputEle",
+		"errors",
 	]);
-	const [error, setError] = createSignal<string[] | undefined>(undefined);
-	const [dirty, setDirty] = createSignal(false);
 
-	let input!: HTMLInputElement | HTMLTextAreaElement;
-	let tooltip!: HTMLDivElement;
-	let arrowEle!: HTMLDivElement;
+	type Input = HTMLInputElement | HTMLTextAreaElement;
 
 	const inputId = props.id ?? `${props.name}${createUniqueId()}`;
 	const descId = `${inputId}-desc`;
-	const toolTipId = `${inputId}-hint`;
+	const hintId = `${inputId}-hint`;
 
-	const padding = (n: number) => {
-		const computedStyle = getComputedStyle(document.documentElement);
-		const rems = computedStyle.getPropertyValue("--spacing");
-		return (
-			Number.parseFloat(rems) * Number.parseFloat(computedStyle.fontSize) * n
-		);
-	};
-
-	createEffect(() => {
-		error(); // this is what resizes `tooltip`
-		if (!input || !tooltip || !arrowEle) return;
-		computePosition(input, tooltip, {
-			placement: "bottom",
-			middleware: [
-				offset(padding(3)),
-				flip(),
-				shift({ padding: padding(4) }),
-				arrow({ element: arrowEle }),
-			],
-		}).then(({ x, y, placement, middlewareData }) => {
-				Object.assign(tooltip.style, {
-					left: `${x}px`,
-					top: `${y}px`,
-				});
-
-				if (middlewareData.arrow) {
-					const staticSide = {
-						top: "bottom",
-						right: "left",
-						bottom: "top",
-						left: "right",
-					}[placement.split("-")[0] as "top"];
-
-					Object.assign(arrowEle.style, {
-						left: `${middlewareData.arrow.x}px`,
-						top: `${middlewareData.arrow.y}px`,
-						right: "",
-						bottom: "",
-						[staticSide]: "-4px",
-					});
-				}
-			});
-	});
-
-	function getValue(ev: { currentTarget: typeof input }) {
+	function getValue(ev: { currentTarget: Input }) {
 		const v = ev.currentTarget.value;
 		if (props.type === "string") return v;
 		return +v;
 	}
 
-	function validate(input: any) {
-		return z
-			.safeParse(props.schema, input, { reportInput: true })
-			.error?.issues?.map((issue) => issue.message);
+	function isRequired() {
+		if (props.optional) return false;
+		return Object.keys(props.schema._zod.def).length > 1; // hack
 	}
-
-	const InputEle = props.inputEle ?? "input";
 
 	return (
 		<span class="text-control">
 			<label for={inputId}>
 				{props.label ?? props.name}
-				<Show when={!props.optional}>
+				<Show when={isRequired()}>
 					<span class="required-field" />
 				</Show>
 			</label>
 			<Dynamic
-				component={InputEle}
-				ref={input as any}
+				component={props.inputEle ?? "input"}
 				id={inputId}
 				autocomplete="off"
-				aria-invalid={Boolean(error())}
-				aria-describedby={`${descId} ${toolTipId}`}
-				onBlur={(ev: { currentTarget: typeof input }) =>
-					setError(validate?.(getValue(ev)))
-				}
-				onInput={(ev: { currentTarget: typeof input }) => {
-					if (dirty() && error()) setError(validate?.(getValue(ev)));
-					setDirty(true);
-					props.setValue(getValue(ev));
-				}}
+				aria-describedby={`${descId} ${hintId}`}
+				onInput={(ev: { currentTarget: Input }) => props.setValue(getValue(ev))}
 				min={props.schema._zod.bag.minimum}
 				max={props.schema._zod.bag.maximum}
 				rows={3}
+				aria-invalid={props.errors.length > 0}
 				{...rest}
 			/>
 			<p id={descId}>{props.description}</p>
-			<div ref={tooltip} id={toolTipId} role="tooltip">
-				<Show when={error()}>
-					<ul><For each={error()}>{(msg) => <li>{msg}</li>}</For></ul>
-					<div class="arrow" ref={arrowEle} />
-				</Show>
-			</div>
+			<Errors errors={props.errors} />
 		</span>
 	);
 }

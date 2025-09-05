@@ -4,6 +4,10 @@
 @import "tailwindcss/utilities.css" layer(utilities);
 @import "./forms/forms.css";
 
+@theme {
+	--font-sans: "Noto Serif", "Noto Serif Hebrew";
+}
+
 @plugin "daisyui" {
 	/* biome-ignore lint/correctness/noUnknownProperty: <explanation> */
 	themes: light --default, dark --prefersdark;
