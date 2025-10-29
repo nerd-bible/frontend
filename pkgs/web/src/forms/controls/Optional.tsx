@@ -9,7 +9,7 @@ export function OptionalControl<T extends z.$ZodType>(
 			optional
 			{...props}
 			schema={(props.schema._zod.def as z.$ZodOptionalDef).innerType}
-			// @ts-ignore
+			// @ts-expect-error
 			setValue={props.setValue}
 		/>
 	);

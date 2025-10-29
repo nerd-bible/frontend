@@ -8,11 +8,6 @@
 	--font-sans: "Noto Serif", "Noto Serif Hebrew";
 }
 
-@plugin "daisyui" {
-	/* biome-ignore lint/correctness/noUnknownProperty: <explanation> */
-	themes: light --default, dark --prefersdark;
-	/* biome-ignore lint/correctness/noUnknownProperty: <explanation> */
-	exclude: "skeleton";
+button {
+	@apply btn;
 }
-
-button { @apply btn }

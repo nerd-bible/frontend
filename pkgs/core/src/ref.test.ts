@@ -7,7 +7,11 @@ test("basic ref", () => {
 	expect(parseBcvPartOrWord("1cor")).toEqual({ book: "1co" });
 	expect(parseBcvPartOrWord("1cor2")).toEqual({ book: "1co", chapter: 2 });
 	expect(parseBcvPartOrWord("1cor2:a")).toEqual({ book: "1co", chapter: 2 });
-	expect(parseBcvPartOrWord("1cor2:3")).toEqual({ book: "1co", chapter: 2, verse: 3 });
+	expect(parseBcvPartOrWord("1cor2:3")).toEqual({
+		book: "1co",
+		chapter: 2,
+		verse: 3,
+	});
 	expect(parseBcvPartOrWord("1cor2:3a")).toEqual({
 		book: "1co",
 		chapter: 2,
@@ -24,7 +28,11 @@ test("basic ref", () => {
 
 test("weird delimiters", () => {
 	expect(parseBcvPartOrWord("1cor:2")).toEqual({ book: "1co", chapter: 2 });
-	expect(parseBcvPartOrWord("1cor2::3")).toEqual({ book: "1co", chapter: 2, verse: 3 });
+	expect(parseBcvPartOrWord("1cor2::3")).toEqual({
+		book: "1co",
+		chapter: 2,
+		verse: 3,
+	});
 	expect(parseBcvPartOrWord("1 cor 2 : 3")).toEqual({
 		book: "1co",
 		chapter: 2,

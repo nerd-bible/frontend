@@ -1,12 +1,12 @@
-import { Switch, Match } from "solid-js";
 import type { Component, JSX, Signal } from "solid-js";
-import type * as z from "zod";
-import { TextControl } from "./Text";
-import { Dynamic as Dynamic2 } from "solid-js/web";
+import { Match, Switch } from "solid-js";
 import type { SetStoreFunction, Store } from "solid-js/store";
-import { OptionalControl } from "./Optional";
-import { ObjectControl } from "./Object";
+import { Dynamic as Dynamic2 } from "solid-js/web";
+import type * as z from "zod";
 import { ArrayControl } from "./Array";
+import { ObjectControl } from "./Object";
+import { OptionalControl } from "./Optional";
+import { TextControl } from "./Text";
 
 type Controls = Partial<
 	Record<z.core.$ZodTypeDef["type"], Component<DynamicControlProps<any, any>>>
@@ -19,7 +19,10 @@ export const controls: Controls = {
 	optional: OptionalControl,
 };
 
-export type DynamicControlProps<T extends z.core.$ZodType, U extends keyof JSX.HTMLElementTags> = JSX.HTMLElementTags[U] & {
+export type DynamicControlProps<
+	T extends z.core.$ZodType,
+	U extends keyof JSX.HTMLElementTags,
+> = JSX.HTMLElementTags[U] & {
 	name?: string;
 	label?: JSX.Element | string;
 	schema: T;
@@ -28,22 +31,18 @@ export type DynamicControlProps<T extends z.core.$ZodType, U extends keyof JSX.H
 	errors: Signal<z.core.$ZodError<T>>;
 };
 
-export function DynamicControl<T extends z.core.$ZodType, U extends keyof JSX.HTMLElementTags>(
-	props: DynamicControlProps<T, U>,
-) {
+export function DynamicControl<
+	T extends z.core.$ZodType,
+	U extends keyof JSX.HTMLElementTags,
+>(props: DynamicControlProps<T, U>) {
 	const t = props.schema._zod.def.type;
 	const component = controls[t];
 
 	return (
-		<>
-			<Switch fallback={<span>TODO: add "{t}" control</span>}>
-				<Match when={component}>
-					<Dynamic2
-						component={component}
-						{...props}
-					/>
-				</Match>
-			</Switch>
-		</>
+		<Switch fallback={<span>TODO: add "{t}" control</span>}>
+			<Match when={component}>
+				<Dynamic2 component={component} {...props} />
+			</Match>
+		</Switch>
 	);
 }

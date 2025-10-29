@@ -1,10 +1,12 @@
-import type * as z from "zod";
-import type { JSX, Accessor } from "solid-js";
+import type { Accessor, JSX } from "solid-js";
 import { For } from "solid-js";
+import type * as z from "zod";
 
-export function Errors<T extends z.$ZodType>(props: JSX.HTMLElementTags["div"] & {
-	errors: Accessor<z.$ZodError<T>[]>;
-}) {
+export function Errors<T extends z.$ZodType>(
+	props: JSX.HTMLElementTags["div"] & {
+		errors: Accessor<z.$ZodError<T>[]>;
+	},
+) {
 	return (
 		<div role="tooltip" classList={{ hidden: !props.errors().length }}>
 			<ul>

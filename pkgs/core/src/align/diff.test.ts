@@ -1,5 +1,5 @@
-import { patienceDiffPlus } from "./diff";
 import chalk from "chalk";
+import { patienceDiffPlus } from "./diff";
 
 const a = `I am the very model of a modern Major-General,
 I've information vegetable, animal, and mineral,

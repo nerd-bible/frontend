@@ -1,7 +1,14 @@
-import { arrow, autoUpdate, computePosition, flip, offset, shift } from "@floating-ui/dom";
+import {
+	arrow,
+	autoUpdate,
+	computePosition,
+	flip,
+	offset,
+	shift,
+} from "@floating-ui/dom";
+import type * as z from "@nerd-bible/valio";
 import { createEffect, createSignal, type JSX } from "solid-js";
 import type { SetStoreFunction, Store } from "solid-js/store";
-import * as z from "@nerd-bible/valio";
 import { DynamicControl } from "./controls/Dynamic";
 
 export const padding = (n: number) => {
@@ -12,12 +19,13 @@ export const padding = (n: number) => {
 	);
 };
 
-
-export function Form<T extends z.Pipe>(props: JSX.HTMLElementTags["form"] & {
-	schema: T;
-	value: Store<z.Output<T>>;
-	setValue: SetStoreFunction<z.Output<T>>;
-}) {
+export function Form<T extends z.Pipe>(
+	props: JSX.HTMLElementTags["form"] & {
+		schema: T;
+		value: Store<z.Output<T>>;
+		setValue: SetStoreFunction<z.Output<T>>;
+	},
+) {
 	const [errors, setErrors] = createSignal<z.$ZodError<T>[]>([]);
 
 	let input!: HTMLDivElement;
@@ -58,13 +66,18 @@ export function Form<T extends z.Pipe>(props: JSX.HTMLElementTags["form"] & {
 						[staticSide]: "-4px",
 					});
 				}
-			}));
+			}),
+		);
 	});
 
 	createEffect(() => {
 		const validation = props.schema.decode(props.value);
 		console.log(validation.error?.issues);
-		setErrors(validation.error?.issues?.filter(issue => issue.path.length === 0)?.map((issue) => issue.message) ?? []);
+		setErrors(
+			validation.error?.issues
+				?.filter((issue) => issue.path.length === 0)
+				?.map((issue) => issue.message) ?? [],
+		);
 	});
 
 	return (

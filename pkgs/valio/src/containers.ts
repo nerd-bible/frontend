@@ -49,7 +49,7 @@ class ValioRecord<K extends PropertyKey, V> extends Pipe<
 			new HalfPipe(
 				"object",
 				(v): v is Record<any, any> =>
-					Object.prototype.toString.call(v) == "[object Object]",
+					Object.prototype.toString.call(v) === "[object Object]",
 				(input: Record<any, any>, ctx: Context): Result<Record<K, V>> => {
 					const output = {} as Record<K, V>;
 
@@ -78,7 +78,7 @@ class ValioRecord<K extends PropertyKey, V> extends Pipe<
 			new HalfPipe(
 				`record<${keyPipe.o.name},${valPipe.o.name}>`,
 				(v): v is Record<K, V> => {
-					if (Object.prototype.toString.call(v) != "[object Object]")
+					if (Object.prototype.toString.call(v) !== "[object Object]")
 						return false;
 					for (const k in v) {
 						// Keys will always be strings.
@@ -163,7 +163,7 @@ class ValioObject<Shape extends Record<any, Pipe<any, any>>> extends Pipe<
 			new HalfPipe(
 				"object",
 				(v): v is Record<any, any> =>
-					Object.prototype.toString.call(v) == "[object Object]",
+					Object.prototype.toString.call(v) === "[object Object]",
 				(data, ctx) => this.transformInput(data, ctx),
 			),
 			new HalfPipe(
@@ -204,7 +204,7 @@ class ValioObject<Shape extends Record<any, Pipe<any, any>>> extends Pipe<
 	}
 
 	protected typeCheckOutput(v: any): v is ObjectOutput<Shape> {
-		if (Object.prototype.toString.call(v) != "[object Object]") return false;
+		if (Object.prototype.toString.call(v) !== "[object Object]") return false;
 		for (const s in this.shape)
 			if (!this.shape[s]!.o.typeCheck(v[s])) return false;
 		return true;

@@ -12,7 +12,7 @@ test("number", () => {
 });
 
 test("custom validator", () => {
-	const schema = v.number().refine((n) => n == 5, "eq", { n: 5 });
+	const schema = v.number().refine((n) => n === 5, "eq", { n: 5 });
 
 	expect(schema.decode(5)).toEqual({ success: true, output: 5 });
 	expect(schema.encode(3)).toEqual({
@@ -22,7 +22,7 @@ test("custom validator", () => {
 });
 
 test("custom context", () => {
-	const schema = v.number().refine((n) => n == 5, "eq", { n: 5 });
+	const schema = v.number().refine((n) => n === 5, "eq", { n: 5 });
 	class MyContext extends v.Context {
 		errorFmt() {
 			return "You done messed up";

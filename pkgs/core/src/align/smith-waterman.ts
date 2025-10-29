@@ -14,7 +14,7 @@ export function score<T>(
 	similarity: (needleEle: T, haystackEle: T) => number,
 	gapPenalty = 2,
 ): number[][] {
-	const res = Array.from({ length: needle.length + 1}, () =>
+	const res = Array.from({ length: needle.length + 1 }, () =>
 		Array(haystack.length + 1).fill(0),
 	);
 
@@ -40,8 +40,13 @@ function fmtCell(n: number | string) {
 	return n.toString().padStart(2, " ");
 }
 
-console.log(["",""].concat(haystack).map(fmtCell).join(" "));
+console.log(["", ""].concat(haystack).map(fmtCell).join(" "));
 for (let i = 0; i < mat.length; i++) {
 	const row = mat[i];
-	console.log(([needle[i - 1] ?? " "] as Array<string|number>).concat(row).map(fmtCell).join(" "));
+	console.log(
+		([needle[i - 1] ?? " "] as Array<string | number>)
+			.concat(row)
+			.map(fmtCell)
+			.join(" "),
+	);
 }

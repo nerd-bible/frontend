@@ -25,8 +25,8 @@ export function number(
 		p.number(),
 		{
 			decode(input, ctx) {
-				if (typeof input == "number") return { success: true, output: input };
-				if (input == null || input.toLowerCase() == "nan")
+				if (typeof input === "number") return { success: true, output: input };
+				if (input == null || input.toLowerCase() === "nan")
 					return { success: true, output: Number.NaN };
 
 				const output = parser(input);

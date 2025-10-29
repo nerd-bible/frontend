@@ -7,10 +7,8 @@ export function ConLLUEditor() {
 
 	return (
 		<div class="grid grid-cols-2">
-			<textarea value={text()} onInput={ev => setText(ev.target.value)} />
-			<ConLLU>
-				{text()}
-			</ConLLU>
+			<textarea value={text()} onInput={(ev) => setText(ev.target.value)} />
+			<ConLLU>{text()}</ConLLU>
 		</div>
 	);
 }

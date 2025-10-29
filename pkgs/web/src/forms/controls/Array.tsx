@@ -1,14 +1,14 @@
+import { batch, For, mergeProps, Show, splitProps } from "solid-js";
 import type * as z from "zod";
-import { Show, mergeProps, splitProps, batch, For } from "solid-js";
-import { DynamicControl, type DynamicControlProps } from "./Dynamic";
-import { arrayRegistry } from "../registry";
-import { empty } from "../empty";
 import { Dropdown } from "../../components/Dropdown";
+import { empty } from "../empty";
+import { arrayRegistry } from "../registry";
+import { DynamicControl, type DynamicControlProps } from "./Dynamic";
 
 export function ArrayControl<T extends z.$ZodArray>(
 	props: DynamicControlProps<T, "fieldset">,
 ) {
-	props = mergeProps(props, arrayRegistry.get(props.schema) as any ?? {});
+	props = mergeProps(props, (arrayRegistry.get(props.schema) as any) ?? {});
 
 	const [controlProps, _, fieldsetProps] = splitProps(
 		props,
@@ -20,11 +20,7 @@ export function ArrayControl<T extends z.$ZodArray>(
 		if (i === j) return false;
 
 		const updatedItems = [...arr];
-		updatedItems.splice(
-			j,
-			0,
-			...updatedItems.splice(i, 1),
-		);
+		updatedItems.splice(j, 0, ...updatedItems.splice(i, 1));
 		setArr(updatedItems);
 
 		return true;
@@ -49,12 +45,14 @@ export function ArrayControl<T extends z.$ZodArray>(
 					{props.label ?? props.name}
 					<button
 						type="button"
-						onPointerDown={() => batch(() => {
-							const newArr = [...props.value];
-							const emptyItem = empty(props.schema._zod.def.element);
-							newArr.push(emptyItem);
-							props.setValue(newArr as any);
-						})}
+						onPointerDown={() =>
+							batch(() => {
+								const newArr = [...props.value];
+								const emptyItem = empty(props.schema._zod.def.element);
+								newArr.push(emptyItem);
+								props.setValue(newArr as any);
+							})
+						}
 					>
 						+
 					</button>
@@ -101,19 +99,24 @@ function ArrayControlItem(
 
 	return (
 		<div class="array-control" ref={ref}>
-			<Dropdown
-				disabled={props.value.length === 1}
-				button="≡"
-			>
-				<button type="button" disabled={props.i === 0} onClick={moveUp}>↑</button>
-				<button type="button" disabled={props.i === props.value.length - 1} onClick={moveDown}>↓</button>
+			<Dropdown disabled={props.value.length === 1} button="≡">
+				<button type="button" disabled={props.i === 0} onClick={moveUp}>
+					↑
+				</button>
+				<button
+					type="button"
+					disabled={props.i === props.value.length - 1}
+					onClick={moveDown}
+				>
+					↓
+				</button>
 			</Dropdown>
 			<DynamicControl
 				label=""
 				schema={props.schema._zod.def.element}
 				value={props.v}
 				setValue={(...args: any) => {
-					// @ts-ignore
+					// @ts-expect-error
 					props.setValue(props.i, ...args);
 				}}
 			/>

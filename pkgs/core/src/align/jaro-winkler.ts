@@ -1,16 +1,19 @@
 const similar = [
 	// Hebrew
-	new Set(['׀', 'ן', 'י', 'ו']),
-	new Set(['ה',  'ת', 'ח',  'ן', 'י', 'ו']),
-	new Set(['ה',  'ת', 'ח',  'א']),
+	new Set(["׀", "ן", "י", "ו"]),
+	new Set(["ה", "ת", "ח", "ן", "י", "ו"]),
+	new Set(["ה", "ת", "ח", "א"]),
 ];
-const character_sets = similar.reduce((acc, cur) => {
-	cur.forEach(v => {
-		acc[v] = acc[v] || [];
-		acc[v].push(cur);
-	});
-	return acc;
-}, {} as Record<string, Set<string>[]>);
+const character_sets = similar.reduce(
+	(acc, cur) => {
+		cur.forEach((v) => {
+			acc[v] = acc[v] || [];
+			acc[v].push(cur);
+		});
+		return acc;
+	},
+	{} as Record<string, Set<string>[]>,
+);
 
 /**
  * Fork of strcmp95 made to work better for Hebrew.
@@ -23,7 +26,7 @@ export function similarity(a: string, b: string): number {
 
 	a = a.trim().toUpperCase();
 	b = b.trim().toUpperCase();
-	if (a == b) return 1;
+	if (a === b) return 1;
 
 	const minv = Math.min(a.length, b.length);
 
@@ -36,11 +39,12 @@ export function similarity(a: string, b: string): number {
 	const b_flag = new Array(b.length);
 
 	for (let i = 0; i < a.length; i++) {
-		const low  = (i >= range) ? i - range : 0;
-		const high = (i + range <= b.length) ? Math.min(i + range, b.length) : b.length;
+		const low = i >= range ? i - range : 0;
+		const high =
+			i + range <= b.length ? Math.min(i + range, b.length) : b.length;
 
 		for (let j = low; j <= high; j++) {
-			if (!a_flag[i] && !b_flag[j] && a[i] == b[j]) {
+			if (!a_flag[i] && !b_flag[j] && a[i] === b[j]) {
 				n_common += 1;
 				a_flag[i] = b_flag[j] = 1;
 				break;
@@ -52,7 +56,7 @@ export function similarity(a: string, b: string): number {
 	let k = 0;
 	for (let i = 0; i < a.length; i++) {
 		if (a_flag[i] === 1) {
-			let j;
+			let j: number;
 			for (j = k; j < b.length; j++) {
 				if (b_flag[j] === 1) {
 					k = j + 1;
@@ -71,8 +75,8 @@ export function similarity(a: string, b: string): number {
 			if (a_flag[i]) continue;
 			for (let j = 0; j < b.length; j++) {
 				if (b_flag[j]) continue;
-				
-				if ((character_sets[a[i]] || []).some(set => set.has(b[j]))) {
+
+				if ((character_sets[a[i]] || []).some((set) => set.has(b[j]))) {
 					n_similar += 1;
 					a_flag[i] = 2;
 					b_flag[j] = 2;
@@ -102,4 +106,3 @@ export function similarity(a: string, b: string): number {
 
 	return weight;
 }
-

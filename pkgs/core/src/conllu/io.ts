@@ -29,9 +29,9 @@ export function recordConllu(delims = { prop: "|", value: "=" }) {
 			for (const cur of value.split(delims.prop)) {
 				// 14:nmod:into
 				const index = cur.indexOf(delims.value);
-				const k = index == -1 ? cur : cur.substring(0, index);
+				const k = index === -1 ? cur : cur.substring(0, index);
 				if (!k) continue;
-				const v = index == -1 ? "" : cur.substring(index + 1);
+				const v = index === -1 ? "" : cur.substring(index + 1);
 				ctx.jsonPath[length] = k;
 				const decoded = primitive.decode(v, ctx);
 				if (decoded.success) output[k] = decoded.output;
@@ -77,7 +77,7 @@ const wordConllu = z.codecs.custom(z.string(), word, {
 			.split("\t")
 			// spec is unclear what a missing _ means
 			// the _ are there for readability in editors that don't show whitespace
-			.map((v) => (v == "_" ? "" : v));
+			.map((v) => (v === "_" ? "" : v));
 
 		const res = {} as any;
 		for (let i = 0; i < columns.length; i++)
@@ -95,7 +95,7 @@ const wordConllu = z.codecs.custom(z.string(), word, {
 				if (!encoded.success) return encoded;
 				output += encoded.output;
 			}
-			if (c != "misc") output += "\t";
+			if (c !== "misc") output += "\t";
 		}
 		return { success: true, output };
 	},
@@ -118,7 +118,7 @@ const headersConllu = z.codecs.custom(z.string(), headers, {
 		for (let line of lines) {
 			line = line.substring(headerPrefix.length);
 			const i = line.indexOf("=");
-			if (i == -1) {
+			if (i === -1) {
 				kvs[line] = undefined;
 			} else {
 				kvs[line.substring(0, i).trim()] = line.substring(i + 1).trim();

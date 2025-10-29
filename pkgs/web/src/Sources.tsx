@@ -1,13 +1,6 @@
 // import { makePersisted } from "@solid-primitives/storage";
 // import { tauriStorage } from "@solid-primitives/storage/tauri";
 import * as z from "@nerd-bible/valio";
-// import {
-// 	arrayRegistry,
-// 	// createForm,
-// 	objectRegistry,
-// 	textRegistry,
-// } from "./forms";
-import { createStore } from "solid-js/store";
 
 const sources = z.object({
 	manuscripts: z.array(
@@ -32,16 +25,14 @@ const sources = z.object({
 				"regexpSource",
 				{},
 			),
-			hosts: z
-				.string()
-				.minLength(1)
-				// .register(textRegistry, { inputEle: "textarea" }),
+			hosts: z.string().minLength(1),
+			// .register(textRegistry, { inputEle: "textarea" }),
 		}),
 	),
 	// .register(arrayRegistry, { label: "Git mirrors" }),
 });
 
-const defaults: z.Output<typeof sources> = {
+const _defaults: z.Output<typeof sources> = {
 	manuscripts: [
 		{
 			url: "https://github.com/nerd-bible/manuscripts",

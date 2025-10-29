@@ -57,7 +57,7 @@ export function parseBcvPartOrWord(
 	const match = r.match(bcvPartOrWord);
 	if (!match) return;
 
-	let res: any = {};
+	const res: any = {};
 
 	try {
 		res.book = Book.fromEnglish(match[1]);
@@ -82,7 +82,7 @@ export function parseCv(r: string): Cv | CvPart | CvWord | undefined {
 	const match = r.match(cvPartOrWord);
 	if (!match) return;
 
-	let res: any = {};
+	const res: any = {};
 
 	if (match[1]) res.chapter = +match[1];
 	if (match[2]) res.verse = +match[2];

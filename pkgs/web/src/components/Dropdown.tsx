@@ -1,9 +1,9 @@
 import {
-	type JSX,
-	Show,
 	createSignal,
+	type JSX,
 	onCleanup,
 	onMount,
+	Show,
 	splitProps,
 } from "solid-js";
 

@@ -8,7 +8,7 @@ function primitive<T>(name: string, typeCheck: (v: T) => v is T) {
 export function boolean() {
 	return primitive<boolean>(
 		"boolean",
-		(v): v is boolean => typeof v == "boolean",
+		(v): v is boolean => typeof v === "boolean",
 	);
 }
 
@@ -16,7 +16,7 @@ export function boolean() {
 export function undefined() {
 	return primitive<undefined>(
 		"undefined",
-		(v): v is undefined => typeof v == "undefined",
+		(v): v is undefined => typeof v === "undefined",
 	);
 }
 
@@ -43,13 +43,13 @@ export class Comparable<I, O> extends Pipe<I, O> {
 		return this.refine((v) => v <= n, "lte", { n });
 	}
 	eq(n: O) {
-		return this.refine((v) => v == n, "eq", { n });
+		return this.refine((v) => v === n, "eq", { n });
 	}
 }
 
 class ValioNumber extends Comparable<number, number> {
 	constructor() {
-		const half = new HalfPipe("number", (v) => typeof v == "number");
+		const half = new HalfPipe("number", (v) => typeof v === "number");
 		super(half, half);
 	}
 }
@@ -73,7 +73,7 @@ export class Arrayish<
 
 class ValioString extends Arrayish<string, string> {
 	constructor() {
-		const half = new HalfPipe("string", (v) => typeof v == "string");
+		const half = new HalfPipe("string", (v) => typeof v === "string");
 		super(half, half);
 	}
 
@@ -89,7 +89,7 @@ export type Lit = string | number | bigint | boolean | null | undefined;
 
 class ValioLiteral<T extends Lit> extends Pipe<T, T> {
 	constructor(public literal: T) {
-		const half = new HalfPipe(`${literal}`, (v): v is T => v == literal);
+		const half = new HalfPipe(`${literal}`, (v): v is T => v === literal);
 		super(half, half);
 	}
 }

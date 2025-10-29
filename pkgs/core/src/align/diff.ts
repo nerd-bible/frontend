@@ -5,7 +5,7 @@ function uniqueIndices(arr: string[], lo: number, hi: number) {
 	const seen = new Set<string>();
 
 	for (let i = lo; i <= hi; i++) {
-		let token = arr[i]!;
+		const token = arr[i]!;
 
 		if (seen.has(token)) {
 			res.delete(token);
@@ -44,7 +44,7 @@ function longestCommonSubsequence(ab: ReturnType<typeof uniqueCommon>) {
 
 	for (const [_, v] of ab) {
 		let i = 0;
-		while (subsequences.at(i)?.at(-1)?.indexB! < v.indexB) {
+		while ((subsequences.at(i)?.at(-1)?.indexB as number) < v.indexB) {
 			i++;
 		}
 		subsequences[i] ??= [];
@@ -108,7 +108,7 @@ export function patienceDiff(aTokens: string[], bTokens: string[]) {
 			addToResult(aLo++, bLo++);
 		}
 
-		let aHiTemp = aHi;
+		const aHiTemp = aHi;
 
 		while (aLo <= aHi && bLo <= bHi && aTokens[aHi] === bTokens[bHi]) {
 			aHi--;
@@ -156,7 +156,7 @@ export function patienceDiff(aTokens: string[], bTokens: string[]) {
 				addSubMatch(aLo, first.indexA - 1, bLo, first.indexB - 1);
 			}
 
-			let i;
+			let i: number;
 			for (i = 0; i < x.length - 1; i++) {
 				addSubMatch(
 					x[i]!.indexA,
@@ -194,16 +194,16 @@ export function patienceDiffPlus(aTokens: string[], bTokens: string[]) {
 	delete difference.aMove;
 	delete difference.bMove;
 
-	let lastLineCountMoved;
+	let lastLineCountMoved: number;
 
 	do {
-		let aMove = aMoveNext;
-		let bMove = bMoveNext;
+		const aMove = aMoveNext;
+		const bMove = bMoveNext;
 
 		aMoveNext = { tokens: [], indices: [] };
 		bMoveNext = { tokens: [], indices: [] };
 
-		let subDiff = patienceDiff(aMove.tokens, bMove.tokens);
+		const subDiff = patienceDiff(aMove.tokens, bMove.tokens);
 
 		lastLineCountMoved = difference.moved;
 

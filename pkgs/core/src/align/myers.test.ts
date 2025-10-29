@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { calcPatch, applyPatch } from "fast-myers-diff";
+import { applyPatch, calcPatch } from "fast-myers-diff";
 
 test("basic diff", () => {
 	const e = "abc";

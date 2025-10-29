@@ -69,7 +69,7 @@ export function empty<T extends z.$ZodType>(schema: T): z.output<T> {
 type FormState = any;
 
 export function formState(shape: any): FormState {
-	if (Array.isArray(shape)) return shape.map(s => formState(s));
+	if (Array.isArray(shape)) return shape.map((s) => formState(s));
 	switch (typeof shape) {
 		case "string":
 		case "number":
@@ -87,6 +87,6 @@ export function formState(shape: any): FormState {
 			return outputObject;
 		}
 		default:
-			throw Error("unknown shape " + typeof shape);
+			throw Error(`unknown shape ${typeof shape}`);
 	}
 }

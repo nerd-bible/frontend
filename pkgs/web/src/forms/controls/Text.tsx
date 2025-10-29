@@ -1,29 +1,24 @@
-import { textRegistry } from "../registry";
-import type * as z from "zod";
-import {
-	splitProps,
-	Show,
-	mergeProps,
-	createUniqueId,
-} from "solid-js";
-import type { DynamicControlProps } from "./Dynamic";
+import { createUniqueId, mergeProps, Show, splitProps } from "solid-js";
 import { Dynamic } from "solid-js/web";
+import type * as z from "zod";
 import { Errors } from "../Errors";
+import { textRegistry } from "../registry";
+import type { DynamicControlProps } from "./Dynamic";
 
 export function TextControl<T extends z.$ZodString | z.$ZodNumber>(
 	props: DynamicControlProps<T, "input"> & {
-			description?: string;
-			optional?: boolean;
-			inputEle?: "input" | "textarea";
-			schema: z.$ZodString | z.$ZodNumber;
-			value: string | number;
-			setValue: (v: string | number) => void;
-		},
+		description?: string;
+		optional?: boolean;
+		inputEle?: "input" | "textarea";
+		schema: z.$ZodString | z.$ZodNumber;
+		value: string | number;
+		setValue: (v: string | number) => void;
+	},
 ) {
 	props = mergeProps(
 		props,
 		{ type: props.schema._zod.def.type },
-		textRegistry.get(props.schema) as any ?? {},
+		(textRegistry.get(props.schema) as any) ?? {},
 	);
 	const [_, rest] = splitProps(props, [
 		"name",
