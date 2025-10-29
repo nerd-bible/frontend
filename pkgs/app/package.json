@@ -1,0 +1,13 @@
+{
+	"name": "@nerd-bible/app",
+	"devDependencies": {
+		"@tauri-apps/cli": "^2.8.4",
+		"@tauri-apps/api": "^2.8.0",
+		"@tauri-apps/plugin-opener": "^2.5.0"
+	},
+	"scripts": {
+		"start": "tauri dev",
+		"icons": "tauri icon ../web/public/logo.svg",
+		"build": "tauri build"
+	}
+}
