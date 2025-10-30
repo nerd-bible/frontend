@@ -1,0 +1,11 @@
+{
+	"app": {
+		"windows": [
+			{
+				"title": "Nerd Bible",
+				"decorations": false,
+				"skipTaskbar": true
+			}
+		]
+	}
+}
