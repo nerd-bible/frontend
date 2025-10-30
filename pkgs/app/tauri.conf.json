@@ -1,7 +1,6 @@
 {
-	"$schema": "https://schema.tauri.app/config/2",
 	"productName": "Nerd Bible",
-	"version": "0.1.0",
+	"version": "0.0.1",
 	"identifier": "bible.nerd",
 	"build": {
 		"beforeDevCommand": "cd ../web && bun start",
@@ -9,20 +8,17 @@
 		"beforeBuildCommand": "cd ../web && bun run build",
 		"frontendDist": "../web/dist"
 	},
+	"bundle": {
+		"active": true,
+		"targets": "all"
+	},
 	"app": {
 		"windows": [
 			{
 				"title": "Nerd Bible",
-				"width": 800,
-				"height": 600
+				"decorations": false,
+				"skipTaskbar": true
 			}
-		],
-		"security": {
-			"csp": null
-		}
-	},
-	"bundle": {
-		"active": true,
-		"targets": "all"
+		]
 	}
 }
