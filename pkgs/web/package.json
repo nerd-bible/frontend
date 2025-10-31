@@ -12,7 +12,10 @@
 		"tailwindcss": "^4.1.16"
 	},
 	"devDependencies": {
+		"@nerd-bible/node": "workspace:*",
 		"@tailwindcss/vite": "^4.1.16",
+		"@types/opentype.js": "^1.3.8",
+		"opentype.js": "^1.3.4",
 		"vite": "^6.4.1",
 		"vite-plugin-solid": "^2.11.10"
 	},

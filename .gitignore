@@ -2,3 +2,4 @@ node_modules
 dist
 target
 pkgs/*/tsconfig.tsbuildinfo
+.DS_Store

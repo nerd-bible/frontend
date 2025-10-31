@@ -1,5 +1,3 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import * as z from "@nerd-bible/valio";
 
 export const rowNumber = z.number().gt(0);
@@ -216,10 +214,10 @@ export const normal = z.codecs.custom(z.string(), z.array(sentence), {
 // 	console.log(wordConllu.encode(decoded.output).output)
 // }
 
-const text = readFileSync(join(import.meta.dir, "gum.conllu"), "utf8");
-const parsed = normal.decode(text);
-// console.dir(parsed, { depth: null });
-if (parsed.success) {
-	const reencoded = normal.encode(parsed.output);
-	if (reencoded.success) console.log(reencoded.output);
-}
+// const text = readFileSync(join(import.meta.dir, "gum.conllu"), "utf8");
+// const parsed = normal.decode(text);
+// // console.dir(parsed, { depth: null });
+// if (parsed.success) {
+// 	const reencoded = normal.encode(parsed.output);
+// 	if (reencoded.success) console.log(reencoded.output);
+// }
