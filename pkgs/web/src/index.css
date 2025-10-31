@@ -1,20 +1,9 @@
-@layer theme, base, components, utilities;
-@import "tailwindcss/theme.css" layer(theme);
-@import "tailwindcss/preflight.css" layer(base);
-@import "tailwindcss/utilities.css" layer(utilities);
-@import "./forms/forms.css";
+@import "tailwindcss";
+@import "./fonts.css";
 
 @theme {
-	--font-sans: "Noto Serif", "Noto Serif Hebrew";
+	--font-sans: "Noto Sans", "Noto Sans Hebrew", sans;
+	--font-serif: "Noto Serif", "Noto Serif Hebrew", sans-serif;
+	--default-font-family: var(--font-serif);
 }
 
-@plugin "daisyui" {
-	/* biome-ignore lint/correctness/noUnknownProperty: daisyui */
-	themes: light --default, dark --prefersdark;
-	/* biome-ignore lint/correctness/noUnknownProperty: daisyui */
-	exclude: "skeleton";
-}
-
-button {
-	@apply btn;
-}
