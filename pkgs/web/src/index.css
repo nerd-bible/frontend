@@ -1,9 +1,35 @@
 @import "tailwindcss";
 @import "./fonts.css";
+@plugin "@iconify/tailwind4";
+@plugin "../plugin-color-mix";
 
 @theme {
 	--font-sans: "Noto Sans", "Noto Sans Hebrew", sans;
 	--font-serif: "Noto Serif", "Noto Serif Hebrew", sans-serif;
-	--default-font-family: var(--font-serif);
+	--font-cursive: "Gloria Hallelujah", cursive;
+	--default-font-family: var(--font-sans);
+}
+@theme inline {
+	--color-primary: var(--color-orange-500);
+	--color-bg: var(--color-yellow-50);
+	--color-fg: black;
 }
 
+html {
+	font-size: 20px;
+}
+
+@utility dark {
+	--color-bg: var(--color-gray-500);
+	--color-text: white;
+}
+
+@media (prefers-color-scheme: dark) {
+	.system {
+		@apply dark;
+	}
+}
+
+@utility col-count-* {
+	column-count: --value(integer);
+}

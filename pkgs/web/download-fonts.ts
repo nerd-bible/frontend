@@ -34,6 +34,10 @@ const fontFamilies = {
 	"noto/mono": {
 		base: `${main}NotoSansMono/unhinted/variable/NotoSansMono%5Bwdth%2Cwght%5D.ttf`,
 	},
+	cursive: {
+		"gloria-hallelujah":
+			"https://github.com/google/fonts/raw/main/ofl/gloriahallelujah/GloriaHallelujah.ttf",
+	},
 };
 
 const fontFaces: Array<{
