@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "./fonts.css";
-@plugin "@iconify/tailwind4";
+@plugin "@iconify/tailwind4" {
+	scale: 1.35;
+};
 @plugin "../plugin-color-mix";
 
 @theme inline {
@@ -15,10 +17,13 @@
 @theme {
 	--color-bg: var(--color-yellow-50);
 	--color-fg: black;
+	--color-lighten: white;
+	--color-focus: var(--outline-blue-500);
 }
 @utility dark {
-	--color-bg: var(--color-gray-500);
-	--color-fg: white;
+	--color-lighten: black;
+	--color-bg: var(--color-yellow-950);
+	--color-fg: var(--color-stone-100);
 }
 @media (prefers-color-scheme: dark) {
 	:root:not(.light) {
@@ -28,9 +33,25 @@
 
 html {
 	font-size: 20px;
-	@apply bg-bg text-fg;
+	@apply bg-bg text-fg leading-none;
 }
 
 button {
 	@apply cursor-pointer;
+}
+
+fieldset, legend {
+	all: unset;
+}
+
+.button {
+	@apply cursor-pointer;
+	@apply hover:bg-mix-[fg/10];
+
+	:hover {
+		@apply bg-amber-50;
+	}
+	.selected {
+		@apply bg-focus;
+	}
 }

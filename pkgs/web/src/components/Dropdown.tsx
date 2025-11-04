@@ -1,49 +1,43 @@
-import {
-	createSignal,
-	type JSX,
-	onCleanup,
-	onMount,
-	Show,
-	splitProps,
-} from "solid-js";
+import { createUniqueId, type JSX, splitProps, children, For } from "solid-js";
 
-export function Dropdown(
-	props: JSX.HTMLElementTags["div"] & {
-		button: JSX.Element;
-		disabled: boolean;
-	},
-) {
-	const [_, divProps] = splitProps(props, ["disabled"]);
-	const [open, setOpen] = createSignal(false);
-
-	let button!: HTMLButtonElement;
-
-	const close = (ev: MouseEvent) => {
-		if (!button.contains(ev.target as Node)) setOpen(false);
-	};
-	onMount(() => {
-		document.addEventListener("click", close);
-	});
-	onCleanup(() => {
-		document.removeEventListener("click", close);
-	});
+type DropdownProps = JSX.HTMLElementTags["div"] & {
+	button: JSX.Element;
+	disabled?: boolean;
+};
+export function Dropdown(props: DropdownProps) {
+	const [_, divProps] = splitProps(props, ["disabled", "button"]);
+	const id = createUniqueId();
+	const anchorName = `--${id}`;
+	const resolved = children(() => props.children);
 
 	return (
-		<div class="dropdown" classList={{ "dropdown-open": open() }} {...divProps}>
+		<div {...divProps}>
 			<button
-				ref={button}
 				type="button"
-				class="m-1"
 				disabled={props.disabled}
-				onClick={() => setOpen((o) => !o)}
+				popoverTarget={id}
+				style={{ "anchor-name": anchorName } as any}
 			>
 				{props.button}
 			</button>
-			<Show when={open()}>
-				<ul class="menu dropdown-content rounded-box z-2 p-2 shadow-sm">
-					{props.children}
+			<div
+				class="absolute bg-mix-[lighten/25] rounded text-fg py-2"
+				popover
+				id={id}
+				style={
+					{
+						"position-anchor": anchorName,
+						"position-area": "bottom span-right",
+						"position-try-fallbacks": "flip-inline",
+					} as any
+				}
+			>
+				<ul class="flex flex-col">
+					<For each={resolved.toArray()}>
+						{r => <li class="p-4 hover:bg-mix-[fg/10]">{r}</li>}
+					</For>
 				</ul>
-			</Show>
+			</div>
 		</div>
 	);
 }
