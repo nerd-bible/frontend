@@ -20,8 +20,8 @@ export function Layout(props: { children: any }) {
 		<div class="p-4 pt-0">
 			<div
 				classList={{
-					"flex bg-bg py-2 w-full": true,
-					"sticky top-0": showHeader(),
+					"flex bg-bg py-2 w-full sticky": true,
+					"top-0": showHeader(),
 				}}
 			>
 				<div class="grow" />
