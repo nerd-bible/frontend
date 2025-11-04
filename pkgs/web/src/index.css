@@ -3,33 +3,34 @@
 @plugin "@iconify/tailwind4";
 @plugin "../plugin-color-mix";
 
-@theme {
+@theme inline {
+	--color-primary: var(--color-orange-500);
 	--font-sans: "Noto Sans", "Noto Sans Hebrew", sans;
 	--font-serif: "Noto Serif", "Noto Serif Hebrew", sans-serif;
 	--font-cursive: "Gloria Hallelujah", cursive;
 	--default-font-family: var(--font-sans);
+	--breakpoint-xs: 24rem;
+	--breakpoint-sm: 32rem;
 }
-@theme inline {
-	--color-primary: var(--color-orange-500);
+@theme {
 	--color-bg: var(--color-yellow-50);
 	--color-fg: black;
 }
-
-html {
-	font-size: 20px;
-}
-
 @utility dark {
 	--color-bg: var(--color-gray-500);
-	--color-text: white;
+	--color-fg: white;
 }
-
 @media (prefers-color-scheme: dark) {
-	.system {
+	:root:not(.light) {
 		@apply dark;
 	}
 }
 
-@utility col-count-* {
-	column-count: --value(integer);
+html {
+	font-size: 20px;
+	@apply bg-bg text-fg;
+}
+
+button {
+	@apply cursor-pointer;
 }

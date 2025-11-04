@@ -20,31 +20,39 @@ export function Layout(props: { children: any }) {
 		<div class="p-4 pt-0">
 			<div
 				classList={{
-					"flex bg-bg py-2 w-full sticky": true,
+					"flex bg-bg py-4 w-full sticky": true,
 					"top-0": showHeader(),
 				}}
 			>
-				<div class="grow" />
+				<div class="flex-1 content-center" >
+					<span class="p-2 font-cursive before:content-['nB'] lg:before:content-['nerd.Bible']" />
+				</div>
 				<form
 					classList={{
-						"w-150 flex items-center p-2": true,
+						"w-125 p-2 flex items-center": true,
 						"bg-mix-[fg/5] rounded-md": true,
 						"focus-within:outline-2 focus-within:bg-transparent outline-blue-500": true,
 					}}
 					onSubmit={(ev) => ev.preventDefault()}
 				>
-					<span class="icon-[mingcute--search-line] h-full mx-2 text-2xl" />
+					<span class="icon-[mingcute--search-line] mx-2 hidden xs:inline" />
 					<input
 						id="search"
 						type="search"
 						autocomplete="off"
 						value="1 Chronicles"
-						class="grow outline-none"
+						class="grow outline-none w-0"
 					/>
 				</form>
-				<div class="grow" />
+				<div class="flex-1 content-center text-end">
+					<button class="p-2" type="button">
+						<span class="icon-[mingcute--menu-line] mt-[5px]" />
+					</button>
+				</div>
 			</div>
-			<div class="text-justify m-auto max-w-150 font-serif">{props.children}</div>
+			<div class="text-justify m-auto max-w-150 font-serif">
+				{props.children}
+			</div>
 		</div>
 	);
 }
