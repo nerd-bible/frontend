@@ -36,7 +36,6 @@ export function ThemePicker() {
 							}}
 						>
 							<span class={v} />
-							<span>{k}</span>
 						</span>
 					</label>
 				)}

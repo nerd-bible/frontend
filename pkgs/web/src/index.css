@@ -6,7 +6,6 @@
 @plugin "../plugin-color-mix";
 
 @theme inline {
-	--color-primary: var(--color-orange-500);
 	--font-sans: "Noto Sans", "Noto Sans Hebrew", sans;
 	--font-serif: "Noto Serif", "Noto Serif Hebrew", sans-serif;
 	--font-cursive: "Gloria Hallelujah", cursive;
@@ -15,15 +14,18 @@
 	--breakpoint-sm: 32rem;
 }
 @theme {
+	--color-primary: var(--color-orange-500);
+	--color-focus: var(--outline-blue-500);
+}
+@theme /* light */ {
 	--color-bg: var(--color-yellow-50);
 	--color-fg: black;
 	--color-lighten: white;
-	--color-focus: var(--outline-blue-500);
 }
 @utility dark {
-	--color-lighten: black;
 	--color-bg: var(--color-yellow-950);
-	--color-fg: var(--color-stone-100);
+	--color-fg: white;
+	--color-lighten: black;
 }
 @media (prefers-color-scheme: dark) {
 	:root:not(.light) {

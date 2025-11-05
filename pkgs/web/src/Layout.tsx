@@ -46,7 +46,7 @@ export function Layout(props: { children: any }) {
 						class="grow outline-none w-0"
 					/>
 				</form>
-				<div class="flex-1 content-center justify-items-end">
+				<div class="flex-1 flex justify-end">
 					<Dropdown
 						class="p-2"
 						button={<span class="icon-[mingcute--menu-line] mt-[5px]" />}
