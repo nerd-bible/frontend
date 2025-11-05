@@ -1,10 +1,21 @@
 import { ThemePicker } from "./components/ThemePicker";
 
-function DropdownItem(props: { children?: any; icon: string; label: string }) {
+type DropdownProps = {
+	children?: any;
+	icon: string;
+	label: string;
+	href: string;
+};
+function DropdownItem(props: DropdownProps) {
 	return (
-		<li class="p-2 flex flex-nowrap items-center leading-none">
-			<span class={`mx-2 ${props.icon}`} />
-			<span class="grow">{props.label}</span>
+		<li class="flex hover:bg-mix-[darken/10]">
+			<a
+				href={props.href}
+				class="p-2 leading-none flex items-center grow"
+			>
+				<span class={`mx-2 ${props.icon}`} />
+				<span>{props.label}</span>
+			</a>
 			{props.children}
 		</li>
 	);
@@ -12,11 +23,19 @@ function DropdownItem(props: { children?: any; icon: string; label: string }) {
 
 export function QuickSettings() {
 	return (
-		<ul class="flex flex-col w-86">
-			<DropdownItem icon="icon-[mingcute--paint-brush-line]" label="Theme">
+		<ul class="flex flex-col w-86 select-none">
+			<DropdownItem
+				icon="icon-[mingcute--paint-brush-line]"
+				href="/settings/theme"
+				label="Theme"
+			>
 				<ThemePicker />
 			</DropdownItem>
-			<DropdownItem icon="icon-[mingcute--link-line]" label="Sources" />
+			<DropdownItem
+				icon="icon-[mingcute--settings-5-line]"
+				href="/settings"
+				label="Settings"
+			/>
 		</ul>
 	);
 }

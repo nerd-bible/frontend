@@ -2,24 +2,23 @@ import { makePersisted } from "@solid-primitives/storage";
 import { createEffect, createSignal, For } from "solid-js";
 
 const [theme, setTheme] = makePersisted(createSignal("system"));
-createEffect(() => (document.documentElement.className = theme()));
 
 export function ThemePicker() {
 	const options = {
-		system: "icon-[mingcute--settings-5-line]",
+		system: "icon-[mingcute--computer-line]",
 		dark: "icon-[mingcute--moon-line]",
 		light: "icon-[mingcute--sun-line]",
 	};
-	const entries = Object.entries(options);
+	createEffect(() => (document.documentElement.className = theme()));
 
 	return (
-		<For each={entries}>
+		<For each={Object.entries(options)}>
 			{([k, v]) => (
 				<button
 					type="button"
 					onClick={() => setTheme(k)}
 					classList={{
-						"border p-2": true,
+						"border p-2 bg-bg": true,
 						selected: theme() === k,
 					}}
 				>
