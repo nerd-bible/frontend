@@ -2,6 +2,7 @@
 	"name": "@nerd-bible/web",
 	"type": "module",
 	"dependencies": {
+		"@ccssmnn/intl": "^0.1.1",
 		"@floating-ui/dom": "^1.7.4",
 		"@iconify-json/mingcute": "^1.2.5",
 		"@iconify/tailwind4": "^1.1.0",
@@ -11,7 +12,6 @@
 		"@solid-primitives/storage": "^4.3.3",
 		"@solidjs/router": "^0.15.3",
 		"@tauri-apps/api": "^2.9.0",
-		"messageformat": "^4.0.0-13",
 		"solid-js": "^1.9.10",
 		"tailwindcss": "^4.1.16"
 	},
