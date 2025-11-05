@@ -13,31 +13,21 @@ export function ThemePicker() {
 	const entries = Object.entries(options);
 
 	return (
-		<div class="gap-4 flex flex-nowrap">
-			<legend>
-				<span class="icon-[mingcute--paint-brush-line]" />
-				Theme
-			</legend>
+		<div class="flex flex-nowrap items-center w-64">
+			<span class="mx-2 icon-[mingcute--paint-brush-line]" />
+			<span class="grow">Theme</span>
 			<For each={entries}>
 				{([k, v]) => (
-					<label class="not-last:pr-4 not-last:border-r-2 inline-block">
-						<input
-							class="appearance-none"
-							type="radio"
-							name="theme"
-							value={k}
-							checked={theme() === k}
-							onChange={() => setTheme(k)}
-						/>
-						<span
-							classList={{
-								"button": true,
-								selected: theme() === k,
-							}}
-						>
-							<span class={v} />
-						</span>
-					</label>
+					<button
+						type="button"
+						onClick={() => setTheme(k)}
+						classList={{
+							"border text-xs leading-none p-1 bg-bg": true,
+							selected: theme() === k,
+						}}
+					>
+						<span class={v} />
+					</button>
 				)}
 			</For>
 		</div>

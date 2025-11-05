@@ -15,7 +15,7 @@
 }
 @theme {
 	--color-primary: var(--color-orange-500);
-	--color-focus: var(--outline-blue-500);
+	--color-focus: var(--color-blue-500);
 }
 @theme /* light */ {
 	--color-bg: var(--color-yellow-50);
@@ -38,18 +38,13 @@ html {
 	@apply bg-bg text-fg leading-none;
 }
 
-.button {
+button {
 	@apply cursor-pointer;
 	@apply hover:bg-mix-[fg/10];
-
-	:hover {
-		@apply bg-amber-50;
+	&.active {
+		@apply bg-mix-[fg/20];
 	}
-	.selected {
-		@apply bg-focus;
+	&.selected {
+		@apply bg-focus/50;
 	}
-}
-
-button {
-	@apply button;
 }

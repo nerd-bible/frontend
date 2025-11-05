@@ -46,15 +46,16 @@ export function Layout(props: { children: any }) {
 						class="grow outline-none w-0"
 					/>
 				</form>
-				<div class="flex-1 flex justify-end">
-					<Dropdown
-						class="p-2"
-						button={<span class="icon-[mingcute--menu-line] mt-[5px]" />}
-					>
-						<ThemePicker />
-						<span>Sources</span>
-					</Dropdown>
-				</div>
+				<Dropdown
+					class="flex-1 flex justify-end content-center text-sm leading-none"
+					button={<span class="p-2 mx-2 icon-[mingcute--menu-line]" />}
+				>
+					<ThemePicker />
+					<div class="flex flex-nowrap items-center">
+						<span class="mx-2 icon-[mingcute--link-line]" />
+						<span class="grow">Sources</span>
+					</div>
+				</Dropdown>
 			</div>
 			<div class="text-justify m-auto max-w-150 font-serif leading-normal">
 				{props.children}
