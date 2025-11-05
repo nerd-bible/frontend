@@ -38,14 +38,6 @@ html {
 	@apply bg-bg text-fg leading-none;
 }
 
-button {
-	@apply cursor-pointer;
-}
-
-fieldset, legend {
-	all: unset;
-}
-
 .button {
 	@apply cursor-pointer;
 	@apply hover:bg-mix-[fg/10];
@@ -56,4 +48,8 @@ fieldset, legend {
 	.selected {
 		@apply bg-focus;
 	}
+}
+
+button {
+	@apply button;
 }
