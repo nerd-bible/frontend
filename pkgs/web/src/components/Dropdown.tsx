@@ -1,11 +1,4 @@
-import {
-	children,
-	createSignal,
-	createUniqueId,
-	For,
-	type JSX,
-	splitProps,
-} from "solid-js";
+import { createSignal, createUniqueId, type JSX, splitProps } from "solid-js";
 
 type DropdownProps = JSX.HTMLElementTags["div"] & {
 	button: JSX.Element;
@@ -15,10 +8,7 @@ export function Dropdown(props: DropdownProps) {
 	const [_, divProps] = splitProps(props, ["disabled", "button"]);
 	const id = createUniqueId();
 	const anchorName = `--${id}`;
-	const resolved = children(() => props.children);
 	const [open, setOpen] = createSignal(false);
-	props.class ??= "";
-	props.class += " p-1";
 
 	return (
 		<div {...divProps}>
@@ -26,15 +16,13 @@ export function Dropdown(props: DropdownProps) {
 				type="button"
 				disabled={props.disabled}
 				popoverTarget={id}
-				classList={{
-					active: open(),
-				}}
+				classList={{ active: open() }}
 				style={{ "anchor-name": anchorName } as any}
 			>
 				{props.button}
 			</button>
 			<div
-				class="absolute bg-mix-[lighten/20] rounded text-fg py-2 shadow-lg shadow-fg"
+				class="absolute bg-mix-[lighten/20] rounded text-fg py-2 shadow-lg shadow-fg/20"
 				onBeforeToggle={(ev) => setOpen(ev.newState === "open")}
 				popover
 				id={id}
@@ -46,11 +34,7 @@ export function Dropdown(props: DropdownProps) {
 					} as any
 				}
 			>
-				<ul class="flex flex-col">
-					<For each={resolved.toArray()}>
-						{(r) => <li class="p-2 hover:bg-mix-[fg/10]">{r}</li>}
-					</For>
-				</ul>
+				{props.children}
 			</div>
 		</div>
 	);

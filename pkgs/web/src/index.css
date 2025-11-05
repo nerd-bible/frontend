@@ -16,6 +16,7 @@
 @theme {
 	--color-primary: var(--color-orange-500);
 	--color-focus: var(--color-blue-500);
+	--color-darken: var(--color-fg);
 }
 @theme /* light */ {
 	--color-bg: var(--color-yellow-50);
@@ -23,7 +24,7 @@
 	--color-lighten: white;
 }
 @utility dark {
-	--color-bg: var(--color-yellow-950);
+	--color-bg: oklch(0.27 0.05 65.65);
 	--color-fg: white;
 	--color-lighten: black;
 }
@@ -40,9 +41,10 @@ html {
 
 button {
 	@apply cursor-pointer;
-	@apply hover:bg-mix-[fg/10];
+	@apply hover:bg-mix-[darken/10];
+	@apply rounded;
 	&.active {
-		@apply bg-mix-[fg/20];
+		@apply bg-mix-[darken/20];
 	}
 	&.selected {
 		@apply bg-focus/50;

@@ -1,6 +1,6 @@
 import { createSignal, onCleanup, onMount } from "solid-js";
 import { Dropdown } from "./components/Dropdown";
-import { ThemePicker } from "./components/ThemePicker";
+import { QuickSettings } from "./QuickSettings";
 
 export function Layout(props: { children: any }) {
 	const [showHeader, setShowHeader] = createSignal(false);
@@ -32,7 +32,7 @@ export function Layout(props: { children: any }) {
 				<form
 					classList={{
 						"w-125 p-2 flex items-center": true,
-						"bg-mix-[fg/10] rounded-md": true,
+						"bg-mix-[darken/10] rounded-md": true,
 						"focus-within:outline-2 focus-within:bg-transparent outline-focus": true,
 					}}
 					onSubmit={(ev) => ev.preventDefault()}
@@ -47,14 +47,10 @@ export function Layout(props: { children: any }) {
 					/>
 				</form>
 				<Dropdown
-					class="flex-1 flex justify-end content-center text-sm leading-none"
-					button={<span class="p-2 mx-2 icon-[mingcute--menu-line]" />}
+					class="p-1 flex-1 flex justify-end content-center"
+					button={<span class="p-2 m-2 icon-[mingcute--menu-line]" />}
 				>
-					<ThemePicker />
-					<div class="flex flex-nowrap items-center">
-						<span class="mx-2 icon-[mingcute--link-line]" />
-						<span class="grow">Sources</span>
-					</div>
+					<QuickSettings />
 				</Dropdown>
 			</div>
 			<div class="text-justify m-auto max-w-150 font-serif leading-normal">
