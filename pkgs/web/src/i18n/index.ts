@@ -13,3 +13,15 @@ export function createIntl<const T extends Record<string, string>>(
 	const intl = createMemo(() => createIntl2(messages(msgs), locale()));
 	return intl();
 }
+
+// TODO: remove dir once FF supports Intl.Locale.getTextInfo
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1693576
+export const langs = {
+	en: {
+	},
+	he: {
+		dir: "rtl",
+	},
+	el: {
+	},
+};

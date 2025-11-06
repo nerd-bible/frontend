@@ -1,5 +1,5 @@
 import { makePersisted } from "@solid-primitives/storage";
-import { createEffect, createSignal, For } from "solid-js";
+import { createSignal, For } from "solid-js";
 
 export const [theme, setTheme] = makePersisted(createSignal("system"), {
 	name: "theme",
@@ -11,7 +11,6 @@ export function ThemePicker() {
 		dark: "icon-[mingcute--moon-line]",
 		light: "icon-[mingcute--sun-line]",
 	};
-	createEffect(() => (document.documentElement.className = theme()));
 
 	return (
 		<div class="flex gap-2">
