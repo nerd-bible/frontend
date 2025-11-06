@@ -2,7 +2,7 @@ import { Route, Router } from "@solidjs/router";
 // import { invoke, isTauri } from "@tauri-apps/api/core";
 // import { ConLLUEditor } from "./ConLLU";
 import { Home } from "./Home";
-import { langs, locale } from "./i18n";
+import { rtl, locale } from "./i18n";
 import { createEffect } from "solid-js";
 import { theme } from "./components/ThemePicker";
 // import { Settings } from "./Settings";
@@ -14,7 +14,7 @@ function App() {
 	createEffect(() => {
 		const l = locale();
 		document.documentElement.lang = l;
-		document.documentElement.dir = (langs as any)[l].dir ?? "ltr";
+		document.documentElement.dir = rtl.has(l) ? "rtl" : "ltr";
 	});
 	createEffect(() => (document.documentElement.className = theme()));
 

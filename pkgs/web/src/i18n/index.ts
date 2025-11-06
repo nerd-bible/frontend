@@ -14,14 +14,22 @@ export function createIntl<const T extends Record<string, string>>(
 	return intl();
 }
 
+// TODO: typescript language server plugin
+type Strings = {
+	Theme: "Theme",
+	Language: "Language",
+	Settings: "Settings",
+	"Font size": "Font size",
+};
+
+// TODO: vite plugin
+export const langs = {
+	en: import("./translations.tsv?col=en") as Promise<Strings>,
+	he: import("./translations.tsv?col=he") as Promise<Strings>,
+	el: import("./translations.tsv?col=el") as Promise<Strings>,
+	es: import("./translations.tsv?col=es") as Promise<Strings>,
+};
+
 // TODO: remove dir once FF supports Intl.Locale.getTextInfo
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1693576
-export const langs = {
-	en: {
-	},
-	he: {
-		dir: "rtl",
-	},
-	el: {
-	},
-};
+export const rtl = new Set(["he"]);

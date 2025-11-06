@@ -1,7 +1,7 @@
 import { For } from "solid-js";
 import { version } from "../package.json";
 import { ThemePicker } from "./components/ThemePicker";
-import { createIntl, locale, setLocale } from "./i18n";
+import { createIntl, langs, locale, setLocale } from "./i18n";
 
 type DropdownProps = {
 	children?: any;
@@ -23,10 +23,10 @@ function DropdownItem(props: DropdownProps) {
 
 export function QuickSettings() {
 	const t = createIntl({
-		theme: "Theme",
-		language: "Language",
-		settings: "Settings",
-		fontSize: "Font size",
+		Theme: "Theme",
+		Language: "Language",
+		Settings: "Settings",
+		"Font size": "Font size",
 	});
 
 	return (
@@ -34,14 +34,14 @@ export function QuickSettings() {
 			<DropdownItem
 				icon="icon-[mingcute--paint-brush-line] scale-x-[-1]"
 				href="/settings/theme"
-				label={t("theme")}
+				label={t("Theme")}
 			>
 				<ThemePicker />
 			</DropdownItem>
 			<DropdownItem
 				icon="icon-[mingcute--font-size-line]"
 				href="/settings/theme"
-				label={t("fontSize")}
+				label={t("Font size")}
 			>
 				<input
 					name="fontSize"
@@ -61,7 +61,7 @@ export function QuickSettings() {
 			<DropdownItem
 				icon="icon-[mingcute--globe-line]"
 				href="/settings#language"
-				label={t("language")}
+				label={t("Language")}
 			>
 				<select
 					name="language"
@@ -69,7 +69,7 @@ export function QuickSettings() {
 					value={locale()}
 					onChange={(ev) => setLocale(ev.target.value)}
 				>
-					<For each={["en", "he", "el"] as const}>
+					<For each={Object.keys(langs)}>
 						{(o) => (
 							<option value={o}>
 								{new Intl.DisplayNames(o, { type: "language" }).of(o)}
@@ -81,7 +81,7 @@ export function QuickSettings() {
 			<DropdownItem
 				icon="icon-[mingcute--settings-5-line]"
 				href="/settings"
-				label={t("settings")}
+				label={t("Settings")}
 			>
 				<a href="/settings" class="content-center text-end">
 					v{version}
