@@ -1,9 +1,9 @@
 @import "tailwindcss";
 @import "./fonts.css";
+@import "./forms.css";
 @plugin "@iconify/tailwind4" {
 	scale: 1.35;
 };
-@plugin "../plugin-color-mix";
 
 @theme inline {
 	--font-sans: "Noto Sans", "Noto Sans Hebrew", sans;
@@ -14,19 +14,38 @@
 	--breakpoint-sm: 32rem;
 }
 @theme {
-	--color-primary: var(--color-orange-500);
-	--color-focus: var(--color-blue-500);
-	--color-darken: var(--color-fg);
+	--font-size: 20px;
 }
+/* https://tailwindcss.com/docs/colors */
+/* https://oklch.com */
+/* https://oddcontrast.com */
 @theme /* light */ {
-	--color-bg: var(--color-yellow-50);
 	--color-fg: black;
-	--color-lighten: white;
+	--color-bg-50: var(--color-yellow-50); /** oklch(98.7% 0.026 102.212) */
+	--color-bg-100: var(--color-yellow-100);
+	--color-bg-200: var(--color-yellow-200);
+	--color-focus-100: var(--color-blue-200);
+	--color-focus-200: var(--color-blue-400);
+
+  --color-primary: oklch(74.419% 0.15437 43.091);
+  --color-secondary: var(--color-indigo-600);
 }
 @utility dark {
-	--color-bg: oklch(0.27 0.05 65.65);
 	--color-fg: white;
-	--color-lighten: black;
+	--color-bg-50: oklch(0.19 0.0275 39);
+	--color-bg-100: oklch(0.25 0.0275 39);
+	--color-bg-200: oklch(0.35 0.0275 39);
+	--color-focus-100: var(--color-blue-500);
+	--color-focus-200: var(--color-blue-600);
+
+  --color-primary: oklch(0.3883 0.1583 27.61);
+  --color-secondary: var(--color-indigo-200);
+  /* --color-accent: oklch(70% 0.213 47.604); */
+  /* --color-neutral: oklch(20% 0.042 265.755); */
+  /* --color-info: oklch(78% 0.154 211.53); */
+  /* --color-success: oklch(76% 0.177 163.223); */
+  /* --color-warning: oklch(75% 0.183 55.934); */
+  /* --color-error: oklch(71% 0.194 13.428); */
 }
 @media (prefers-color-scheme: dark) {
 	:root:not(.light) {
@@ -34,19 +53,7 @@
 	}
 }
 
-html {
-	font-size: 20px;
-	@apply bg-bg text-fg leading-none;
-}
-
-button {
-	@apply cursor-pointer;
-	@apply hover:bg-mix-[darken/10];
-	@apply rounded;
-	&.active {
-		@apply bg-mix-[darken/20];
-	}
-	&.selected {
-		@apply bg-focus/50;
-	}
+:root {
+	font-size: var(--font-size);
+	@apply bg-bg-50 text-fg leading-none;
 }

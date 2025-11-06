@@ -22,7 +22,7 @@ export function Dropdown(props: DropdownProps) {
 				{props.button}
 			</button>
 			<div
-				class="absolute bg-mix-[lighten/20] rounded text-fg py-2 shadow-lg shadow-fg/20"
+				class="absolute bg-bg-200 text-fg rounded shadow-lg shadow-fg/20"
 				onBeforeToggle={(ev) => setOpen(ev.newState === "open")}
 				popover
 				id={id}

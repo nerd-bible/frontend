@@ -1,6 +1,7 @@
 {
 	"name": "@nerd-bible/web",
 	"type": "module",
+	"version": "0.0.1",
 	"dependencies": {
 		"@ccssmnn/intl": "^0.1.1",
 		"@floating-ui/dom": "^1.7.4",

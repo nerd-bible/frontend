@@ -1,0 +1,67 @@
+@utility fborder {
+	@apply border-2 rounded;
+}
+@utility ffocus {
+	@apply outline-focus-200 outline-4 outline-offset-4;
+}
+
+button {
+	@apply cursor-pointer;
+	@apply fborder focus:ffocus;
+	@apply p-2;
+	@apply flex items-center;
+	@apply bg-bg-50 hover:bg-bg-200;
+	&.active {
+		@apply bg-bg-200;
+	}
+	&.selected {
+		@apply bg-primary;
+	}
+}
+select {
+	@apply fborder;
+	@apply focus:ffocus;
+	@apply bg-bg-50;
+}
+option {
+	@apply bg-inherit;
+}
+
+@utility thumb-focus {
+	@apply ffocus;
+}
+@utility track {
+	@apply bg-secondary;
+	@apply rounded;
+	height: 0.5rem;  
+}
+@utility thumb {
+	@apply border-3 rounded;
+	@apply bg-primary;
+	height: 2rem;
+	width: 1rem;
+}
+input[type="range"] {
+	appearance: none;
+	background: transparent;
+	cursor: pointer;
+
+	&:focus {
+		outline: none;
+		&::-webkit-slider-thumb { @apply thumb-focus; }
+		&::-moz-range-thumb { @apply thumb-focus; }
+	}
+
+	&::-webkit-slider-runnable-track { @apply track; }
+	&::-moz-range-track { @apply track; }
+
+	&::-webkit-slider-thumb {
+		appearance: none;
+		margin-top: -0.75rem;
+		@apply thumb;
+	}
+	&::-moz-range-thumb {
+		border: none;
+		@apply thumb;
+	}
+}

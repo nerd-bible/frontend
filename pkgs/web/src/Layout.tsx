@@ -20,9 +20,9 @@ export function Layout(props: { children: any }) {
 
 	return (
 		<div class="p-4 pt-0">
-			<div
+			<header
 				classList={{
-					"flex bg-bg/90 py-4 w-full sticky": true,
+					"flex bg-bg-50/90 py-4 w-full sticky": true,
 					"top-0": showHeader(),
 				}}
 			>
@@ -32,7 +32,7 @@ export function Layout(props: { children: any }) {
 				<form
 					classList={{
 						"w-125 p-2 flex items-center": true,
-						"bg-mix-[darken/10] rounded-md": true,
+						"bg-bg-100 rounded-md": true,
 						"focus-within:outline-2 focus-within:bg-transparent outline-focus": true,
 					}}
 					onSubmit={(ev) => ev.preventDefault()}
@@ -47,12 +47,12 @@ export function Layout(props: { children: any }) {
 					/>
 				</form>
 				<Dropdown
-					class="p-1 flex-1 flex justify-end content-center"
-					button={<span class="p-2 m-2 icon-[mingcute--menu-line]" />}
+					class="flex-1 content-center flex justify-end [&>button]:border-none"
+					button={<span class="icon-[mingcute--menu-line]" />}
 				>
 					<QuickSettings />
 				</Dropdown>
-			</div>
+			</header>
 			<div class="text-justify m-auto max-w-150 font-serif leading-normal">
 				{props.children}
 			</div>

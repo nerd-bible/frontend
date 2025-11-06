@@ -1,4 +1,5 @@
 import { For } from "solid-js";
+import { version } from "../package.json";
 import { ThemePicker } from "./components/ThemePicker";
 import { createIntl, locale, setLocale } from "./i18n";
 
@@ -10,9 +11,9 @@ type DropdownProps = {
 };
 function DropdownItem(props: DropdownProps) {
 	return (
-		<li class="flex hover:bg-mix-[darken/10]">
-			<a href={props.href} class="p-2 leading-none flex items-center grow">
-				<span class={`mx-2 ${props.icon}`} />
+		<li class="grid grid-cols-subgrid col-span-2 hover:bg-fg/10 pe-4">
+			<a href={props.href} class="flex p-4 gap-2 items-center">
+				<span class={props.icon} />
 				<span>{props.label}</span>
 			</a>
 			{props.children}
@@ -23,29 +24,55 @@ function DropdownItem(props: DropdownProps) {
 export function QuickSettings() {
 	const t = createIntl({
 		theme: "Theme",
-		settings: "Settings",
 		language: "Language",
+		settings: "Settings",
+		fontSize: "Font size",
 	});
 
 	return (
-		<ul class="flex flex-col w-86 select-none">
+		<ul class="grid grid-cols-[minmax(0,1fr)_1fr] w-86 select-none my-4">
 			<DropdownItem
-				icon="icon-[mingcute--paint-brush-line]"
+				icon="icon-[mingcute--paint-brush-line] scale-x-[-1]"
 				href="/settings/theme"
 				label={t("theme")}
 			>
 				<ThemePicker />
 			</DropdownItem>
 			<DropdownItem
+				icon="icon-[mingcute--font-size-line]"
+				href="/settings/theme"
+				label={t("fontSize")}
+			>
+				<input
+					name="fontSize"
+					class="w-42"
+					type="range"
+					min={8}
+					max={48}
+					value="20"
+					onChange={(ev) =>
+						document.documentElement.style.setProperty(
+							"--font-size",
+							`${ev.target.value}px`,
+						)
+					}
+				/>
+			</DropdownItem>
+			<DropdownItem
 				icon="icon-[mingcute--globe-line]"
 				href="/settings#language"
 				label={t("language")}
 			>
-				<select value={locale()} onChange={(ev) => setLocale(ev.target.value)}>
+				<select
+					name="language"
+					class="ps-2"
+					value={locale()}
+					onChange={(ev) => setLocale(ev.target.value)}
+				>
 					<For each={["en", "he", "el"] as const}>
 						{(o) => (
 							<option value={o}>
-								{new Intl.DisplayNames(locale(), { type: "language" }).of(o)}
+								{new Intl.DisplayNames(o, { type: "language" }).of(o)}
 							</option>
 						)}
 					</For>
@@ -55,7 +82,11 @@ export function QuickSettings() {
 				icon="icon-[mingcute--settings-5-line]"
 				href="/settings"
 				label={t("settings")}
-			/>
+			>
+				<a href="/settings" class="content-center text-end">
+					v{version}
+				</a>
+			</DropdownItem>
 		</ul>
 	);
 }
