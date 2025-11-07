@@ -1,12 +1,12 @@
-import { For } from "solid-js";
+import { type Accessor, For, useContext } from "solid-js";
 import { version } from "../package.json";
 import { ThemePicker } from "./components/ThemePicker";
-import { createIntl, langs, locale, setLocale } from "./i18n";
+import { IntlCtx, locales, locale, setLocale } from "./i18n";
 
 type DropdownProps = {
 	children?: any;
 	icon: string;
-	label: string;
+	label: Accessor<string>;
 	href: string;
 };
 function DropdownItem(props: DropdownProps) {
@@ -14,7 +14,7 @@ function DropdownItem(props: DropdownProps) {
 		<li class="grid grid-cols-subgrid col-span-2 hover:bg-fg/10 pe-4">
 			<a href={props.href} class="flex p-4 gap-2 items-center">
 				<span class={props.icon} />
-				<span>{props.label}</span>
+				<span>{props.label()}</span>
 			</a>
 			{props.children}
 		</li>
@@ -22,12 +22,7 @@ function DropdownItem(props: DropdownProps) {
 }
 
 export function QuickSettings() {
-	const t = createIntl({
-		Theme: "Theme",
-		Language: "Language",
-		Settings: "Settings",
-		"Font size": "Font size",
-	});
+	const t = useContext(IntlCtx);
 
 	return (
 		<ul class="grid grid-cols-[minmax(0,1fr)_1fr] w-86 select-none my-4">
@@ -69,7 +64,7 @@ export function QuickSettings() {
 					value={locale()}
 					onChange={(ev) => setLocale(ev.target.value)}
 				>
-					<For each={Object.keys(langs)}>
+					<For each={locales}>
 						{(o) => (
 							<option value={o}>
 								{new Intl.DisplayNames(o, { type: "language" }).of(o)}

@@ -31,7 +31,7 @@ export function Layout(props: { children: any }) {
 				</div>
 				<form
 					classList={{
-						"w-125 p-2 flex items-center": true,
+						"w-132 p-2 flex items-center": true,
 						"bg-bg-100 rounded-md": true,
 						"focus-within:outline-2 focus-within:bg-transparent outline-focus": true,
 					}}
@@ -53,7 +53,7 @@ export function Layout(props: { children: any }) {
 					<QuickSettings />
 				</Dropdown>
 			</header>
-			<div class="text-justify m-auto max-w-150 font-serif leading-normal">
+			<div class="text-justify m-auto max-w-150 font-serif leading-normal" dir="ltr">
 				{props.children}
 			</div>
 		</div>

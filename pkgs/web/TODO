@@ -1,0 +1,11 @@
+- [ ] Wire conllu to web worker
+- [ ] Don't touch `document.documentElement`
+- Settings
+	- [ ] ul -> form
+	- [ ] add reset all w/confirm dialog
+- i18n
+	- [x] consider messageformat v1 to save 24KB
+		- [x] worth it, https://github.com/unicode-org/message-format-wg/blob/main/docs/why_mf_next.md https://youtu.be/4jucYXE42_s?t=667
+	- [ ] add params/.input column instead of using en
+	- [ ] pretty ui for csv editing + custom functions
+		- [ ] must be better than google docs

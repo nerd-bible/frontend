@@ -3,3 +3,4 @@ dist
 target
 pkgs/*/tsconfig.tsbuildinfo
 .DS_Store
+generated

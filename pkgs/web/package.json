@@ -13,6 +13,7 @@
 		"@solid-primitives/storage": "^4.3.3",
 		"@solidjs/router": "^0.15.3",
 		"@tauri-apps/api": "^2.9.0",
+		"locale-matcher": "^2.2.1",
 		"solid-js": "^1.9.10",
 		"tailwindcss": "^4.1.16"
 	},
@@ -22,11 +23,13 @@
 		"@types/opentype.js": "^1.3.8",
 		"opentype.js": "^1.3.4",
 		"vite": "^6.4.1",
+		"vite-bundle-analyzer": "^1.2.3",
 		"vite-plugin-solid": "^2.11.10"
 	},
 	"scripts": {
-		"build": "vite build",
-		"start": "vite",
+		"build": "bun generate && vite build",
+		"generate": "bun run ./generate-i18n.ts",
+		"start": "bun generate && vite",
 		"serve": "vite preview"
 	}
 }

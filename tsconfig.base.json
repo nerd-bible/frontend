@@ -5,6 +5,7 @@
 		"target": "ESNext",
 		"module": "ESNext",
 		"moduleDetection": "force",
+		"resolveJsonModule": true,
 		"jsx": "preserve",
 		"jsxImportSource": "solid-js",
 		"allowJs": true,
@@ -12,6 +13,7 @@
 		// Bundler mode
 		"moduleResolution": "bundler",
 		"verbatimModuleSyntax": true,
+		"types": ["vite/client"],
 
 		// Best practices
 		"strict": true,
@@ -33,7 +35,7 @@
 		// Allow detecting linking to *.ts
 		// "customConditions": ["@source"]
 	},
-	"include": ["${configDir}/src"],
+	"include": ["${configDir}/src", "${configDir}/src/**/*.json"],
 	// Don't typecheck test files
 	"exclude": ["${configDir}/**/*.test.*", "${configDir}/**/__snapshots__/*"]
 }
