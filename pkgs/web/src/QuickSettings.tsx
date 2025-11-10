@@ -1,23 +1,35 @@
 import { type Accessor, For, useContext } from "solid-js";
+import { Dynamic } from "solid-js/web";
 import { version } from "../package.json";
 import { ThemePicker } from "./components/ThemePicker";
-import { IntlCtx, locales, locale, setLocale } from "./i18n";
+import { IntlCtx, locale, locales, setLocale } from "./i18n";
 
 type DropdownProps = {
 	children?: any;
 	icon: string;
 	label: Accessor<string>;
-	href: string;
+	href?: string;
+	labelFor?: string;
 };
 function DropdownItem(props: DropdownProps) {
 	return (
-		<li class="grid grid-cols-subgrid col-span-2 hover:bg-fg/10 pe-4">
-			<a href={props.href} class="flex p-4 gap-2 items-center">
-				<span class={props.icon} />
-				<span>{props.label()}</span>
-			</a>
+		<div class="grid grid-cols-subgrid col-span-2 hover:bg-fg/10 pe-4">
+			<Dynamic
+				class="p-4"
+				component={props.labelFor ? "label" : "div"}
+				for={props.labelFor}
+			>
+				<Dynamic
+					class="flex items-center gap-2"
+					component={props.href ? "a" : "div"}
+					href={props.href}
+				>
+					<span class={`hidden sm:inline ${props.icon}`} />
+					<span>{props.label()}</span>
+				</Dynamic>
+			</Dynamic>
 			{props.children}
-		</li>
+		</div>
 	);
 }
 
@@ -25,21 +37,23 @@ export function QuickSettings() {
 	const t = useContext(IntlCtx);
 
 	return (
-		<ul class="grid grid-cols-[minmax(0,1fr)_1fr] w-86 select-none my-4">
+		<form
+			class="grid grid-cols-[minmax(0,1fr)_1fr] w-96 select-none my-4"
+			onSubmit={(ev) => ev.preventDefault()}
+		>
 			<DropdownItem
 				icon="icon-[mingcute--paint-brush-line] scale-x-[-1]"
-				href="/settings/theme"
 				label={t("Theme")}
 			>
 				<ThemePicker />
 			</DropdownItem>
 			<DropdownItem
 				icon="icon-[mingcute--font-size-line]"
-				href="/settings/theme"
 				label={t("Font size")}
+				labelFor="fontSize"
 			>
 				<input
-					name="fontSize"
+					id="fontSize"
 					class="w-42"
 					type="range"
 					min={8}
@@ -55,11 +69,11 @@ export function QuickSettings() {
 			</DropdownItem>
 			<DropdownItem
 				icon="icon-[mingcute--globe-line]"
-				href="/settings#language"
 				label={t("Language")}
+				labelFor="language"
 			>
 				<select
-					name="language"
+					id="language"
 					class="ps-2"
 					value={locale()}
 					onChange={(ev) => setLocale(ev.target.value)}
@@ -82,6 +96,6 @@ export function QuickSettings() {
 					v{version}
 				</a>
 			</DropdownItem>
-		</ul>
+		</form>
 	);
 }

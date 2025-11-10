@@ -19,7 +19,7 @@ export function Layout(props: { children: any }) {
 	onCleanup(() => document.removeEventListener("scroll", onScrollUp));
 
 	return (
-		<div class="p-4 pt-0">
+		<div class="p-4 pt-0 [--spacing:0.15rem] sm:[--spacing:0.25rem]">
 			<header
 				classList={{
 					"flex bg-bg-50/90 py-4 w-full sticky": true,

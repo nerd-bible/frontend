@@ -1,6 +1,7 @@
 import { createIntl, messages } from "@ccssmnn/intl";
 // import { LocaleMatcher } from "@phensley/locale-matcher";
 import { makePersisted } from "@solid-primitives/storage";
+import { pickLocale } from "locale-matcher";
 import {
 	type Accessor,
 	type Context,
@@ -11,10 +12,8 @@ import {
 	Show,
 } from "solid-js";
 import type { Translation } from "./generated/index";
-import { pickLocale } from "locale-matcher";
 
 // https://vite.dev/guide/features#glob-import
-// TODO: vite plugin + tsc plugin
 export const modules = import.meta.glob<false, "string", Translation>(
 	"./generated/*.json",
 	{ import: "default" },

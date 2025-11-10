@@ -9,7 +9,6 @@ const cssOutPath = join(import.meta.dir, "./src/fonts.css");
 const main =
 	"https://github.com/notofonts/notofonts.github.io/raw/refs/heads/main/fonts/";
 // const cjk = "https://github.com/notofonts/noto-cjk/raw/refs/heads/main/";
-// TODO: figure out if can use https://github.com/notofonts/noto-cjk-varco
 const fontFamilies = {
 	"noto/sans": {
 		base: `${main}NotoSans/unhinted/variable/NotoSans%5Bwdth,wght%5D.ttf`,
