@@ -1,10 +1,13 @@
 # major
 - [ ] Wire conllu to web worker
 - [ ] Choose storage + indexing format
+- [ ] Design review
 
 # minor
-- [ ] Don't touch `document.documentElement`
+- [x] Don't touch `document.documentElement` nor :root
 - [ ] add browserslist and confirm usage
+- [ ] index.html per language with preloaded fonts+i18n
+- [ ] better loading component
 
 ## settings
 - [x] quick settings ul -> form

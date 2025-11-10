@@ -13,7 +13,6 @@
 		// Bundler mode
 		"moduleResolution": "bundler",
 		"verbatimModuleSyntax": true,
-		"types": ["vite/client"],
 
 		// Best practices
 		"strict": true,

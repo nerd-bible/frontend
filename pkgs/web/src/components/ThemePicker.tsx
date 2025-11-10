@@ -1,9 +1,5 @@
-import { makePersisted } from "@solid-primitives/storage";
-import { createSignal, For } from "solid-js";
-
-export const [theme, setTheme] = makePersisted(createSignal("system"), {
-	name: "theme",
-});
+import { For } from "solid-js";
+import { setTheme, theme } from "../settings";
 
 export function ThemePicker() {
 	const options = {

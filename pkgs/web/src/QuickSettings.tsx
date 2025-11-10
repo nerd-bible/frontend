@@ -3,6 +3,7 @@ import { Dynamic } from "solid-js/web";
 import { version } from "../package.json";
 import { ThemePicker } from "./components/ThemePicker";
 import { IntlCtx, locale, locales, setLocale } from "./i18n";
+import { columnWidth, fontSize, setColumnWidth, setFontSize } from "./settings";
 
 type DropdownProps = {
 	children?: any;
@@ -58,13 +59,23 @@ export function QuickSettings() {
 					type="range"
 					min={8}
 					max={48}
-					value="20"
-					onChange={(ev) =>
-						document.documentElement.style.setProperty(
-							"--font-size",
-							`${ev.target.value}px`,
-						)
-					}
+					value={Number.parseInt(fontSize(), 10)}
+					onInput={(ev) => setFontSize(`${ev.target.value}px`)}
+				/>
+			</DropdownItem>
+			<DropdownItem
+				icon="icon-[mingcute--font-size-line]"
+				label={t("Column width")}
+				labelFor="columnWidth"
+			>
+				<input
+					id="columnWidth"
+					class="w-42"
+					type="range"
+					min={100}
+					max={1000}
+					value={Number.parseInt(columnWidth(), 10)}
+					onInput={(ev) => setColumnWidth(`${ev.target.value}px`)}
 				/>
 			</DropdownItem>
 			<DropdownItem

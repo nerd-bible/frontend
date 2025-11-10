@@ -1,25 +1,36 @@
-import { createSignal, onCleanup, onMount } from "solid-js";
+import { createSignal } from "solid-js";
 import { Dropdown } from "./components/Dropdown";
 import { QuickSettings } from "./QuickSettings";
+import { columnWidth, fontSize, theme } from "./settings";
 
-export function Layout(props: { children: any }) {
+export function Layout(props: {
+	children: any;
+	classList?: Record<string, boolean>;
+}) {
 	const [showHeader, setShowHeader] = createSignal(false);
 	let lastScrollTop = 0;
-	function onScrollUp() {
-		const st = window.pageYOffset || document.documentElement.scrollTop;
-		if (st > lastScrollTop) {
-			setShowHeader(false);
-		} else if (st < lastScrollTop) {
-			setShowHeader(true);
-		}
-		lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
-	}
-
-	onMount(() => document.addEventListener("scroll", onScrollUp));
-	onCleanup(() => document.removeEventListener("scroll", onScrollUp));
 
 	return (
-		<div class="p-4 pt-0 [--spacing:0.15rem] sm:[--spacing:0.25rem]">
+		<div
+			classList={{
+				"text-xl": true,
+				"p-4 pt-0": true,
+				"[--spacing:0.15rem] sm:[--spacing:0.25rem]": true,
+				"bg-bg-50 text-fg leading-none": true,
+				"h-dvh overflow-auto": true,
+				"dark:not-[.light]:dark text-(--font-size)": true,
+				[theme()]: true,
+			}}
+			onScroll={(ev) => {
+				const st = ev.target.scrollTop;
+				if (st > lastScrollTop) {
+					setShowHeader(false);
+				} else if (st < lastScrollTop) {
+					setShowHeader(true);
+				}
+				lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
+			}}
+		>
 			<header
 				classList={{
 					"flex bg-bg-50/90 py-4 w-full sticky": true,
@@ -53,7 +64,16 @@ export function Layout(props: { children: any }) {
 					<QuickSettings />
 				</Dropdown>
 			</header>
-			<div class="text-justify m-auto max-w-150 font-serif leading-normal" dir="ltr">
+			<div
+				classList={{
+					"m-auto font-serif leading-normal": true,
+				}}
+				dir="ltr"
+				style={{
+					"font-size": fontSize(),
+					"width": columnWidth(),
+				}}
+			>
 				{props.children}
 			</div>
 		</div>

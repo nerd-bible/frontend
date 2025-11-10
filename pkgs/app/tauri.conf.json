@@ -16,7 +16,8 @@
 		"windows": [
 			{
 				"title": "Nerd Bible",
-				"skipTaskbar": true
+				"skipTaskbar": true,
+				"zoomHotkeysEnabled": true
 			}
 		]
 	}

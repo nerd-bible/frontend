@@ -1,8 +1,6 @@
-import { Layout } from "./Layout";
-
 export function Home() {
 	return (
-		<Layout>
+		<>
 			<p>
 				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vitae
 				urna in ante tincidunt rutrum vel nec leo. Nulla bibendum, eros at
@@ -212,6 +210,6 @@ export function Home() {
 				non faucibus ipsum, ac malesuada mauris. Donec sem nulla, rutrum non
 				quam ut, bibendum blandit est.
 			</p>
-		</Layout>
+		</>
 	);
 }

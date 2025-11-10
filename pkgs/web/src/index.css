@@ -13,9 +13,6 @@
 	--breakpoint-xs: 24rem;
 	--breakpoint-sm: 32rem;
 }
-@theme {
-	--font-size: 20px;
-}
 /* https://tailwindcss.com/docs/colors */
 /* https://oklch.com */
 /* https://oddcontrast.com */
@@ -38,22 +35,12 @@
 	--color-focus-100: var(--color-blue-500);
 	--color-focus-200: var(--color-blue-600);
 
-  --color-primary: oklch(0.3883 0.1583 27.61);
-  --color-secondary: var(--color-indigo-200);
-  /* --color-accent: oklch(70% 0.213 47.604); */
-  /* --color-neutral: oklch(20% 0.042 265.755); */
-  /* --color-info: oklch(78% 0.154 211.53); */
-  /* --color-success: oklch(76% 0.177 163.223); */
-  /* --color-warning: oklch(75% 0.183 55.934); */
-  /* --color-error: oklch(71% 0.194 13.428); */
-}
-@media (prefers-color-scheme: dark) {
-	:root:not(.light) {
-		@apply dark;
-	}
-}
-
-:root {
-	font-size: var(--font-size);
-	@apply bg-bg-50 text-fg leading-none;
+	--color-primary: oklch(0.3883 0.1583 27.61);
+	--color-secondary: var(--color-indigo-200);
+	/* --color-accent: oklch(70% 0.213 47.604); */
+	/* --color-neutral: oklch(20% 0.042 265.755); */
+	/* --color-info: oklch(78% 0.154 211.53); */
+	/* --color-success: oklch(76% 0.177 163.223); */
+	/* --color-warning: oklch(75% 0.183 55.934); */
+	/* --color-error: oklch(71% 0.194 13.428); */
 }

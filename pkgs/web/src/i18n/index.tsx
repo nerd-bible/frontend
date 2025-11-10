@@ -43,16 +43,23 @@ export function IntlProvider(props: { children: any }) {
 		const msgs = messages(strings);
 		const nextIntl: IntlFn = createIntl(msgs, l);
 		setIntl(() => nextIntl);
-		document.documentElement.lang = l;
-		document.documentElement.dir = rtl.has(l) ? "rtl" : "ltr";
 	});
 
+	// Yes, this makes a memo for every localized string for convenience.
 	const memoized = (key: string, ...args: any) =>
-		createMemo(() => (intl() as any)(key, ...args));
+		createMemo(() => {
+			try {
+				return (intl() as any)(key, ...args);
+			} catch {
+				return key;
+			}
+		});
 
 	return (
 		<Show when={intl()} fallback="loading translation...">
-			<IntlCtx.Provider value={memoized}>{props.children}</IntlCtx.Provider>
+			<div lang={locale()} dir={rtl.has(locale()) ? "rtl" : "ltr"}>
+				<IntlCtx.Provider value={memoized}>{props.children}</IntlCtx.Provider>
+			</div>
 		</Show>
 	);
 }
