@@ -12,7 +12,7 @@ const list = browserslist(`fully supports ${target}`);
 // https://vitejs.dev/config/
 export default defineConfig({
 	plugins: [solid(), tailwindcss(), analyzer({ analyzerMode: "static" })],
-	// lightningcss > postcss and is future
+	// lightningcss is what tailwindcss uses anyways
 	css: {
 		transformer: "lightningcss",
 		lightningcss: { targets: browserslistToTargets(list) }

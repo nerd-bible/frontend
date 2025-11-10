@@ -6,6 +6,8 @@
 # minor
 - [x] Don't touch `document.documentElement` nor :root
 - [x] add browserslist and confirm usage
+	- [ ] choose css and js features
+		- [ ] user color-mix?
 - [ ] index.html per language with preloaded fonts+i18n
 - [ ] better loading component
 
