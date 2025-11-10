@@ -2,6 +2,7 @@ import { createIntl, messages } from "@ccssmnn/intl";
 // import { LocaleMatcher } from "@phensley/locale-matcher";
 import { makePersisted } from "@solid-primitives/storage";
 import { pickLocale } from "locale-matcher";
+import { getLocaleDir } from "messageformat/functions";
 import {
 	type Accessor,
 	type Context,
@@ -13,15 +14,7 @@ import {
 } from "solid-js";
 import type { Translation } from "./generated/index";
 
-// https://vite.dev/guide/features#glob-import
-export const modules = import.meta.glob<false, "string", Translation>(
-	"./generated/*.json",
-	{ import: "default" },
-);
 export const locales = ["en", "he", "el", "es"];
-// TODO: remove dir once FF supports Intl.Locale.getTextInfo
-// https://bugzilla.mozilla.org/show_bug.cgi?id=1693576
-export const rtl = new Set(["he"]);
 export const [locale, setLocale] = makePersisted(
 	createSignal(pickLocale(navigator.languages, locales, locales[0])),
 	{ name: "locale" },
@@ -39,7 +32,8 @@ export function IntlProvider(props: { children: any }) {
 	const [intl, setIntl] = createSignal<IntlFn>();
 	createEffect(async () => {
 		const l = locale();
-		const strings = await modules[`./generated/${l}.json`]();
+		// https://vite.dev/guide/features#dynamic-import
+		const strings: Translation = (await import(`./generated/${l}.js`)).default;
 		const msgs = messages(strings);
 		const nextIntl: IntlFn = createIntl(msgs, l);
 		setIntl(() => nextIntl);
@@ -57,7 +51,7 @@ export function IntlProvider(props: { children: any }) {
 
 	return (
 		<Show when={intl()} fallback="loading translation...">
-			<div lang={locale()} dir={rtl.has(locale()) ? "rtl" : "ltr"}>
+			<div lang={locale()} dir={getLocaleDir(locale())}>
 				<IntlCtx.Provider value={memoized}>{props.children}</IntlCtx.Provider>
 			</div>
 		</Show>

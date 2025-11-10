@@ -22,11 +22,14 @@ for (const line of contents.split(/\r?\n/g)) {
 }
 
 for (const lang in translations) {
-	const outPath2 = join(outPath, `${lang}.json`);
+	const outPath2 = join(outPath, `${lang}.js`);
 	const outDir = dirname(outPath2);
 
 	mkdirSync(outDir, { recursive: true });
-	writeFileSync(outPath2, JSON.stringify(translations[lang], null, 2));
+	writeFileSync(
+		outPath2,
+		`export default ${JSON.stringify(translations[lang], null, "\t")};`,
+	);
 }
 
 // Consumed in `i18n/index.ts`

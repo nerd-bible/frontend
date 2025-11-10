@@ -5,7 +5,7 @@
 
 # minor
 - [x] Don't touch `document.documentElement` nor :root
-- [ ] add browserslist and confirm usage
+- [x] add browserslist and confirm usage
 - [ ] index.html per language with preloaded fonts+i18n
 - [ ] better loading component
 

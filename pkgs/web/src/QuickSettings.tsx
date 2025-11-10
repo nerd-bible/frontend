@@ -103,7 +103,7 @@ export function QuickSettings() {
 				href="/settings"
 				label={t("Settings")}
 			>
-				<a href="/settings" class="content-center text-end">
+				<a href="/settings" class="content-center flex justify-end items-center">
 					v{version}
 				</a>
 			</DropdownItem>

@@ -1,13 +1,23 @@
 import tailwindcss from "@tailwindcss/vite";
+import browserslist from "browserslist";
+import { browserslistToTargets } from "lightningcss";
 import { defineConfig } from "vite";
 import { analyzer } from "vite-bundle-analyzer";
 import solid from "vite-plugin-solid";
 
 const host = process.env.TAURI_DEV_HOST;
+const target = "es6";
+const list = browserslist(`fully supports ${target}`);
 
 // https://vitejs.dev/config/
-export default defineConfig(async () => ({
+export default defineConfig({
 	plugins: [solid(), tailwindcss(), analyzer({ analyzerMode: "static" })],
+	// lightningcss > postcss and is future
+	css: {
+		transformer: "lightningcss",
+		lightningcss: { targets: browserslistToTargets(list) }
+	},
+	build: { target },
 
 	// Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
 	//
@@ -30,4 +40,4 @@ export default defineConfig(async () => ({
 			ignored: ["**/src-tauri/**"],
 		},
 	},
-}));
+});
