@@ -1,5 +1,7 @@
 # major
 - [ ] tailwind -> UnoCSS
+- [ ] vite-plugin-legacy
+- [ ] consider vue-vapor-jsx
 - [ ] Wire conllu to web worker
 - [ ] Choose storage + indexing format
 - [ ] Design review
@@ -15,6 +17,7 @@
 ## settings
 - [x] quick settings ul -> form
 - [ ] design page (need tabs + dialog components)
+	- [ ] maybe use @radix-ui
 	- [ ] add reset all
 	- [ ] add clear cookies
 
