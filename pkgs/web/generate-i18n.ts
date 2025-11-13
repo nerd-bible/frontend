@@ -2,7 +2,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 
 const inPath = join(import.meta.dir, "./src/i18n/translations.tsv");
-const outPath = join(import.meta.dir, "./src/i18n/generated");
+const outPath = join(import.meta.dir, "./public/i18n/generated");
 const contents = readFileSync(inPath, "utf8");
 
 const translations: Record<string, Record<string, string>> = {};
@@ -22,18 +22,15 @@ for (const line of contents.split(/\r?\n/g)) {
 }
 
 for (const lang in translations) {
-	const outPath2 = join(outPath, `${lang}.js`);
+	const outPath2 = join(outPath, `${lang}.json`);
 	const outDir = dirname(outPath2);
 
 	mkdirSync(outDir, { recursive: true });
-	writeFileSync(
-		outPath2,
-		`export default ${JSON.stringify(translations[lang], null, "\t")};`,
-	);
+	writeFileSync(outPath2, JSON.stringify(translations[lang]));
 }
 
-// Consumed in `i18n/index.ts`
-const indexPath = join(outPath, "index.ts");
+// Consumed in `i18n/index.tsx`
+const indexPath = join("./src/i18n/generated", "index.ts");
 writeFileSync(
 	indexPath,
 	`export type Translation = {

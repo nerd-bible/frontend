@@ -32,8 +32,8 @@ export function IntlProvider(props: { children: any }) {
 	const [intl, setIntl] = createSignal<IntlFn>();
 	createEffect(async () => {
 		const l = locale();
-		// https://vite.dev/guide/features#dynamic-import
-		const strings: Translation = (await import(`./generated/${l}.js`)).default;
+		const req = await fetch(`/i18n/generated/${l}.json`);
+		const strings: Translation = await req.json();
 		const msgs = messages(strings);
 		const nextIntl: IntlFn = createIntl(msgs, l);
 		setIntl(() => nextIntl);
