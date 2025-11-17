@@ -1,7 +1,9 @@
 # major
-- [ ] tailwind -> UnoCSS
-- [ ] vite-plugin-legacy
-- [ ] consider vue-vapor-jsx
+- [x] tailwind -> UnoCSS
+- [x] vite-plugin-legacy
+- [x] consider vue-vapor-jsx
+- [x] choose component library
+	- [x] fork kobalte one component at a time
 - [ ] Wire conllu to web worker
 - [ ] Choose storage + indexing format
 - [ ] Design review
@@ -12,14 +14,11 @@
 	- [x] choose css and js features
 		- [x] user color-mix?
 - [ ] index.html per language with ssr + preloaded fonts+i18n
-- [ ] better loading component
 
 ## settings
 - [x] quick settings ul -> form
-- [ ] design page (need tabs + dialog components)
-	- [ ] maybe use @radix-ui
-	- [ ] add reset all
-	- [ ] add clear cookies
+- [ ] slow settings
+	- [ ] reset all
 
 ## i18n
 - [x] consider messageformat v1 to save 24KB
@@ -27,7 +26,7 @@
 		- [x] https://github.com/unicode-org/message-format-wg/blob/main/docs/why_mf_next.md
 		- [x] https://youtu.be/4jucYXE42_s?t=667
 - [ ] add CJK
-	- consider https://github.com/notofonts/noto-cjk-varco
+	- [ ] consider https://github.com/notofonts/noto-cjk-varco
 - [ ] add params/.input column instead of using en
 - [ ] pretty ui for csv editing + custom functions
 	- [ ] must be better than google docs
