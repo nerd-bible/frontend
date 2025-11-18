@@ -1,5 +1,7 @@
+import { getLocaleDir } from "messageformat/functions";
 import { createSignal } from "solid-js";
 import { Dropdown } from "./components/Dropdown";
+import { locale } from "./i18n";
 import { QuickSettings } from "./QuickSettings";
 import { columnWidth, fontSize, theme } from "./settings";
 
@@ -19,7 +21,7 @@ export function Layout(props: {
 				"bg-bg-50 text-fg leading-none": true,
 				"h-dvh overflow-auto": true,
 				"dark:not-[.light]:dark text-(--font-size)": true,
-				[theme()]: true,
+				[theme().toLowerCase()]: true,
 			}}
 			onScroll={(ev) => {
 				const st = ev.target.scrollTop;
@@ -32,6 +34,8 @@ export function Layout(props: {
 			}}
 		>
 			<header
+				lang={locale()}
+				dir={getLocaleDir(locale())}
 				classList={{
 					"flex bg-bg-50/90 py-4 w-full sticky": true,
 					"top-0": showHeader(),
@@ -57,12 +61,11 @@ export function Layout(props: {
 						class="grow outline-none w-0"
 					/>
 				</form>
-				<Dropdown
-					class="flex-1 content-center flex justify-end [&>button]:border-none"
-					button={<span class="icon-[mingcute--menu-line]" />}
-				>
-					<QuickSettings />
-				</Dropdown>
+				<div class="flex-1 content-center flex justify-end [&>button]:border-none">
+					<Dropdown button={<span class="icon-[mingcute--menu-line]" />}>
+						<QuickSettings />
+					</Dropdown>
+				</div>
 			</header>
 			<div
 				classList={{
@@ -71,7 +74,7 @@ export function Layout(props: {
 				dir="ltr"
 				style={{
 					"font-size": fontSize(),
-					"width": columnWidth(),
+					"max-width": columnWidth(),
 				}}
 			>
 				{props.children}

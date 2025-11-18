@@ -24,5 +24,5 @@ export function Settings() {
 	// 	</form>
 	// );
 
-	return <div>hello</div>;
+	return <div>settings</div>;
 }

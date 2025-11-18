@@ -8,12 +8,6 @@ const host = process.env.TAURI_DEV_HOST;
 // https://vitejs.dev/config/
 export default defineConfig({
 	plugins: [solid(), tailwindcss(), analyzer({ analyzerMode: "static" })],
-	// TODO: make all this work, see ./browser-support.md
-	// css: {
-	// 	transformer: "lightningcss",
-	// 	lightningcss: { targets: browserslistToTargets(list) }
-	// },
-	// build: { target },
 
 	// 1. prevent vite from obscuring rust errors
 	clearScreen: false,

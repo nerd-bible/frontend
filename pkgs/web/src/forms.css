@@ -5,7 +5,7 @@
 	@apply outline-focus-200 outline-4 outline-offset-4;
 }
 
-button {
+button, .button {
 	@apply cursor-pointer;
 	@apply fborder focus:ffocus;
 	@apply p-2;

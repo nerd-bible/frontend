@@ -30,7 +30,8 @@ for (const lang in translations) {
 }
 
 // Consumed in `i18n/index.tsx`
-const indexPath = join("./src/i18n/generated", "index.ts");
+const indexPath = join(import.meta.dir, "./src/i18n/generated/index.ts");
+mkdirSync(dirname(indexPath), { recursive: true });
 writeFileSync(
 	indexPath,
 	`export type Translation = {

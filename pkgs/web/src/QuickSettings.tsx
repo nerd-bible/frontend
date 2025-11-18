@@ -1,4 +1,4 @@
-import { type Accessor, For, useContext } from "solid-js";
+import { For, useContext } from "solid-js";
 import { Dynamic } from "solid-js/web";
 import { version } from "../package.json";
 import { ThemePicker } from "./components/ThemePicker";
@@ -8,7 +8,7 @@ import { columnWidth, fontSize, setColumnWidth, setFontSize } from "./settings";
 type DropdownProps = {
 	children?: any;
 	icon: string;
-	label: Accessor<string>;
+	label: string;
 	href?: string;
 	labelFor?: string;
 };
@@ -26,7 +26,7 @@ function DropdownItem(props: DropdownProps) {
 					href={props.href}
 				>
 					<span class={`hidden sm:inline ${props.icon}`} />
-					<span>{props.label()}</span>
+					<span>{props.label}</span>
 				</Dynamic>
 			</Dynamic>
 			{props.children}
@@ -44,13 +44,13 @@ export function QuickSettings() {
 		>
 			<DropdownItem
 				icon="icon-[mingcute--paint-brush-line] scale-x-[-1]"
-				label={t("Theme")}
+				label={t()("Theme")}
 			>
 				<ThemePicker />
 			</DropdownItem>
 			<DropdownItem
 				icon="icon-[mingcute--font-size-line]"
-				label={t("Font size")}
+				label={t()("Font size")}
 				labelFor="fontSize"
 			>
 				<input
@@ -65,7 +65,7 @@ export function QuickSettings() {
 			</DropdownItem>
 			<DropdownItem
 				icon="icon-[mingcute--font-size-line]"
-				label={t("Column width")}
+				label={t()("Column width")}
 				labelFor="columnWidth"
 			>
 				<input
@@ -80,7 +80,7 @@ export function QuickSettings() {
 			</DropdownItem>
 			<DropdownItem
 				icon="icon-[mingcute--globe-line]"
-				label={t("Language")}
+				label={t()("Language")}
 				labelFor="language"
 			>
 				<select
@@ -101,7 +101,7 @@ export function QuickSettings() {
 			<DropdownItem
 				icon="icon-[mingcute--settings-5-line]"
 				href="/settings"
-				label={t("Settings")}
+				label={t()("Settings")}
 			>
 				<a href="/settings" class="content-center flex justify-end items-center">
 					v{version}

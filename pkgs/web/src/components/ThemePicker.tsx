@@ -1,25 +1,30 @@
-import { For } from "solid-js";
+import { For, useContext } from "solid-js";
+import { IntlCtx } from "../i18n";
 import { setTheme, theme } from "../settings";
 
 export function ThemePicker() {
+	const t = useContext(IntlCtx);
+
 	const options = {
-		system: "icon-[mingcute--computer-line]",
-		dark: "icon-[mingcute--moon-line]",
-		light: "icon-[mingcute--sun-line]",
+		System: "icon-[mingcute--computer-line]",
+		Dark: "icon-[mingcute--moon-line]",
+		Light: "icon-[mingcute--sun-line]",
 	};
 
 	return (
-		<div class="flex gap-2">
+		<div role="radiogroup" class="flex gap-2">
 			<For each={Object.entries(options)}>
 				{([k, v]) => (
-					<button
-						class="grow"
-						type="button"
-						onClick={() => setTheme(k)}
-						classList={{ selected: theme() === k }}
-					>
+					<label class="grow button" classList={{ selected: theme() === k }}>
+						<input
+							type="radio"
+							name="theme"
+							onInput={() => setTheme(k)}
+							class="appearance-none"
+						/>
 						<span class={`${v} m-auto`} />
-					</button>
+						<span class="sr-only">{t()(k as keyof typeof options)}</span>
+					</label>
 				)}
 			</For>
 		</div>

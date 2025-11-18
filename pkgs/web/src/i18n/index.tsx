@@ -1,17 +1,8 @@
 import { createIntl, messages } from "@ccssmnn/intl";
-// import { LocaleMatcher } from "@phensley/locale-matcher";
 import { makePersisted } from "@solid-primitives/storage";
 import { pickLocale } from "locale-matcher";
-import { getLocaleDir } from "messageformat/functions";
-import {
-	type Accessor,
-	type Context,
-	createContext,
-	createEffect,
-	createMemo,
-	createSignal,
-	Show,
-} from "solid-js";
+import type { Accessor, Context } from "solid-js";
+import { createContext, createEffect, createSignal, Show } from "solid-js";
 import type { Translation } from "./generated/index";
 
 export const locales = ["en", "he", "el", "es"];
@@ -20,12 +11,8 @@ export const [locale, setLocale] = makePersisted(
 	{ name: "locale" },
 );
 
-type ReplaceReturnType<T extends (...a: any) => any, TNewReturn> = (
-	...a: Parameters<T>
-) => TNewReturn;
 type IntlFn = ReturnType<typeof createIntl<Translation>>;
-type T = ReplaceReturnType<IntlFn, Accessor<string>>;
-
+type T = Accessor<IntlFn>;
 export const IntlCtx: Context<T> = createContext(undefined as any);
 
 export function IntlProvider(props: { children: any }) {
@@ -39,21 +26,11 @@ export function IntlProvider(props: { children: any }) {
 		setIntl(() => nextIntl);
 	});
 
-	// Yes, this makes a memo for every localized string for convenience.
-	const memoized = (key: string, ...args: any) =>
-		createMemo(() => {
-			try {
-				return (intl() as any)(key, ...args);
-			} catch {
-				return key;
-			}
-		});
-
 	return (
 		<Show when={intl()} fallback="loading translation...">
-			<div lang={locale()} dir={getLocaleDir(locale())}>
-				<IntlCtx.Provider value={memoized}>{props.children}</IntlCtx.Provider>
-			</div>
+			<IntlCtx.Provider value={intl as () => IntlFn}>
+				{props.children}
+			</IntlCtx.Provider>
 		</Show>
 	);
 }

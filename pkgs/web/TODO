@@ -7,12 +7,10 @@
 - [ ] Wire conllu to web worker
 - [ ] Choose storage + indexing format
 - [ ] Design review
+- [ ] 99% Browser compatibility
 
 # minor
 - [x] Don't touch `document.documentElement` nor :root
-- [x] add browserslist and confirm usage
-	- [x] choose css and js features
-		- [x] user color-mix?
 - [ ] index.html per language with ssr + preloaded fonts+i18n
 
 ## settings
