@@ -12,17 +12,20 @@ export function ThemePicker() {
 	};
 
 	return (
-		<div role="radiogroup" class="flex gap-2">
+		<div role="radiogroup" class="flex bg-bg-100 outline-2 rounded">
 			<For each={Object.entries(options)}>
 				{([k, v]) => (
-					<label class="grow button" classList={{ selected: theme() === k }}>
+					<label
+						class="relative p-2 grow focus-within:ffocus"
+						classList={{ "bg-primary": theme() === k }}
+					>
 						<input
 							type="radio"
 							name="theme"
 							onInput={() => setTheme(k)}
 							class="appearance-none"
 						/>
-						<span class={`${v} m-auto`} />
+						<span class={`${v} w-full h-full`} />
 						<span class="sr-only">{t()(k as keyof typeof options)}</span>
 					</label>
 				)}

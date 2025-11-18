@@ -1,6 +1,6 @@
 import { getLocaleDir } from "messageformat/functions";
 import { createSignal } from "solid-js";
-import { Dropdown } from "./components/Dropdown";
+import { Dropdown, hasPopover } from "./components/Dropdown";
 import { locale } from "./i18n";
 import { QuickSettings } from "./QuickSettings";
 import { columnWidth, fontSize, theme } from "./settings";
@@ -9,7 +9,7 @@ export function Layout(props: {
 	children: any;
 	classList?: Record<string, boolean>;
 }) {
-	const [showHeader, setShowHeader] = createSignal(false);
+	const [showHeader, setShowHeader] = createSignal(true);
 	let lastScrollTop = 0;
 
 	return (
@@ -25,7 +25,7 @@ export function Layout(props: {
 			}}
 			onScroll={(ev) => {
 				const st = ev.target.scrollTop;
-				if (st > lastScrollTop) {
+				if (st > lastScrollTop && !hasPopover()) {
 					setShowHeader(false);
 				} else if (st < lastScrollTop) {
 					setShowHeader(true);
@@ -37,7 +37,8 @@ export function Layout(props: {
 				lang={locale()}
 				dir={getLocaleDir(locale())}
 				classList={{
-					"flex bg-bg-50/90 py-4 w-full sticky": true,
+					"flex bg-bg-50/90 py-4 w-full sticky transition-[top] h-20": true,
+					"-top-20": !showHeader(),
 					"top-0": showHeader(),
 				}}
 			>

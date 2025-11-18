@@ -1,6 +1,8 @@
-import { autoUpdate, flip, shift } from "@floating-ui/dom";
+import { autoUpdate, shift } from "@floating-ui/dom";
 import { useFloating } from "solid-floating-ui";
-import { createSignal, createUniqueId, type JSX } from "solid-js";
+import { createEffect, createSignal, createUniqueId, type JSX } from "solid-js";
+
+export const [hasPopover, setHasPopover] = createSignal(false);
 
 type DropdownProps = {
 	button: JSX.Element;
@@ -17,7 +19,17 @@ export function Dropdown(props: DropdownProps) {
 	const position = useFloating(reference, floating, {
 		whileElementsMounted: autoUpdate,
 		placement: "bottom-end",
+		middleware: [shift()],
 	});
+
+	createEffect(() => setHasPopover(open()));
+
+	function onClick(ev: PointerEvent) {
+		if (!floating()?.contains(ev.target as Node)) {
+			setOpen(false);
+			document.removeEventListener("click", onClick);
+		}
+	}
 
 	return (
 		<>
@@ -26,7 +38,14 @@ export function Dropdown(props: DropdownProps) {
 				disabled={props.disabled}
 				popoverTarget={id}
 				classList={{ active: open() }}
-				onClick={() => setOpen((o) => !o)}
+				onClick={() => {
+					setOpen((o) => {
+						if (!o) {
+							document.addEventListener("click", onClick);
+						}
+						return !o;
+					});
+				}}
 				style={{ "anchor-name": anchorName } as any}
 				ref={setReference}
 			>
