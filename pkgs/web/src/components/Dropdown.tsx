@@ -1,17 +1,15 @@
 import { autoUpdate, shift } from "@floating-ui/dom";
 import { useFloating } from "solid-floating-ui";
-import { createEffect, createSignal, createUniqueId, type JSX } from "solid-js";
+import { createEffect, createSignal, type JSX } from "solid-js";
 
 export const [hasPopover, setHasPopover] = createSignal(false);
 
 type DropdownProps = {
 	button: JSX.Element;
-	disabled?: boolean;
+	"aria-label"?: string;
 	children: any;
 };
 export function Dropdown(props: DropdownProps) {
-	const id = createUniqueId();
-	const anchorName = `--${id}`;
 	const [open, setOpen] = createSignal(false);
 	const [reference, setReference] = createSignal<HTMLElement>();
 	const [floating, setFloating] = createSignal<HTMLElement>();
@@ -35,8 +33,7 @@ export function Dropdown(props: DropdownProps) {
 		<>
 			<button
 				type="button"
-				disabled={props.disabled}
-				popoverTarget={id}
+				aria-label={props["aria-label"]}
 				classList={{ active: open() }}
 				onClick={() => {
 					setOpen((o) => {
@@ -46,7 +43,6 @@ export function Dropdown(props: DropdownProps) {
 						return !o;
 					});
 				}}
-				style={{ "anchor-name": anchorName } as any}
 				ref={setReference}
 			>
 				{props.button}

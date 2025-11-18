@@ -1,7 +1,6 @@
-import { getLocaleDir } from "messageformat/functions";
-import { createSignal } from "solid-js";
+import { createSignal, useContext } from "solid-js";
 import { Dropdown, hasPopover } from "./components/Dropdown";
-import { locale } from "./i18n";
+import { IntlCtx } from "./i18n";
 import { QuickSettings } from "./QuickSettings";
 import { columnWidth, fontSize, theme } from "./settings";
 
@@ -9,6 +8,7 @@ export function Layout(props: {
 	children: any;
 	classList?: Record<string, boolean>;
 }) {
+	const t = useContext(IntlCtx);
 	const [showHeader, setShowHeader] = createSignal(true);
 	let lastScrollTop = 0;
 	let closeTimeout: number;
@@ -38,8 +38,6 @@ export function Layout(props: {
 			}}
 		>
 			<header
-				lang={locale()}
-				dir={getLocaleDir(locale())}
 				onPointerOver={() => clearTimeout(closeTimeout)}
 				onPointerDown={() => clearTimeout(closeTimeout)}
 				classList={{
@@ -49,7 +47,7 @@ export function Layout(props: {
 				}}
 			>
 				<div class="flex-1 content-center">
-					<span class="p-2 font-cursive before:content-['nB'] lg:before:content-['nerd.Bible']" />
+					<span class="p-2 font-cursive before:content-['nB'] lg:before:content-['nerd.Bible'] text-primary" />
 				</div>
 				<form
 					classList={{
@@ -62,6 +60,7 @@ export function Layout(props: {
 					<span class="icon-[mingcute--search-line] mx-2 hidden xs:inline" />
 					<input
 						id="search"
+						aria-label={t()("Search")}
 						type="search"
 						autocomplete="off"
 						value="1 Chronicles"
@@ -69,7 +68,10 @@ export function Layout(props: {
 					/>
 				</form>
 				<div class="flex-1 content-center flex justify-end [&>button]:border-none">
-					<Dropdown button={<span class="icon-[mingcute--menu-line]" />}>
+					<Dropdown
+						aria-label={t()("Quick settings")}
+						button={<span class="icon-[mingcute--menu-line]" />}
+					>
 						<QuickSettings />
 					</Dropdown>
 				</div>

@@ -4,6 +4,7 @@ import { pickLocale } from "locale-matcher";
 import type { Accessor, Context } from "solid-js";
 import { createContext, createEffect, createSignal, Show } from "solid-js";
 import type { Translation } from "./generated/index";
+import { getLocaleDir } from "messageformat/functions";
 
 export const locales = ["en", "he", "el", "es"];
 export const [locale, setLocale] = makePersisted(
@@ -24,6 +25,11 @@ export function IntlProvider(props: { children: any }) {
 		const msgs = messages(strings);
 		const nextIntl: IntlFn = createIntl(msgs, l);
 		setIntl(() => nextIntl);
+	});
+
+	createEffect(() => {
+		document.documentElement.lang = locale();
+		document.documentElement.dir = getLocaleDir(locale());
 	});
 
 	return (
