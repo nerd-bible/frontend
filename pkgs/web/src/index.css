@@ -16,6 +16,105 @@
 /* https://tailwindcss.com/docs/colors */
 /* https://oklch.com */
 /* https://oddcontrast.com */
+@theme {
+	--color-*: initial;
+	/*  U.S. Web Design System (USWDS) v3, modified palette (2025-11-18T21:41:56.465Z) */
+	--color-gray-950: #1b1b1b;
+	--color-gray-900: #242424;
+	--color-gray-800: #2e2e2e;
+	--color-gray-700: #454545;
+	--color-gray-600: #5c5c5c;
+	--color-gray-500: #757575;
+	--color-gray-400: #919191;
+	--color-gray-300: #adadad;
+	--color-gray-200: #c9c9c9;
+	--color-gray-100: #e6e6e6;
+	--color-gray-50: #f0f0f0;
+
+	--color-red-950: #1b1616;
+	--color-red-900: #2c1f1f;
+	--color-red-800: #3e2927;
+	--color-red-700: #6f3331;
+	--color-red-600: #a23737;
+	--color-red-500: #d83933;
+	--color-red-400: #e9695f;
+	--color-red-300: #f2938c;
+	--color-red-200: #f7bbb1;
+	--color-red-100: #f8e1de;
+	--color-red-50: #f9eeee;
+
+	--color-orange-950: #1b1614;
+	--color-orange-900: #27211d;
+	--color-orange-800: #332d27;
+	--color-orange-700: #524236;
+	--color-orange-600: #775540;
+	--color-orange-500: #a86437;
+	--color-orange-400: #dd7533;
+	--color-orange-300: #f09860;
+	--color-orange-200: #f3bf90;
+	--color-orange-100: #f2e4d4;
+	--color-orange-50: #f6efe9;
+
+	--color-yellow-950: #1a1614;
+	--color-yellow-900: #26211d;
+	--color-yellow-800: #332d27;
+	--color-yellow-700: #504332;
+	--color-yellow-600: #6b5a39;
+	--color-yellow-500: #8a7237;
+	--color-yellow-400: #a88f48;
+	--color-yellow-300: #c9ab48;
+	--color-yellow-200: #e6c74c;
+	--color-yellow-100: #f5e6af;
+	--color-yellow-50: #faf3d1;
+
+	--color-green-950: #161814;
+	--color-green-900: #1f241b;
+	--color-green-800: #293021;
+	--color-green-700: #3c4a29;
+	--color-green-600: #4c6424;
+	--color-green-500: #607f35;
+	--color-green-400: #7d9b4e;
+	--color-green-300: #9bb672;
+	--color-green-200: #b8d293;
+	--color-green-100: #dfeacd;
+	--color-green-50: #eaf4dd;
+
+	--color-cyan-950: #111819;
+	--color-cyan-900: #192426;
+	--color-cyan-800: #203133;
+	--color-cyan-700: #2c4a4e;
+	--color-cyan-600: #2a646d;
+	--color-cyan-500: #168092;
+	--color-cyan-400: #449dac;
+	--color-cyan-300: #5dc0d1;
+	--color-cyan-200: #99deea;
+	--color-cyan-100: #ccecf2;
+	--color-cyan-50: #e7f6f8;
+
+	--color-blue-950: #11181d;
+	--color-blue-900: #18242c;
+	--color-blue-800: #1f303e;
+	--color-blue-700: #274863;
+	--color-blue-600: #2c608a;
+	--color-blue-500: #2378c3;
+	--color-blue-400: #4f97d1;
+	--color-blue-300: #73b3e7;
+	--color-blue-200: #aacdec;
+	--color-blue-100: #d9e8f6;
+	--color-blue-50: #eff6fb;
+
+	--color-violet-950: #18161d;
+	--color-violet-900: #24202d;
+	--color-violet-800: #312b3f;
+	--color-violet-700: #4c3d69;
+	--color-violet-600: #665190;
+	--color-violet-500: #8168b3;
+	--color-violet-400: #9d84d2;
+	--color-violet-300: #b8a2e3;
+	--color-violet-200: #d0c3e9;
+	--color-violet-100: #ebe3f9;
+	--color-violet-50: #f4f1f9;
+}
 @theme /* light */ {
 	--color-fg: black;
 	--color-bg-50: var(--color-yellow-50); /** oklch(98.7% 0.026 102.212) */
@@ -24,19 +123,19 @@
 	--color-focus-100: var(--color-blue-200);
 	--color-focus-200: var(--color-blue-400);
 
-  --color-primary: oklch(74.419% 0.15437 43.091);
-  --color-secondary: var(--color-indigo-600);
+	--color-primary: var(--color-red-500);
+	--color-secondary: var(--color-violet-500);
 }
 @utility dark {
 	--color-fg: white;
-	--color-bg-50: oklch(0.19 0.0275 39);
-	--color-bg-100: oklch(0.25 0.0275 39);
-	--color-bg-200: oklch(0.35 0.0275 39);
+	--color-bg-50: var(--color-yellow-900);
+	--color-bg-100: var(--color-yellow-800);
+	--color-bg-200: var(--color-yellow-700);
 	--color-focus-100: var(--color-blue-500);
 	--color-focus-200: var(--color-blue-600);
 
-	--color-primary: oklch(0.3883 0.1583 27.61);
-	--color-secondary: var(--color-indigo-200);
+	--color-primary: var(--color-red-200);
+	--color-secondary: var(--color-violet-200);
 	/* --color-accent: oklch(70% 0.213 47.604); */
 	/* --color-neutral: oklch(20% 0.042 265.755); */
 	/* --color-info: oklch(78% 0.154 211.53); */

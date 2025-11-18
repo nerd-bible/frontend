@@ -11,6 +11,7 @@ export function Layout(props: {
 }) {
 	const [showHeader, setShowHeader] = createSignal(true);
 	let lastScrollTop = 0;
+	let closeTimeout: number;
 
 	return (
 		<div
@@ -29,6 +30,9 @@ export function Layout(props: {
 					setShowHeader(false);
 				} else if (st < lastScrollTop) {
 					setShowHeader(true);
+					clearTimeout(closeTimeout);
+					// TODO: add to settings
+					closeTimeout = setTimeout(() => setShowHeader(false), 8_000);
 				}
 				lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
 			}}
@@ -36,8 +40,10 @@ export function Layout(props: {
 			<header
 				lang={locale()}
 				dir={getLocaleDir(locale())}
+				onPointerOver={() => clearTimeout(closeTimeout)}
+				onPointerDown={() => clearTimeout(closeTimeout)}
 				classList={{
-					"flex bg-bg-50/90 py-4 w-full sticky transition-[top] h-20": true,
+					"flex bg-bg-50/95 py-4 w-full sticky transition-[top] h-20": true,
 					"-top-20": !showHeader(),
 					"top-0": showHeader(),
 				}}
