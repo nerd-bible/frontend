@@ -6,9 +6,9 @@ export function ThemePicker() {
 	const t = useContext(IntlCtx);
 
 	const options = {
-		System: "icon-[mingcute--computer-line]",
-		Dark: "icon-[mingcute--moon-line]",
-		Light: "icon-[mingcute--sun-line]",
+		system: "icon-[mingcute--computer-line]",
+		dark: "icon-[mingcute--moon-line]",
+		light: "icon-[mingcute--sun-line]",
 	};
 
 	return (

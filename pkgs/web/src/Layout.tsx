@@ -22,7 +22,7 @@ export function Layout(props: {
 				"bg-bg-50 text-fg leading-none": true,
 				"h-dvh overflow-auto": true,
 				"dark:not-[.light]:dark text-(--font-size)": true,
-				[theme().toLowerCase()]: true,
+				[theme()]: true,
 			}}
 			onScroll={(ev) => {
 				const st = ev.target.scrollTop;
@@ -47,7 +47,7 @@ export function Layout(props: {
 				}}
 			>
 				<div class="flex-1 content-center">
-					<span class="p-2 font-cursive before:content-['nB'] lg:before:content-['nerd.Bible'] text-primary" />
+					<span class="p-2 font-cursive text-2xl before:content-['nB'] lg:before:content-['nerd.Bible'] text-primary text-shadow-lg" />
 				</div>
 				<form
 					classList={{

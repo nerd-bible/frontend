@@ -6,6 +6,7 @@
 	- [x] fork kobalte one component at a time
 - [ ] Wire conllu to web worker
 - [ ] Choose storage + indexing format
+- [ ] SEARCH
 - [ ] Design review
 - [ ] 99% Browser compatibility
 
@@ -29,3 +30,4 @@
 - [ ] pretty ui for csv editing + custom functions
 	- [ ] must be better than google docs
 - [ ] replace codegen with tsc+vite plugin
+- [ ] handle missing translations (replace createIntl)

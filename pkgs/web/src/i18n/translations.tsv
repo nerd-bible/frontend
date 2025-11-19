@@ -5,7 +5,7 @@ settings	Settings	הגדרות	Ρυθμίσεις	Ajustes
 settings	Font size	גודל גופן	Μέγεθος γραμματοσειράς	Tamaño de fuente
 layout	Quick settings
 layout	Search
-settings.theme	System
-settings.theme	Light
-settings.theme	Dark
+theme.aria-label	system
+theme.aria-label	light
+theme.aria-label	dark
 settings	Column width

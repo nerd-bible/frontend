@@ -5,9 +5,16 @@
 	version="1.1"
 	xmlns="http://www.w3.org/2000/svg">
 	<style>
-		:root { --color-primary: black; }
+		:root {
+			--color-orange-500: #a86437;
+			--color-orange-400: #dd7533;
+
+			--color-primary: var(--color-orange-400);
+		}
 		@media (prefers-color-scheme: dark) {
-			:root { --color-primary: white; }
+			:root {
+				--color-primary: var(--color-orange-500);
+			}
 		}
 	</style>
 	<g transform="translate(-74.094131,-87.663696)">
