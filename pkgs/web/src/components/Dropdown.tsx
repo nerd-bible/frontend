@@ -1,6 +1,6 @@
 import { autoUpdate, shift } from "@floating-ui/dom";
-import { useFloating } from "solid-floating-ui";
 import { createEffect, createSignal, type JSX } from "solid-js";
+import { useFloating } from "./floating";
 
 export const [hasPopover, setHasPopover] = createSignal(false);
 
@@ -15,19 +15,12 @@ export function Dropdown(props: DropdownProps) {
 	const [floating, setFloating] = createSignal<HTMLElement>();
 
 	const position = useFloating(reference, floating, {
-		whileElementsMounted: autoUpdate,
+		whileMounted: autoUpdate,
 		placement: "bottom-end",
 		middleware: [shift()],
 	});
 
 	createEffect(() => setHasPopover(open()));
-
-	function onClick(ev: PointerEvent) {
-		if (!floating()?.contains(ev.target as Node)) {
-			setOpen(false);
-			document.removeEventListener("click", onClick);
-		}
-	}
 
 	return (
 		<>

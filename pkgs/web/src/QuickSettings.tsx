@@ -14,23 +14,23 @@ type DropdownProps = {
 };
 function DropdownItem(props: DropdownProps) {
 	return (
-		<div class="grid grid-cols-subgrid col-span-2 hover:bg-fg/10 pe-4">
+		<Dynamic
+			class="grid grid-cols-subgrid col-span-2 hover:bg-fg/10 pe-4"
+			component={props.href ? "a" : "div"}
+			href={props.href}
+		>
 			<Dynamic
 				class="p-4"
 				component={props.labelFor ? "label" : "div"}
 				for={props.labelFor}
 			>
-				<Dynamic
-					class="flex items-center gap-2"
-					component={props.href ? "a" : "div"}
-					href={props.href}
-				>
+				<span class="flex items-center gap-2">
 					<span class={`hidden sm:inline ${props.icon}`} />
 					<span>{props.label}</span>
-				</Dynamic>
+				</span>
 			</Dynamic>
 			{props.children}
-		</div>
+		</Dynamic>
 	);
 }
 
@@ -59,6 +59,7 @@ export function QuickSettings() {
 					type="range"
 					min={8}
 					max={48}
+					step={2}
 					value={Number.parseInt(fontSize(), 10)}
 					onInput={(ev) => setFontSize(`${ev.target.value}px`)}
 				/>
@@ -74,6 +75,7 @@ export function QuickSettings() {
 					type="range"
 					min={100}
 					max={1000}
+					step={50}
 					value={Number.parseInt(columnWidth(), 10)}
 					onInput={(ev) => setColumnWidth(`${ev.target.value}px`)}
 				/>
@@ -103,9 +105,9 @@ export function QuickSettings() {
 				href="/settings"
 				label={t()("Settings")}
 			>
-				<a href="/settings" class="content-center flex justify-end items-center">
+				<span class="content-center flex justify-end items-center">
 					v{version}
-				</a>
+				</span>
 			</DropdownItem>
 		</form>
 	);
