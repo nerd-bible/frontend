@@ -1,45 +1,35 @@
 import { createSignal, useContext } from "solid-js";
 import { Dropdown, hasPopover } from "./components/Dropdown";
-import { IntlCtx } from "./i18n";
+import { I18nCtx } from "./i18n/Provider";
 import { QuickSettings } from "./QuickSettings";
-import { columnWidth, fontSize, theme } from "./settings";
+import { columnWidth, fontSize } from "./settings";
 
 export function Layout(props: {
 	children: any;
 	classList?: Record<string, boolean>;
 }) {
-	const t = useContext(IntlCtx);
+	const t = useContext(I18nCtx);
 	const [showHeader, setShowHeader] = createSignal(true);
 	let lastScrollTop = 0;
 	let closeTimeout: number;
 
+	document.addEventListener("scroll", () => {
+		const st = window.scrollY;
+		if (st > lastScrollTop && !hasPopover()) {
+			setShowHeader(false);
+		} else if (st < lastScrollTop) {
+			setShowHeader(true);
+			clearTimeout(closeTimeout);
+			// TODO: add to settings
+			closeTimeout = setTimeout(() => setShowHeader(false), 8_000);
+		}
+		lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
+	});
+
 	return (
-		<div
-			classList={{
-				"text-xl": true,
-				"p-4 pt-0": true,
-				"[--spacing:0.15rem] sm:[--spacing:0.25rem]": true,
-				"bg-bg-50 text-fg leading-none": true,
-				"h-dvh overflow-auto": true,
-				"dark:not-[.light]:dark text-(--font-size)": true,
-				[theme()]: true,
-			}}
-			onScroll={(ev) => {
-				const st = ev.target.scrollTop;
-				if (st > lastScrollTop && !hasPopover()) {
-					setShowHeader(false);
-				} else if (st < lastScrollTop) {
-					setShowHeader(true);
-					clearTimeout(closeTimeout);
-					// TODO: add to settings
-					closeTimeout = setTimeout(() => setShowHeader(false), 8_000);
-				}
-				lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
-			}}
-		>
+		<>
 			<header
-				onPointerOver={() => clearTimeout(closeTimeout)}
-				onPointerDown={() => clearTimeout(closeTimeout)}
+				onPointerMove={() => clearTimeout(closeTimeout)}
 				classList={{
 					"flex bg-bg-50/95 py-4 w-full sticky transition-[top] h-20": true,
 					"-top-20": !showHeader(),
@@ -88,6 +78,6 @@ export function Layout(props: {
 			>
 				{props.children}
 			</div>
-		</div>
+		</>
 	);
 }

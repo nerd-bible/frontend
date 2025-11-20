@@ -2,8 +2,15 @@ import { For, useContext } from "solid-js";
 import { Dynamic } from "solid-js/web";
 import { version } from "../package.json";
 import { ThemePicker } from "./components/ThemePicker";
-import { IntlCtx, locale, locales, setLocale } from "./i18n";
-import { columnWidth, fontSize, setColumnWidth, setFontSize } from "./settings";
+import { I18nCtx, locales } from "./i18n";
+import {
+	columnWidth,
+	fontSize,
+	locale,
+	setColumnWidth,
+	setFontSize,
+	setLocale,
+} from "./settings";
 
 type DropdownProps = {
 	children?: any;
@@ -35,7 +42,7 @@ function DropdownItem(props: DropdownProps) {
 }
 
 export function QuickSettings() {
-	const t = useContext(IntlCtx);
+	const t = useContext(I18nCtx);
 
 	return (
 		<form

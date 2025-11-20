@@ -1,4 +1,4 @@
-import tailwindcss from "@tailwindcss/vite";
+import apply from "postcss-class-apply/dist/index";
 import { defineConfig } from "vite";
 import { analyzer } from "vite-bundle-analyzer";
 import solid from "vite-plugin-solid";
@@ -7,7 +7,13 @@ const host = process.env.TAURI_DEV_HOST;
 
 // https://vitejs.dev/config/
 export default defineConfig({
-	plugins: [solid(), tailwindcss(), analyzer({ analyzerMode: "static" })],
+	plugins: [solid(), analyzer({ analyzerMode: "static" })],
+
+	css: {
+		postcss: {
+			plugins: [apply()],
+		},
+	},
 
 	// 1. prevent vite from obscuring rust errors
 	clearScreen: false,

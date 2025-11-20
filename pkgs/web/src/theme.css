@@ -1,0 +1,47 @@
+@import "./pallette.css";
+
+:root {
+	--font-serif: "Noto Serif", "Noto Serif Hebrew", sans-serif;
+	--font-cursive: "Gloria Hallelujah", cursive;
+	--breakpoint-xs: 24rem;
+	--breakpoint-sm: 32rem;
+	--spacing: 2px;
+
+	/* light */
+	--color-fg: black;
+	--color-bg-50: var(--color-yellow-50); /** oklch(98.7% 0.026 102.212) */
+	--color-bg-100: var(--color-yellow-100);
+	--color-bg-200: var(--color-yellow-200);
+	--color-focus-100: var(--color-blue-200);
+	--color-focus-200: var(--color-blue-400);
+
+	--color-primary: var(--color-orange-400);
+	--color-secondary: var(--color-violet-400);
+}
+.dark {
+	--color-fg: white;
+	--color-bg-50: var(--color-yellow-900);
+	--color-bg-100: var(--color-yellow-800);
+	--color-bg-200: var(--color-yellow-700);
+	--color-focus-100: var(--color-blue-500);
+	--color-focus-200: var(--color-blue-600);
+
+	--color-primary: var(--color-orange-500);
+	--color-secondary: var(--color-violet-500);
+}
+@media (prefers-color-scheme: dark) {
+	.system { @apply dark; }
+}
+
+/* biome-ignore lint/suspicious/noUnknownAtRules: they're functions */
+@function --padding(--amount) {
+	/* biome-ignore lint/correctness/noUnknownProperty: new syntax */
+	result: calc(var(--spacing) * var(--amount));
+}
+
+body {
+	padding: --padding(4);
+	padding-top: 0;
+	background: var(--color-bg-50);
+	color: var(--color-fg);
+}

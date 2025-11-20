@@ -1,9 +1,9 @@
 import { For, useContext } from "solid-js";
-import { IntlCtx } from "../i18n";
+import { I18nCtx } from "../i18n";
 import { setTheme, theme } from "../settings";
 
 export function ThemePicker() {
-	const t = useContext(IntlCtx);
+	const t = useContext(I18nCtx);
 
 	const options = {
 		system: "icon-[mingcute--computer-line]",
@@ -21,6 +21,7 @@ export function ThemePicker() {
 					>
 						<input
 							type="radio"
+							checked={theme() === k}
 							name="theme"
 							onInput={() => setTheme(k)}
 							class="appearance-none"
