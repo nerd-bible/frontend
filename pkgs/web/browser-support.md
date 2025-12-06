@@ -2,6 +2,8 @@
 
 Goal: support 99% of users with a consistent experience. Sadly, this is far off.
 
+https://github.com/browserslist/caniuse-lite/tree/main/data/features
+
 ## HTML
 
 Do not use native `<input>` types.
@@ -13,14 +15,11 @@ Do not use native `<input>` types.
 - [Floating UI](https://floating-ui.com/docs/misc#browser-support)
 - Promises
 - Fetch
-- Proxy (solidjs)
+- Proxy (solidjs mergeProps)
 
 ## CSS
 
-- @layer
 - align-[start,end]
-- Nesting syntax
-- color-mix
 - woff2
 - font weight
 - variable font

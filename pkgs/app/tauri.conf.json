@@ -3,9 +3,9 @@
 	"version": "0.0.1",
 	"identifier": "bible.nerd",
 	"build": {
-		"beforeDevCommand": "cd ../web && bun start",
+		"beforeDevCommand": "cd ../web && npm start",
 		"devUrl": "http://localhost:1420",
-		"beforeBuildCommand": "cd ../web && bun run build",
+		"beforeBuildCommand": "cd ../web && npm run build",
 		"frontendDist": "../web/dist"
 	},
 	"bundle": {

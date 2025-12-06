@@ -1,8 +1,8 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 
-const inPath = join(import.meta.dir, "./src/i18n/translations.tsv");
-const outPath = join(import.meta.dir, "./public/i18n/generated");
+const inPath = "./src/i18n/translations.tsv";
+const outPath = "./public/i18n/generated";
 const contents = readFileSync(inPath, "utf8");
 
 const translations: Record<string, Record<string, string>> = {};
@@ -30,7 +30,7 @@ for (const lang in translations) {
 }
 
 // Consumed in `i18n/index.tsx`
-const indexPath = join(import.meta.dir, "./src/i18n/generated/index.ts");
+const indexPath = "./src/i18n/generated/index.ts";
 mkdirSync(dirname(indexPath), { recursive: true });
 writeFileSync(
 	indexPath,

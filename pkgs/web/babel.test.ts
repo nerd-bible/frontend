@@ -1,3 +1,6 @@
+import { transformSync } from "@babel/core";
+
+const src = `
 import { Route, Router } from "@solidjs/router";
 import { render } from "solid-js/web";
 import { I18nProvider } from "./i18n";
@@ -20,3 +23,10 @@ const App = () => (
 );
 
 render(App, document.body);
+`;
+
+const code = transformSync(src, {
+	presets: ["solid"],
+});
+
+console.log(code);

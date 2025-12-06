@@ -1,12 +1,12 @@
 {
 	"name": "@nerd-bible/frontend",
 	"workspaces": [
-		"pkgs/*"
+		"./pkgs/*"
 	],
 	"scripts": {
-		"start": "bun --filter '@nerd-bible/app' start",
-		"start-web": "bun --filter '@nerd-bible/web' start",
-		"build": "bun --filter '*' build",
+		"start": "npm run start --workspace='@nerd-bible/app'",
+		"start-web": "npm run start --workspace='@nerd-bible/web'",
+		"build": "npm run build --workspaces",
 		"fmt": "biome check",
 		"fmt-fix": "biome check --write --unsafe"
 	},

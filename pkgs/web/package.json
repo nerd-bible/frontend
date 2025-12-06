@@ -7,9 +7,8 @@
 		"@floating-ui/dom": "^1.7.4",
 		"@iconify-json/mingcute": "^1.2.5",
 		"@iconify/tailwind4": "^1.1.0",
-		"@nerd-bible/core": "workspace:*",
-		"@nerd-bible/valio": "workspace:*",
-		"@solid-primitives/i18n": "^2.2.1",
+		"@nerd-bible/core": "*",
+		"@nerd-bible/valio": "*",
 		"@solid-primitives/storage": "^4.3.3",
 		"@solidjs/router": "^0.15.3",
 		"@tauri-apps/api": "^2.9.0",
@@ -17,18 +16,20 @@
 		"solid-js": "^1.9.10"
 	},
 	"devDependencies": {
-		"@nerd-bible/node": "workspace:*",
+		"@babel/preset-env": "^7.28.5",
+		"@babel/preset-typescript": "^7.28.5",
+		"@nerd-bible/node": "*",
 		"@types/opentype.js": "^1.3.8",
+		"autoprefixer": "^10.4.22",
 		"opentype.js": "^1.3.4",
-		"postcss-class-apply": "^4.0.1",
-		"vite": "^6.4.1",
+		"vite": "^7.2.6",
 		"vite-bundle-analyzer": "^1.2.3",
 		"vite-plugin-solid": "^2.11.10"
 	},
 	"scripts": {
-		"build": "bun generate && vite build",
-		"generate": "bun run ./generate-i18n.ts",
-		"start": "bun generate && vite",
+		"build": "npm run generate && vite build",
+		"generate": "node ./build/generate-i18n.ts",
+		"start": "npm run generate && vite",
 		"serve": "vite preview"
 	}
 }
