@@ -1,7 +1,7 @@
 // https://rollupjs.org/plugin-development/
 // https://iconify.design/docs/usage/css/no-code/
 import type { IconifyJSON } from "@iconify/types";
-import { createIdResolver, type Plugin } from "vite";
+import type { Plugin } from "vite";
 import { dependencies } from "../../../package.json" with { type: "json" };
 
 type TransformPluginContext = {
@@ -55,6 +55,8 @@ export default function iconifyPlugin(): Plugin[] {
 			}
 		}
 	}
+	const toWatch = new Set<string>();
+	const watching = new Set<string>();
 
 	return [
 		{
@@ -65,21 +67,16 @@ export default function iconifyPlugin(): Plugin[] {
 			transform: {
 				order: "pre",
 				filter: { id: { exclude: [/node_modules/, cssRegex] } },
-				handler(src, _id) {
-					// console.log("scan", _id, src.length);
-					const env = this.environment;
-					createIdResolver(env.config, {
-						...env.config.resolve,
-						extensions: [".css"],
-						mainFields: ["style"],
-						conditions: ["style", "development|production"],
-						tryIndex: false,
-						preferRelative: true,
-					});
+				handler(src, id) {
+					this.environment.config.mode
+					// console.log("scan", id, src.length);
+					toWatch.add(id);
 					addIcons(this, src);
 				},
 			},
-			transformIndexHtml(src) {
+			transformIndexHtml(src, ctx) {
+				// console.log("scan", ctx.filename);
+				toWatch.add(ctx.filename);
 				addIcons(this, src);
 			},
 		},
@@ -89,7 +86,12 @@ export default function iconifyPlugin(): Plugin[] {
 				order: "pre",
 				filter: { id: { include: cssRegex } },
 				handler(src, _id) {
-					// console.log("handle", _id);
+					const needToWatch = toWatch.difference(watching);
+					for (const f of needToWatch) {
+						// console.log("watch", f)
+						this.addWatchFile(f);
+					}
+					// console.log("transform", _id);
 					const withSets = `${source}${Object.keys(usedIcons).map((v) => `.${v}`).join(",")} {
 	width: 1em;
 	height: 1em;
