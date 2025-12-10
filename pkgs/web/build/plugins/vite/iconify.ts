@@ -1,7 +1,12 @@
+// https://rollupjs.org/plugin-development/
+// https://iconify.design/docs/usage/css/no-code/
 import type { IconifyJSON } from "@iconify/types";
-import { escape as htmlEscape } from "html-escaper";
-import type { Plugin } from "vite";
+import { createIdResolver, type Plugin } from "vite";
 import { dependencies } from "../../../package.json" with { type: "json" };
+
+type TransformPluginContext = {
+	warn: (msg: string) => void;
+};
 
 const installedSets: Record<string, IconifyJSON> = {};
 for (const d in dependencies) {
@@ -9,6 +14,8 @@ for (const d in dependencies) {
 	if (split[0] === "@iconify-json")
 		installedSets[split[1]] = (await import(d)).icons;
 }
+// Vite postpends `?direct` to css included from html.
+const cssRegex = /(\.css(\?.*)?$)/;
 
 const re = new RegExp(
 	`\\b(${Object.keys(installedSets).join("|")})\\s+([\\w-]+)`,
@@ -16,36 +23,37 @@ const re = new RegExp(
 );
 
 export default function iconifyPlugin(): Plugin[] {
-	const usedSets = new Set<string>();
+	const usedIcons: Record<string, Set<string>> = {};
 	let source = "";
-	function addIcons(input: string) {
+	function addIcons(ctx: TransformPluginContext, input: string) {
 		let match: RegExpExecArray | null;
 		while ((match = re.exec(input))) {
 			const iconSet = installedSets?.[match[1]];
 			if (!iconSet) {
-				this.warn(`Missing icon set ${match[1]}`);
+				ctx.warn(`Missing install for icon set @iconify-json/${match[1]}`);
 				continue;
 			}
-			usedSets.add(match[1]);
+			usedIcons[match[1]] ??= new Set<string>();
 
 			const icon = iconSet.icons?.[match[2]];
 			if (!icon) {
-				this.warn(`Icon set ${match[1]} does not have icon ${match[2]}`);
+				ctx.warn(`Icon set ${match[1]} does not have icon ${match[2]}`);
 				continue;
 			}
+			
+			function encode(s: string) {
+				// https://datatracker.ietf.org/doc/html/rfc3986#section-2.2
+				return encodeURI(s).replaceAll("%20", " ");
+			}
 
-			const escaped = htmlEscape(icon.body);
-			const dataUrl = `url("data:image/svg+xml,${escaped}")`;
-			source += `.${match[1]}.${match[2]} { --svg: ${dataUrl} }\n`;
+			if (!usedIcons[match[1]].has(match[2])) {
+				const { width, height } = installedSets[match[1]];
+				const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${width} ${height}' width='${width}' height='${height}'>${icon.body.replaceAll('"', "'")}</svg>`;
+				const dataUrl = `url("data:image/svg+xml,${encode(svg)}")`;
+				source += `.${match[1]}.${match[2]} { --svg: ${dataUrl} }\n`;
+				usedIcons[match[1]].add(match[2]);
+			}
 		}
-
-		source += `${[...usedSets].map((v) => `.${v}`).join(",")} {
-	width: 1em;
-	height: 1em;
-	background-color: currentColor;
-	mask: no-repeat center / 100%;
-	mask-image: var(--svg);
-}`;
 	}
 
 	return [
@@ -56,20 +64,40 @@ export default function iconifyPlugin(): Plugin[] {
 			},
 			transform: {
 				order: "pre",
-				filter: { id: { exclude: /\.css$/ } },
-				handler(src) {
-					// console.log("scan", id, src.length);
-					addIcons(src);
+				filter: { id: { exclude: [/node_modules/, cssRegex] } },
+				handler(src, _id) {
+					// console.log("scan", _id, src.length);
+					const env = this.environment;
+					createIdResolver(env.config, {
+						...env.config.resolve,
+						extensions: [".css"],
+						mainFields: ["style"],
+						conditions: ["style", "development|production"],
+						tryIndex: false,
+						preferRelative: true,
+					});
+					addIcons(this, src);
 				},
+			},
+			transformIndexHtml(src) {
+				addIcons(this, src);
 			},
 		},
 		{
 			name: "iconify-css:transform",
 			transform: {
 				order: "pre",
-				filter: { id: { include: /\.css$/ } },
-				handler(src) {
-					return src.replace(`@import "iconify-css";`, source);
+				filter: { id: { include: cssRegex } },
+				handler(src, _id) {
+					// console.log("handle", _id);
+					const withSets = `${source}${Object.keys(usedIcons).map((v) => `.${v}`).join(",")} {
+	width: 1em;
+	height: 1em;
+	background-color: currentColor;
+	mask: no-repeat center / 100%;
+	mask-image: var(--svg);
+}`;
+					return src.replace(`@import "iconify-css";`, withSets);
 				},
 			},
 		},
