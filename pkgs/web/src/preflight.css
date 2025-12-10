@@ -13,6 +13,7 @@
 	margin: 0; /* 2 */
 	padding: 0; /* 2 */
 	border: 0 solid; /* 3 */
+	outline-color: var(--color-focus-200);
 }
 
 /**
@@ -117,9 +118,6 @@ table {
 	border-color: inherit; /* 2 */
 	border-collapse: collapse; /* 3 */
 }
-
-/** Use the modern Firefox focus style for all focusable elements. */
-:-moz-focusring { outline: auto; }
 
 /**
  * Remove the additional `:invalid` styles in Firefox.

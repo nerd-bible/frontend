@@ -2,12 +2,7 @@ import type { AtRule, Helpers, Plugin, Rule } from "postcss";
 import type { NewChild } from "postcss/lib/container";
 
 export function getDecls(rule: Rule | AtRule): NewChild[] {
-	const res: NewChild[] = [];
-	rule.walkDecls((d) => {
-		// have to clone for some reason
-		res.push({ prop: d.prop, value: d.value });
-	});
-	return res;
+	return rule.nodes?.slice() ?? [];
 }
 
 export default function plugin(): Plugin {
@@ -21,10 +16,11 @@ export default function plugin(): Plugin {
 				applyableSelectors[s] = decls;
 		},
 		AtRule: {
-			apply(atRule: AtRule) {
+			apply(atRule: AtRule, helper: Helpers) {
 				for (const selector of atRule.params.split(/\s+/)) {
 					const decls = applyableSelectors[selector];
 					if (decls) atRule.parent?.append(...decls);
+					else atRule.warn(helper.result, `missing definition for ${selector}`);
 				}
 
 				atRule.remove();

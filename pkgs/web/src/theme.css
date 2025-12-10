@@ -3,8 +3,6 @@
 :root {
 	--font-serif: "Noto Serif", "Noto Serif Hebrew", sans-serif;
 	--font-cursive: "Gloria Hallelujah", cursive;
-	--breakpoint-xs: 24rem;
-	--breakpoint-sm: 32rem;
 	--spacing-inc: 2px;
 
 	--radius-xs: 0.125rem;
@@ -48,8 +46,8 @@
 	result: calc(var(--spacing-inc) * --amount);
 }
 
-body {
-	padding: --spacing(4);
+.root {
+	padding: --spacing(2) --spacing(4);
 	padding-top: 0;
 	background: var(--color-bg-50);
 	color: var(--color-fg);

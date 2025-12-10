@@ -10,24 +10,22 @@
 		<script type="module" src="./src/index.ts"></script>
 		<link rel="stylesheet" href="./src/index.css" />
 	</head>
-	<body>
-		<noscript>Please enable JavaScript.</noscript>
+	<body class="root">
 		<header>
 			<!-- onPointerMove={() => clearTimeout(closeTimeout)} -->
-			<div class="logo">
-			</div>
+			<div class="logo"></div>
 			<form class="search">
-				<div class="mingcute search-line mx-2 hidden xs:inline">hello</div>
 				<input
-					id="search"
-					type="search"
+					name="search"
 					autocomplete="off"
 					value="1 Chronicles"
 				>
 			</form>
 			<div class="options">
 				<details class="dropdown">
-					<summary>QS</summary>
+					<summary>
+						<div class="mingcute menu-line"></div>
+					</summary>
 					<div class="content">
 						settings
 					</div>
@@ -39,6 +37,7 @@
 			<!-- 	"font-size": fontSize(), -->
 			<!-- 	"max-width": columnWidth(), -->
 			<!-- }} -->
+			<noscript>Please enable JavaScript.</noscript>
 			<p>
 				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vitae
 				urna in ante tincidunt rutrum vel nec leo. Nulla bibendum, eros at
