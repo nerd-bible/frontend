@@ -3,33 +3,27 @@
 	"type": "module",
 	"version": "0.0.1",
 	"dependencies": {
-		"@ccssmnn/intl": "^0.1.1",
 		"@floating-ui/dom": "^1.7.4",
 		"@iconify-json/mingcute": "^1.2.5",
-		"@iconify/tailwind4": "^1.1.0",
 		"@nerd-bible/core": "*",
 		"@nerd-bible/valio": "*",
-		"@solid-primitives/storage": "^4.3.3",
-		"@solidjs/router": "^0.15.3",
 		"@tauri-apps/api": "^2.9.0",
-		"locale-matcher": "^2.2.1",
-		"solid-js": "^1.9.10"
+		"locale-matcher": "^2.2.1"
 	},
 	"devDependencies": {
-		"@babel/preset-env": "^7.28.5",
-		"@babel/preset-typescript": "^7.28.5",
 		"@nerd-bible/node": "*",
+		"@types/html-escaper": "^3.0.4",
 		"@types/opentype.js": "^1.3.8",
-		"autoprefixer": "^10.4.22",
+		"html-escaper": "^3.0.3",
 		"opentype.js": "^1.3.4",
-		"vite": "^7.2.6",
-		"vite-bundle-analyzer": "^1.2.3",
-		"vite-plugin-solid": "^2.11.10"
+		"vite": "^8.0.0-beta.1",
+		"vite-bundle-analyzer": "^1.3.1"
 	},
 	"scripts": {
 		"build": "npm run generate && vite build",
 		"generate": "node ./build/generate-i18n.ts",
 		"start": "npm run generate && vite",
 		"serve": "vite preview"
-	}
+	},
+	"browserslist": "fully supports es6 and supports webworkers and supports fetch and supports woff2"
 }

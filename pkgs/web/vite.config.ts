@@ -1,22 +1,17 @@
-import autoprefixer from "autoprefixer";
 import { defineConfig } from "vite";
 import { analyzer } from "vite-bundle-analyzer";
-import solid from "vite-plugin-solid";
-import apply from "./build/postcss-apply";
+import iconify from "./build/plugins/vite/iconify";
 
 const host = process.env.TAURI_DEV_HOST;
 
 // https://vitejs.dev/config/
 export default defineConfig({
-	plugins: [solid({ hot: false }), analyzer({ analyzerMode: "static" })],
+	plugins: [iconify(), analyzer({ analyzerMode: "static" })],
 	build: {
-		minify: false,
-		cssMinify: false,
-	},
-	css: {
-		postcss: {
-			plugins: [apply(), autoprefixer()],
-		},
+		// minify: false,
+		// cssMinify: false,
+		// sourcemap: true,
+		modulePreload: false,
 	},
 	// 1. prevent vite from obscuring rust errors
 	clearScreen: false,

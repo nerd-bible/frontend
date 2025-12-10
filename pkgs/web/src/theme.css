@@ -5,7 +5,16 @@
 	--font-cursive: "Gloria Hallelujah", cursive;
 	--breakpoint-xs: 24rem;
 	--breakpoint-sm: 32rem;
-	--spacing: 2px;
+	--spacing-inc: 2px;
+
+	--radius-xs: 0.125rem;
+	--radius-sm: 0.25rem;
+	--radius-md: 0.375rem;
+	--radius-lg: 0.5rem;
+	--radius-xl: 0.75rem;
+	--radius-2xl: 1rem;
+	--radius-3xl: 1.5rem;
+	--radius-4xl: 2rem;
 
 	/* light */
 	--color-fg: black;
@@ -34,13 +43,13 @@
 	.system { @apply .dark; }
 }
 
-@function --padding(--amount) {
+@function --spacing(--amount) {
 	/* biome-ignore lint/correctness/noUnknownProperty: new syntax */
-	result: calc(var(--spacing) * var(--amount));
+	result: calc(var(--spacing-inc) * --amount);
 }
 
 body {
-	padding: --padding(4);
+	padding: --spacing(4);
 	padding-top: 0;
 	background: var(--color-bg-50);
 	color: var(--color-fg);

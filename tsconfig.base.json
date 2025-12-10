@@ -34,7 +34,7 @@
 		// Allow detecting linking to *.ts
 		// "customConditions": ["@source"]
 	},
-	"include": ["${configDir}/src", "${configDir}/src/**/*.json"],
+	"include": ["${configDir}/src", "${configDir}/src/**/*.json", "${configDir}/build",],
 	// Don't typecheck test files
 	"exclude": ["${configDir}/**/*.test.*", "${configDir}/**/__snapshots__/*"]
 }

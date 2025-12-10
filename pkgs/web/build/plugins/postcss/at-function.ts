@@ -8,7 +8,7 @@ type CssFunction = { args: string[]; value: string };
 // Should be different syntax for decl/caller
 // Maybe this can work?
 // https://github.com/postcss/postcss/blob/main/docs/syntax.md
-const fnPattern = /(--[\w-]+)\(([\w-]+(?:,\s*[\w-]+)*)\)/;
+const fnPattern = /(--[\w-]+)\(([\w-.]+(?:,\s*[\w-.]+)*)\)/;
 function parseFn(s: string) {
 	const parsed = fnPattern.exec(s);
 	if (!parsed) return; // probably some other valid syntax
@@ -23,10 +23,9 @@ export default function plugin(): Plugin {
 	return {
 		postcssPlugin: "postcss-function",
 		Declaration(d: Declaration, helper: Helpers) {
-			if (d.value.startsWith("--")) {
-				const parsed = parseFn(d.value);
-				if (!parsed) return; // probably some other valid syntax
-
+			let nextValue = d.value;
+			let parsed: ReturnType<typeof parseFn>;
+			while (parsed = parseFn(nextValue)) {
 				const fn = functions[parsed.name];
 				if (!fn) {
 					d.warn(
@@ -44,16 +43,17 @@ export default function plugin(): Plugin {
 					return;
 				}
 
-				let replaced = fn.value;
+				let evaled = fn.value;
 				for (let i = 0; i < parsed.args.length; i++) {
-					replaced = replaced.replace(
+					evaled = evaled.replace(
 						new RegExp(fn.args[i], "g"),
 						parsed.args[i],
 					);
 				}
 
-				d.value = replaced;
+				nextValue = nextValue.replace(fnPattern, evaled);
 			}
+			d.value = nextValue;
 		},
 		AtRule: {
 			function(atRule: AtRule, helper: Helpers) {

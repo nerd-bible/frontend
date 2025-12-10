@@ -1,1 +1,64 @@
 /* @import "./forms.css"; */
+
+header {
+	display: flex;
+	gap: --spacing(4);
+	justify-content: space-between;
+	align-items: baseline;
+	position: sticky;
+	transition: top;
+	top: 0;
+	background: var(--color-bg-50);
+	/* TODO: find way to use opacity */
+	/* biome-ignore lint/suspicious/noDuplicateProperties: if has support */
+	background: color-mix(in srgb, var(--color-bg-50), transparent 4%);
+	padding-top: --spacing(2);
+	padding-bottom: --spacing(4);
+	width: 100%;
+
+	& > .logo {
+		display: flex;
+
+		& > span {
+			font-family: var(--font-cursive);
+			/* font-size: 1.5rem; */
+			color: var(--color-primary);
+			text-shadow: 0px 1px 2px rgb(0 0 0 / 0.1), 0px 3px 2px rgb(0 0 0 / 0.1), 0px 4px 8px rgb(0 0 0 / 0.1);
+
+			&::before {
+				content: "nerd.Bible";
+			}
+		}
+	}
+
+	& > .search {
+		flex: 1;
+		background: var(--background-100);
+		border-radius: var(--radius-md);
+
+		& > input {
+			outline: none;
+			width: 100%;
+		}
+	}
+
+	& > .options {
+		display: flex;
+		justify-content: end;
+	}
+}
+
+.dropdown {
+	& > summary {
+		list-style: none;
+	}
+	& > .content {
+		position: absolute;
+	}
+}
+
+main {
+	margin: auto;
+	font-family: var(--font-serif);
+	line-height: 1.5;
+}
