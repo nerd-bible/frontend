@@ -14,6 +14,10 @@
 	padding: 0; /* 2 */
 	border: 0 solid; /* 3 */
 	outline-color: var(--color-focus-200);
+	&:focus {
+		outline-style: solid;
+		outline-width: 0.1rem;
+	}
 }
 
 /**

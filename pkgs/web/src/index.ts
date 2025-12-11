@@ -2,18 +2,21 @@ import type {
 	AutoUpdateOptions,
 	ComputePositionConfig,
 } from "@floating-ui/dom";
-import { autoUpdate, computePosition, shift } from "@floating-ui/dom";
+import { autoUpdate, computePosition, offset, shift } from "@floating-ui/dom";
 
 console.log("hello worldd");
-
 const root = document.body;
-if (!root) throw new Error("missing root");
 
-const searchInput = root.querySelector<HTMLInputElement>("form > input");
-const searchForm = searchInput?.parentElement;
+function getId<T extends HTMLElement>(id: string): T {
+	const res = root.querySelector(`#${id}`);
+	if (!res) throw Error(`missing element #${id}`);
+	return res as T;
+}
+
+const searchInput = getId<HTMLInputElement>("search");
+const searchForm = searchInput?.parentElement as HTMLFormElement;
 searchForm?.addEventListener("submit", (ev) => {
-	const query = searchInput?.value;
-	console.log(query);
+	// const query = searchInput?.value;
 	ev.preventDefault();
 });
 
@@ -45,10 +48,19 @@ root.querySelectorAll("details.dropdown").forEach((e) => {
 		floating,
 		{
 			placement: "bottom-end",
-			middleware: [shift()],
+			middleware: [shift(), offset(2)],
 		},
 		{
 			ancestorScroll: false,
 		},
 	);
+});
+root.addEventListener("keydown", (ev) => {
+	if (ev.key === "Escape") {
+		root
+			.querySelectorAll<HTMLDetailsElement>("details.dropdown")
+			.forEach((e) => {
+				e.removeAttribute("open");
+			});
+	}
 });

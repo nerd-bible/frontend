@@ -1,19 +1,34 @@
-import { makePersisted } from "@solid-primitives/storage";
 import { pickLocale } from "locale-matcher";
-import { createSignal } from "solid-js";
-import { locales } from "./i18n/locales";
 
-function createSetting<T>(name: string, defaultValue: T) {
-	return makePersisted(createSignal(defaultValue), { name });
+type Bindable = HTMLInputElement | HTMLSelectElement;
+
+const boundEles: Record<string, Bindable> = {};
+const storage = localStorage;
+
+function bindSetting<T extends string>(name: string, defaultValue: T) {
+	const ele = document.getElementById(name)! as Bindable;
+	if (storage[name] == null) storage.setItem(name, defaultValue);
+	boundEles[name] = ele;
+
+	ele?.addEventListener("change", () => storage.setItem(name, ele.value));
 }
 
-export const [locale, setLocale] = createSetting(
-	"locale",
-	pickLocale(navigator.languages, locales, locales[0]),
-);
-export const [theme, setTheme] = createSetting("theme", "system");
-export const [fontSize, setFontSize] = createSetting("fontSize", "20px");
-export const [columnWidth, setColumnWidth] = createSetting(
-	"columnWidth",
-	"600px",
-);
+window.addEventListener("storage", (event) => {
+	console.log("storage", event);
+	const boundEle = boundEles[event.key ?? ""];
+	if (event.storageArea === storage && boundEle && event.newValue != null) {
+		boundEle.value = event.newValue;
+	}
+});
+
+const locales = [];
+const children = document.getElementById("lang")!.children;
+for (let i = 0; i < children.length; i++) {
+	locales.push(children.item(i)!.value);
+}
+console.log(locales);
+
+bindSetting("locale", pickLocale(navigator.languages, locales, locales[0]));
+bindSetting("theme", "system");
+bindSetting("fontSize", "20px");
+bindSetting("columnWidth", "600px");

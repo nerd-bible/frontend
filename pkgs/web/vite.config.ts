@@ -1,12 +1,13 @@
 import { defineConfig } from "vite";
 import { analyzer } from "vite-bundle-analyzer";
 import iconify from "./build/plugins/vite/iconify";
+import renderBlocking from "./build/plugins/vite/blocking-split";
 
 const host = process.env.TAURI_DEV_HOST;
 
 // https://vitejs.dev/config/
 export default defineConfig({
-	plugins: [iconify(), analyzer({ analyzerMode: "static" })],
+	plugins: [iconify(), renderBlocking(), analyzer({ analyzerMode: "static" })],
 	build: {
 		// minify: false,
 		// cssMinify: false,

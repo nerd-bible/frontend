@@ -1,6 +1,11 @@
 @import "./pallette.css";
 
-:root {
+@function --spacing(--amount) {
+	/* biome-ignore lint/correctness/noUnknownProperty: new syntax */
+	result: calc(var(--spacing-inc) * --amount);
+}
+
+.root {
 	--font-serif: "Noto Serif", "Noto Serif Hebrew", sans-serif;
 	--font-cursive: "Gloria Hallelujah", cursive;
 	--spacing-inc: 2px;
@@ -14,6 +19,8 @@
 	--radius-3xl: 1.5rem;
 	--radius-4xl: 2rem;
 
+	--drop-shadow-xl: 0 9px 7px rgb(0 0 0 / 0.1);
+
 	/* light */
 	--color-fg: black;
 	--color-bg-50: var(--color-yellow-50); /** oklch(98.7% 0.026 102.212) */
@@ -24,31 +31,35 @@
 
 	--color-primary: var(--color-orange-400);
 	--color-secondary: var(--color-violet-400);
-}
-.dark {
-	--color-fg: white;
-	--color-bg-50: var(--color-yellow-900);
-	--color-bg-100: var(--color-yellow-800);
-	--color-bg-200: var(--color-yellow-700);
-	--color-focus-100: var(--color-blue-500);
-	--color-focus-200: var(--color-blue-600);
 
-	--color-primary: var(--color-orange-500);
-	--color-secondary: var(--color-violet-500);
-}
-
-@media (prefers-color-scheme: dark) {
-	.system { @apply .dark; }
-}
-
-@function --spacing(--amount) {
-	/* biome-ignore lint/correctness/noUnknownProperty: new syntax */
-	result: calc(var(--spacing-inc) * --amount);
-}
-
-.root {
+	font-size: 20px;
 	padding: --spacing(2) --spacing(4);
 	padding-top: 0;
 	background: var(--color-bg-50);
 	color: var(--color-fg);
+
+	&.dark {
+		--color-fg: white;
+		--color-bg-50: var(--color-yellow-900);
+		--color-bg-100: var(--color-yellow-800);
+		--color-bg-200: var(--color-yellow-700);
+		--color-focus-100: var(--color-blue-500);
+		--color-focus-200: var(--color-blue-600);
+
+		--color-primary: var(--color-orange-500);
+		--color-secondary: var(--color-violet-500);
+	}
+}
+
+@media (prefers-color-scheme: dark) {
+	.root.system { @apply .dark; }
+}
+
+.sr-only {
+	position:absolute;
+	left:-10000px;
+	top:auto;
+	width:1px;
+	height:1px;
+	overflow:hidden;
 }

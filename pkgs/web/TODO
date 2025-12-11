@@ -8,11 +8,12 @@
 - [ ] Choose storage + indexing format
 - [ ] SEARCH
 - [ ] Design review
-- [ ] 99% Browser compatibility
+- [x] 99% Browser compatibility
 
 # minor
 - [x] Don't touch `document.documentElement` nor :root
-- [ ] index.html per language with ssr + preloaded fonts+i18n
+- [.] ~index.html per language with ssr + preloaded fonts+i18n~
+- [ ] remove logo font, noto webfont as fallback
 
 ## settings
 - [x] quick settings ul -> form

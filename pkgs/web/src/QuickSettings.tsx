@@ -60,16 +60,6 @@ export function QuickSettings() {
 				label={t()("Font size")}
 				labelFor="fontSize"
 			>
-				<input
-					id="fontSize"
-					class="w-42"
-					type="range"
-					min={8}
-					max={48}
-					step={2}
-					value={Number.parseInt(fontSize(), 10)}
-					onInput={(ev) => setFontSize(`${ev.target.value}px`)}
-				/>
 			</DropdownItem>
 			<DropdownItem
 				icon="icon-[mingcute--font-size-line]"

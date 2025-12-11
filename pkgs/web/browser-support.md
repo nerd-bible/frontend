@@ -4,6 +4,8 @@ Goal: support 99% of users with a consistent experience. Sadly, this is far off.
 
 https://github.com/browserslist/caniuse-lite/tree/main/data/features
 
+https://github.com/rstacruz/details-polyfill/blob/master/index.js
+
 ## HTML
 
 Do not use native `<input>` types.
