@@ -24,57 +24,55 @@
 				>
 			</form>
 			<div class="options">
-				<details class="dropdown">
-					<summary>
-						<div class="mingcute menu-line"></div>
-					</summary>
-					<form class="content">
-						<label>
-							Theme
-							<select id="theme">
-								<option value="system">System</option>
-								<option value="dark">Dark</option>
-								<option value="light">Light</option>
-							</select>
-						</label>
-						<label>
-							Font size
-							<input
-								id="fontSize"
-								type="range"
-								min="8"
-								max="48"
-								step="2"
-							>
-						</label>
-						<label>
-							Column width
-							<input
-								id="columnWidth"
-								type="range"
-								min="100"
-								max="2000"
-								step="50"
-							>
-						</label>
-						<label>
-							Language
-							<select id="locale">
-								<option value="en">English</option>
-								<option value="he">עברית</option>
-								<option value="el">Ελληνικά</option>
-								<option value="es">español</option>
-							</select>
-						</label>
-						<a href="/settings">Settings</a>
-					</form>
-				</details>
+				<button id="settingsToggle">
+					<div class="mingcute menu-line"></div>
+				</button>
 			</div>
 		</header>
 		<main dir="ltr">
 			<noscript>Please enable JavaScript.</noscript>
 			Loading...
 		</main>
-		<div id="wordHover"></div>
+		<div class="popover" id="wordHover"></div>
+		<form class="popover" id="settings">
+			<label>
+				Theme
+				<select id="theme">
+					<option value="system">System</option>
+					<option value="dark">Dark</option>
+					<option value="light">Light</option>
+				</select>
+			</label>
+			<label>
+				Font size
+				<input
+					id="fontSize"
+					type="range"
+					min="8"
+					max="48"
+					step="2"
+				>
+			</label>
+			<label>
+				Column width
+				<input
+					id="columnWidth"
+					type="range"
+					min="100"
+					max="2000"
+					step="20"
+				>
+			</label>
+			<label>
+				Language
+				<select id="locale">
+					<option value="en">English</option>
+					<option value="he">עברית</option>
+					<option value="el">Ελληνικά</option>
+					<option value="es">español</option>
+				</select>
+			</label>
+			<a href="/settings">Settings</a>
+		</form>
 	</body>
 </html>

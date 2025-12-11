@@ -38,18 +38,18 @@
 	color: var(--color-fg);
 	width: 100%;
 	margin: auto;
+}
 
-	&.dark {
-		--color-fg: white;
-		--color-bg-50: var(--color-yellow-900);
-		--color-bg-100: var(--color-yellow-800);
-		--color-bg-200: var(--color-yellow-700);
-		--color-focus-100: var(--color-blue-500);
-		--color-focus-200: var(--color-blue-600);
+.dark {
+	--color-fg: white;
+	--color-bg-50: var(--color-yellow-900);
+	--color-bg-100: var(--color-yellow-800);
+	--color-bg-200: var(--color-yellow-700);
+	--color-focus-100: var(--color-blue-500);
+	--color-focus-200: var(--color-blue-600);
 
-		--color-primary: var(--color-orange-500);
-		--color-secondary: var(--color-violet-500);
-	}
+	--color-primary: var(--color-orange-500);
+	--color-secondary: var(--color-violet-500);
 }
 
 @media (prefers-color-scheme: dark) {

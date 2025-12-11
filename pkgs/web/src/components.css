@@ -45,38 +45,6 @@ header {
 		}
 	}
 
-	& > .options {
-		display: flex;
-		justify-content: end;
-
-		& .content {
-			padding: --spacing(2) 0;
-			width: --spacing(100);
-			user-select: none;
-			border-radius: var(--radius-md);
-
-			& > * {
-				width: 100%;
-				padding: --spacing(1) --spacing(4);
-			}
-
-			& > a {
-				display: block;
-				&:hover {
-					background: var(--color-bg-100);
-				}
-			}
-		}
-
-		& label {
-			display: flex;
-			justify-content: space-between;
-		}
-
-		& input, & select {
-			width: 100px;
-		}
-	}
 }
 
 .button {
@@ -89,31 +57,54 @@ header {
 	}
 }
 
-.dropdown {
-	& > summary {
-		@apply .button;
-	}
-	&:open > summary {
-		background: var(--color-hover);
-	}
-	& > summary {
-		list-style: none;
-	}
-	& > .content {
-		position: absolute;
-		background: var(--color-bg-200);
-		filter: drop-shadow(var(--drop-shadow-xl));
-	}
-}
-
 main {
 	margin: auto;
 	font-family: var(--font-serif);
 	line-height: 1.5;
 }
 
-#wordHover {
+.popover {
 	position: absolute;
-	visibility: hidden;
+	display: none;
 	background: var(--color-bg-200);
+	filter: drop-shadow(var(--drop-shadow-xl));
+	border-radius: var(--radius-md);
+}
+
+#settings {
+	padding: --spacing(2) 0;
+	width: --spacing(100);
+	user-select: none;
+
+	& > * {
+		width: 100%;
+		padding: --spacing(1) --spacing(4);
+	}
+
+	& > a {
+		display: block;
+		&:hover {
+			background: var(--color-bg-100);
+		}
+	}
+
+	& label {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	& input, & select {
+		width: 100px;
+	}
+}
+
+#wordHover {
+	padding: --spacing(4);
+	display: flex;
+
+	li {
+		display: flex;
+		justify-content: space-between;
+		gap: --spacing(4);
+	}
 }

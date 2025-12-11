@@ -25,7 +25,7 @@ function bindSetting(
 	effect?.(ele.value);
 	bound[name] = { ele, effect };
 
-	ele?.addEventListener("change", () => {
+	ele?.addEventListener("input", () => {
 		storage.setItem(name, ele.value);
 		effect?.(ele.value);
 	});
