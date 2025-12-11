@@ -8,6 +8,9 @@ const host = process.env.TAURI_DEV_HOST;
 // https://vitejs.dev/config/
 export default defineConfig({
 	plugins: [iconify(), renderBlocking(), analyzer({ analyzerMode: "static" })],
+	resolve: {
+		conditions: ["bun"],
+	},
 	build: {
 		// minify: false,
 		// cssMinify: false,
