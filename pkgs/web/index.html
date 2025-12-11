@@ -8,9 +8,10 @@
 		<link rel="icon" type="image/svg+xml" href="/logo.svg" />
 		<title>Nerd Bible</title>
 		<script type="module" defer src="./src/index.ts"></script>
+		<script type="module" defer src="./src/critical.ts"></script>
 		<link rel="stylesheet" href="./src/index.css" />
 	</head>
-	<body class="root">
+	<body>
 		<header>
 			<!-- onPointerMove={() => clearTimeout(closeTimeout)} -->
 			<div class="logo"></div>
@@ -47,8 +48,18 @@
 							>
 						</label>
 						<label>
+							Column width
+							<input
+								id="columnWidth"
+								type="range"
+								min="100"
+								max="2000"
+								step="50"
+							>
+						</label>
+						<label>
 							Language
-							<select id="lang">
+							<select id="locale">
 								<option value="en">English</option>
 								<option value="he">עברית</option>
 								<option value="el">Ελληνικά</option>
@@ -64,7 +75,6 @@
 			<noscript>Please enable JavaScript.</noscript>
 			Loading...
 		</main>
-		<div id="wordHover" style="position:absolute;display:none">
-		</div>
+		<div id="wordHover"></div>
 	</body>
 </html>

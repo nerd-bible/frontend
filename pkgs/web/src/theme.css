@@ -5,7 +5,7 @@
 	result: calc(var(--spacing-inc) * --amount);
 }
 
-.root {
+:root {
 	--font-serif: "Noto Serif", "Noto Serif Hebrew", sans-serif;
 	--font-cursive: "Gloria Hallelujah", cursive;
 	--spacing-inc: 0.25rem;
@@ -32,11 +32,12 @@
 	--color-primary: var(--color-orange-400);
 	--color-secondary: var(--color-violet-400);
 
-	font-size: 20px;
 	padding: --spacing(2) --spacing(4);
 	padding-top: 0;
 	background: var(--color-bg-50);
 	color: var(--color-fg);
+	width: 100%;
+	margin: auto;
 
 	&.dark {
 		--color-fg: white;
@@ -52,7 +53,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-	.root.system { @apply .dark; }
+	.system { @apply .dark; }
 }
 
 .sr-only {

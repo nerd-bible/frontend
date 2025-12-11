@@ -9,8 +9,8 @@ import {
 	offset,
 	shift,
 } from "@floating-ui/dom";
-import { conllu } from "@nerd-bible/core";
-import * as z from "@nerd-bible/valio";
+import type { conllu } from "@nerd-bible/core";
+import type * as z from "@nerd-bible/valio";
 
 console.log("Welcome to nerd.Bible");
 
@@ -43,6 +43,7 @@ function floatEle(
 				Object.assign(target.style, {
 					left: `${x}px`,
 					top: `${y}px`,
+					visibility: "visible",
 				});
 			}),
 		watchOptions,
@@ -80,11 +81,16 @@ const worker = new Worker(new URL("./worker", import.meta.url), {
 	type: "module",
 });
 
+type Sentences = z.Output<typeof conllu.normal>;
+type WordElement = HTMLSpanElement & {
+	conllu: Sentences[number]["words"][number];
+};
+
 worker.postMessage({ sentences: "gen" });
 worker.addEventListener("message", (ev) => {
 	main.innerHTML = "";
 
-	const sentences: z.Output<typeof conllu.normal> = ev.data;
+	const sentences: Sentences = ev.data;
 	let p: HTMLParagraphElement | undefined;
 	for (const s of sentences) {
 		const newpar = s.headers["newpar"];
@@ -95,13 +101,10 @@ worker.addEventListener("message", (ev) => {
 		}
 
 		for (const w of s.words) {
-			const span = document.createElement("span");
+			const span = document.createElement("span") as WordElement;
+			span.tabIndex = 0;
 			span.textContent = w.form;
-			for (const a in w) {
-				if (!["form", "feats", "deps", "misc"].includes(a)) {
-					span.setAttribute(a, w[a]);
-				}
-			}
+			span.conllu = w;
 			p?.appendChild(span);
 			if (w.misc["SpaceAfter"] !== "No") {
 				p?.appendChild(new Text(" "));
@@ -110,20 +113,56 @@ worker.addEventListener("message", (ev) => {
 	}
 	if (p) main.appendChild(p);
 });
+function flatten(obj: Record<string, any>, prefix?: string) {
+	const res: Record<string, any> = {};
+
+	for (const k in obj) {
+		const val = obj[k];
+		const newKey = prefix ? `${prefix}.${k}` : k;
+
+		if (typeof val === "object") {
+			if (Array.isArray(val)) {
+				const { ...arrToObj } = val;
+				const newObj = flatten(arrToObj, newKey);
+				Object.assign(res, newObj);
+			} else {
+				const newObj = flatten(val, newKey);
+				Object.assign(res, newObj);
+			}
+		} else {
+			res[newKey] = val;
+		}
+	}
+
+	return res;
+}
 
 const hoverBox = document.getElementById("wordHover")!;
-main.addEventListener("pointerdown", (ev) => {
-	if (ev.target instanceof HTMLElement && ev.target.tagName === "SPAN") {
-		hoverBox.innerText = "hello";
-		computePosition(ev.target, hoverBox, {
-			placement: "bottom",
-			middleware: [offset(2), flip()],
-		}).then(({ x, y }) => {
-			Object.assign(hoverBox.style, {
-				left: `${x}px`,
-				top: `${y}px`,
-				display: "inline-block",
-			});
-		});
+
+function clickWord(target: any) {
+	if (!(target instanceof HTMLElement && "conllu" in target)) {
+		hoverBox.style.removeProperty("visibility");
+		return;
 	}
+
+	hoverBox.innerHTML = "";
+	const ul = document.createElement("ul");
+	const word = (target as WordElement).conllu;
+	const flattened = flatten(word);
+	for (const k in flattened) {
+		const li = document.createElement("li");
+		li.innerText = `${k}: ${JSON.stringify(flattened[k])}`;
+		ul.appendChild(li);
+	}
+	hoverBox.append(ul);
+
+	floatEle(target, hoverBox, {
+		middleware: [flip(), shift(), offset(2)],
+	});
+}
+
+document.addEventListener("click", (ev) => clickWord(ev.target));
+main.addEventListener("keypress", (ev) => {
+	console.log("keypress", ev);
+	if (ev.key === " " || ev.key === "Enter") clickWord(ev.target);
 });

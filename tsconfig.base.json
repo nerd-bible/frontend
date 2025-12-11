@@ -30,9 +30,9 @@
 		// Multi-project mode
 		"composite": true,
 		"incremental": true,
-		"declarationMap": true
+		"declarationMap": true,
 		// Allow detecting linking to *.ts
-		// "customConditions": ["@source"]
+		"customConditions": ["bun"]
 	},
 	"include": ["${configDir}/src", "${configDir}/src/**/*.json", "${configDir}/build",],
 	// Don't typecheck test files

@@ -1,5 +1,6 @@
 /* @import "./forms.css"; */
 header {
+	font-size: 20px;
 	display: flex;
 	gap: --spacing(4);
 	padding: --spacing(2);
@@ -109,4 +110,10 @@ main {
 	margin: auto;
 	font-family: var(--font-serif);
 	line-height: 1.5;
+}
+
+#wordHover {
+	position: absolute;
+	visibility: hidden;
+	background: var(--color-bg-200);
 }
