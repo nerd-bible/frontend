@@ -3,4 +3,5 @@
 @import "./theme.css";
 @import "./components.css";
 @import "./responsive.css";
+@import "./conllu.css";
 @import "iconify-css";

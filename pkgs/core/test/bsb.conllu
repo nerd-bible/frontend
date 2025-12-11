@@ -72,7 +72,7 @@
 8	be	be	VERB	VB	VerbForm=Inf	6	xcomp	_	_
 9	light	light	NOUN	NN	Number=Sing	8	nsubj	_	SpaceAfter=No|Footnote=Cited in 2 Corinthians 4:6
 10	,	,	PUNCT	,	_	6	punct	_	SpaceAfter=No
-a	”	''	PUNCT	''	_	6	punct	_	_
+11	”	''	PUNCT	''	_	6	punct	_	_
 12	and	and	CCONJ	CC	_	14	cc	_	_
 13	there	there	PRON	EX	PronType=Dem	14	expl	_	_
 14	was	be	VERB	VBD	Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin	6	conj	_	_

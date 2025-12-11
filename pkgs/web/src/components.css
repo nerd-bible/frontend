@@ -52,6 +52,7 @@ header {
 			padding: --spacing(2) 0;
 			width: --spacing(100);
 			user-select: none;
+			border-radius: var(--radius-md);
 
 			& > * {
 				width: 100%;
