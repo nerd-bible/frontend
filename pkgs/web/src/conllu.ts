@@ -1,7 +1,7 @@
 import { flip, offset, shift } from "@floating-ui/dom";
 import type { conllu } from "@nerd-bible/core";
 import type * as z from "@nerd-bible/valio";
-import { floatEle } from "./popover";
+import { open } from "./popover";
 
 type Sentences = z.Output<typeof conllu.normal>;
 type WordElement = HTMLSpanElement & {
@@ -91,7 +91,7 @@ export function clickWord(target: any) {
 	}
 	hoverBox.append(ul);
 
-	floatEle(target, hoverBox, {
+	open(target, hoverBox, {
 		middleware: [flip(), shift(), offset(2)],
 	});
 }

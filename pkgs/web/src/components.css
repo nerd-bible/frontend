@@ -1,6 +1,6 @@
 /* @import "./forms.css"; */
 header {
-	font-size: 20px;
+	font-size: var(--font-size-ui);
 	display: flex;
 	gap: --spacing(4);
 	padding: --spacing(2);
@@ -69,12 +69,13 @@ main {
 	background: var(--color-bg-200);
 	filter: drop-shadow(var(--drop-shadow-xl));
 	border-radius: var(--radius-md);
+	font-size: var(--font-size-ui);
 }
 
 #settings {
 	padding: --spacing(2) 0;
-	width: --spacing(100);
 	user-select: none;
+	width: --spacing(84);
 
 	& > * {
 		width: 100%;
@@ -94,7 +95,7 @@ main {
 	}
 
 	& input, & select {
-		width: 100px;
+		width: --spacing(32);
 	}
 }
 

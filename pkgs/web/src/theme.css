@@ -8,6 +8,7 @@
 :root {
 	--font-serif: "Noto Serif", "Noto Serif Hebrew", sans-serif;
 	--font-cursive: "Gloria Hallelujah", cursive;
+	--font-size-ui: 20px;
 	--spacing-inc: 0.25rem;
 
 	--radius-xs: 0.125rem;
