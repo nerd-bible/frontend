@@ -26,17 +26,18 @@
 			</div>
 		</header>
 		<main dir="ltr">
-			<noscript>Please enable JavaScript.</noscript>
 			<div class="loading">
 				<div class="book">
-					<!-- <figure class="page"></figure> -->
-					<!-- <figure class="page"></figure> -->
 					<figure class="page turning"></figure>
 					<figure class="page turning"></figure>
 					<figure class="page turning"></figure>
 					<figure class="page turning"></figure>
 				</div>
-				<div>Loading</div>
+				<noscript>
+					<div>Please enable JavaScript.</div>
+					<style>.loadingMsg{display:none}</style>
+				</noscript>
+				<div class="loadingMsg">Loading</div>
 			</div>
 		</main>
 		<div class="popover" id="wordHover"></div>
