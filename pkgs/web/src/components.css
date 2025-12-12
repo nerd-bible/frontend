@@ -98,11 +98,10 @@ main {
 	}
 }
 
-#wordHover {
+#wordHover > ul {
 	padding: --spacing(4);
-	display: flex;
 
-	li {
+	& > li {
 		display: flex;
 		justify-content: space-between;
 		gap: --spacing(4);

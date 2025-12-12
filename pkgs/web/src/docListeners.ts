@@ -3,7 +3,7 @@ import { offset, shift } from "@floating-ui/dom";
 import { clickWord } from "./conllu";
 import { active, closeFloating, floatEle } from "./popover";
 
-document.addEventListener("keypress", (ev) => {
+document.addEventListener("keydown", (ev) => {
 	if (ev.key === "Escape") closeFloating();
 	if (ev.key === " " || ev.key === "Enter") clickWord(ev.target);
 });
