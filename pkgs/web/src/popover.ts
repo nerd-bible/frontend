@@ -3,7 +3,8 @@ import type {
 	AutoUpdateOptions,
 	ComputePositionConfig,
 } from "@floating-ui/dom";
-import { autoUpdate, computePosition } from "@floating-ui/dom";
+import { autoUpdate, computePosition, offset, shift } from "@floating-ui/dom";
+import { clickWord } from "./conllu";
 
 type Popover = {
 	anchor: HTMLElement;
@@ -44,3 +45,32 @@ export function floatEle(
 	);
 	active = { anchor, floating, stopUpdate };
 }
+
+document.addEventListener("keydown", (ev) => {
+	if (ev.key === "Escape") closeFloating();
+	if (ev.key === " " || ev.key === "Enter") clickWord(ev.target);
+});
+
+document.addEventListener("click", (ev) => {
+	if (!active?.floating.contains(ev.target as HTMLElement)) closeFloating();
+	// conllu
+	clickWord(ev.target);
+	// settings menu
+	if (
+		document
+			.getElementById("settingsToggle")
+			?.contains(ev.target as HTMLElement)
+	) {
+		floatEle(
+			document.getElementById("settingsToggle")!,
+			document.getElementById("settings")!,
+			{
+				placement: "bottom-end",
+				middleware: [shift(), offset(2)],
+			},
+			{
+				ancestorScroll: false,
+			},
+		);
+	}
+});
