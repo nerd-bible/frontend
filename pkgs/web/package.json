@@ -20,9 +20,8 @@
 		"vite-bundle-analyzer": "^1.3.1"
 	},
 	"scripts": {
-		"build": "npm run generate && vite build",
-		"generate": "node ./build/generate-i18n.ts",
-		"start": "npm run generate && vite",
+		"build": "vite build",
+		"start": "vite",
 		"serve": "vite preview"
 	},
 	"browserslist": "fully supports es6 and supports webworkers and supports fetch and supports woff2"

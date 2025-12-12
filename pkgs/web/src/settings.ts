@@ -52,7 +52,11 @@ bindSetting(
 	(l) => (document.documentElement.lang = l),
 );
 bindSetting("theme", "system", (t) => (document.documentElement.className = t));
-bindSetting("fontSize", "20", (t) => document.body.style.fontSize = `${t}px`);
+bindSetting(
+	"fontSize",
+	"20",
+	(t) => (document.querySelector("main")!.style.fontSize = `${t}px`),
+);
 bindSetting(
 	"columnWidth",
 	"600",

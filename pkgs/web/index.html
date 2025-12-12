@@ -7,30 +7,37 @@
 		<!-- https://dev.to/masakudamatsu/favicon-nightmare-how-to-maintain-sanity-3al7 -->
 		<link rel="icon" type="image/svg+xml" href="/logo.svg" />
 		<title>Nerd Bible</title>
-		<script type="module" defer src="./src/index.ts"></script>
-		<link rel="stylesheet" href="./src/index.css" />
+		<!-- SEO -->
+		<meta name="description" content="Personal Bible Study tool.">
+		<script type="module" src="./src/critical.ts"></script>
+		<link rel="stylesheet" href="./src/css/critical.css" />
 	</head>
 	<body>
 		<header>
 			<!-- onPointerMove={() => clearTimeout(closeTimeout)} -->
 			<div class="logo"></div>
 			<form class="search">
-				<input
-					aria-label="Search"
-					id="search"
-					autocomplete="off"
-					value="1 Chronicles"
-				>
+				<input aria-label="Search" id="search" autocomplete="off">
 			</form>
 			<div class="options">
-				<button id="settingsToggle">
+				<button id="settingsToggle" aria-label="Quick settings">
 					<div class="mingcute menu-line"></div>
 				</button>
 			</div>
 		</header>
 		<main dir="ltr">
 			<noscript>Please enable JavaScript.</noscript>
-			Loading...
+			<div class="loading">
+				<div class="book">
+					<!-- <figure class="page"></figure> -->
+					<!-- <figure class="page"></figure> -->
+					<figure class="page turning"></figure>
+					<figure class="page turning"></figure>
+					<figure class="page turning"></figure>
+					<figure class="page turning"></figure>
+				</div>
+				<div>Loading</div>
+			</div>
 		</main>
 		<div class="popover" id="wordHover"></div>
 		<form class="popover" id="settings">
@@ -44,23 +51,11 @@
 			</label>
 			<label>
 				Font size
-				<input
-					id="fontSize"
-					type="range"
-					min="8"
-					max="48"
-					step="2"
-				>
+				<input id="fontSize" type="range" min="8" max="48" step="2">
 			</label>
 			<label>
 				Column width
-				<input
-					id="columnWidth"
-					type="range"
-					min="100"
-					max="2000"
-					step="20"
-				>
+				<input id="columnWidth" type="range" min="100" max="2000" step="20">
 			</label>
 			<label>
 				Language

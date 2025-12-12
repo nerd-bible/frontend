@@ -1,8 +1,6 @@
+@import "./functions.css";
 @import "./preflight.css";
 @import "./fonts.css";
 @import "./theme.css";
-@import "./components.css";
 @import "./responsive.css";
-@import "./conllu.css";
-@import "./forms.css";
 @import "iconify-css";

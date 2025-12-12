@@ -1,0 +1,36 @@
+#settings {
+	padding: --spacing(2) 0;
+	user-select: none;
+	width: --spacing(84);
+
+	& > * {
+		width: 100%;
+		padding: --spacing(1) --spacing(4);
+	}
+
+	& > a {
+		display: block;
+		&:hover {
+			background: var(--color-bg-100);
+		}
+	}
+
+	& label {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	& input, & select {
+		width: --spacing(32);
+	}
+}
+
+#wordHover > ul {
+	padding: --spacing(4);
+
+	& > li {
+		display: flex;
+		justify-content: space-between;
+		gap: --spacing(4);
+	}
+}
