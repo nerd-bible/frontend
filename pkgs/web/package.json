@@ -22,7 +22,8 @@
 	"scripts": {
 		"build": "vite build",
 		"start": "vite",
-		"serve": "vite preview"
+		"serve": "vite preview",
+		"fonts": "node --conditions bun ./build/download-fonts.ts"
 	},
 	"browserslist": "fully supports es6 and supports webworkers and supports fetch and supports woff2"
 }
