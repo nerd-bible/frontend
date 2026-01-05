@@ -27,7 +27,6 @@
 
 	--color-primary: var(--color-orange-400);
 	--color-secondary: var(--color-violet-400);
-	--header-height: 2rem;
 
 	font-family: var(--font-sans);
 	font-size: 16px;
@@ -72,15 +71,15 @@ header {
 	margin: --spacing(2);
 	flex-wrap: nowrap;
 	justify-content: space-between;
+	align-items: center;
 	position: sticky;
 	transition: top;
 	top: 0;
 	background: var(--color-bg-50);
 	background: color-mix(in srgb, var(--color-bg-50), transparent 4%);
-	height: var(--header-height);
 
 	& > .logo {
-		height: 100%;
+		height: 2rem;
 		aspect-ratio: 1;
 		background-image: url(../../src/logo.svg);
 		background-size: cover;
@@ -96,12 +95,8 @@ header {
 			background: var(--color-bg-100);
 			border-radius: var(--radius-md);
 			width: 100%;
-			padding: 0 --spacing(2);
+			padding: --spacing(2);
 		}
-	}
-
-	& > .options {
-		align-self: stretch;
 	}
 }
 
@@ -150,7 +145,7 @@ main {
 	margin: auto;
 	/** Prevent overflow from `perspective` during animation. */
 	max-width: calc(50vw);
-	max-height: calc(100vh - 5 * var(--header-height));
+	max-height: calc(80vh);
 
 	& > .page {
 		width: 46%;
