@@ -1,5 +1,5 @@
 import * as core from "@nerd-bible/core";
-import bsb from "/Users/zack/src/hbo-UD/data/checked/genesis.conllu?raw";
+// import bsb from "/Users/zack/src/hbo-UD/data/checked/genesis.conllu?raw";
 // import { DuckDb } from "./db";
 
 // const DB = DuckDb;
@@ -26,7 +26,7 @@ import bsb from "/Users/zack/src/hbo-UD/data/checked/genesis.conllu?raw";
 addEventListener("message", (ev) => {
 	const { data } = ev;
 	// console.log("got message", data, bsb.length);
-	const parsed = core.conllu.normal.decode(bsb);
+	const parsed = core.conllu.normal.decode("");
 	if (parsed.success) {
 		postMessage(parsed.output);
 	} else {

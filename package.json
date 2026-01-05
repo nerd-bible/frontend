@@ -3,8 +3,6 @@
 	"workspaces": [
 		"app",
 		"core",
-		"fonts",
-		"node",
 		"valio",
 		"web"
 	],
