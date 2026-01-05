@@ -68,7 +68,7 @@ export default function iconifyPlugin(): Plugin[] {
 				order: "pre",
 				filter: { id: { exclude: [/node_modules/, cssRegex] } },
 				handler(src, id) {
-					this.environment.config.mode;
+					// this.environment.config.mode;
 					// console.log("scan", id, src.length);
 					toWatch.add(id);
 					addIcons(this, src);
