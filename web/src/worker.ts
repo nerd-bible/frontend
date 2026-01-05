@@ -1,4 +1,5 @@
 import * as core from "@nerd-bible/core";
+
 // import bsb from "/Users/zack/src/hbo-UD/data/checked/genesis.conllu?raw";
 // import { DuckDb } from "./db";
 

@@ -14,7 +14,7 @@
 @utility track {
 	background: var(--color-secondary);
 	border-radius: var(--radius-md);
-	height: 0.5rem;  
+	height: 0.5rem;
 }
 @utility thumb {
 	background: var(--color-primary);
@@ -30,12 +30,20 @@ input[type="range"] {
 
 	&:focus {
 		/* outline: none; */
-		&::-webkit-slider-thumb { @apply thumb-focus; }
-		&::-moz-range-thumb { @apply thumb-focus; }
+		&::-webkit-slider-thumb {
+			@apply thumb-focus;
+		}
+		&::-moz-range-thumb {
+			@apply thumb-focus;
+		}
 	}
 
-	&::-webkit-slider-runnable-track { @apply track; }
-	&::-moz-range-track { @apply track; }
+	&::-webkit-slider-runnable-track {
+		@apply track;
+	}
+	&::-moz-range-track {
+		@apply track;
+	}
 
 	&::-webkit-slider-thumb {
 		appearance: none;

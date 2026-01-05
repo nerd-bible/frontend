@@ -25,7 +25,7 @@ export default function plugin(): Plugin {
 		Declaration(d: Declaration, helper: Helpers) {
 			let nextValue = d.value;
 			let parsed: ReturnType<typeof parseFn>;
-			while (parsed = parseFn(nextValue)) {
+			while ((parsed = parseFn(nextValue))) {
 				const fn = functions[parsed.name];
 				if (!fn) {
 					d.warn(
@@ -45,10 +45,7 @@ export default function plugin(): Plugin {
 
 				let evaled = fn.value;
 				for (let i = 0; i < parsed.args.length; i++) {
-					evaled = evaled.replace(
-						new RegExp(fn.args[i], "g"),
-						parsed.args[i],
-					);
+					evaled = evaled.replace(new RegExp(fn.args[i], "g"), parsed.args[i]);
 				}
 
 				nextValue = nextValue.replace(fnPattern, evaled);

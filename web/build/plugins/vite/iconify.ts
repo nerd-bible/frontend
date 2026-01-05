@@ -40,7 +40,7 @@ export default function iconifyPlugin(): Plugin[] {
 				ctx.warn(`Icon set ${match[1]} does not have icon ${match[2]}`);
 				continue;
 			}
-			
+
 			function encode(s: string) {
 				// https://datatracker.ietf.org/doc/html/rfc3986#section-2.2
 				return encodeURI(s).replaceAll("%20", " ");
@@ -68,7 +68,7 @@ export default function iconifyPlugin(): Plugin[] {
 				order: "pre",
 				filter: { id: { exclude: [/node_modules/, cssRegex] } },
 				handler(src, id) {
-					this.environment.config.mode
+					this.environment.config.mode;
 					// console.log("scan", id, src.length);
 					toWatch.add(id);
 					addIcons(this, src);
@@ -92,7 +92,9 @@ export default function iconifyPlugin(): Plugin[] {
 						this.addWatchFile(f);
 					}
 					// console.log("transform", _id);
-					const withSets = `${source}${Object.keys(usedIcons).map((v) => `.${v}`).join(",")} {
+					const withSets = `${source}${Object.keys(usedIcons)
+						.map((v) => `.${v}`)
+						.join(",")} {
 	width: 1em;
 	height: 1em;
 	background-color: currentColor;

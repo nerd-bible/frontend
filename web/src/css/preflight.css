@@ -34,16 +34,8 @@
 	-webkit-text-size-adjust: 100%; /* 2 */
 	tab-size: 4; /* 3 */
 	font-family:
-		"Noto Sans",
-		"Noto Sans Hebrew",
-		ui-sans,
-		system-ui,
-		sans,
-		"Apple Color Emoji",
-		"Segoe UI Emoji",
-		"Segoe UI Symbol",
-		"Noto Color Emoji"
-	; /* 4 */
+		"Noto Sans", "Noto Sans Hebrew", ui-sans, system-ui, sans,
+		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; /* 4 */
 	font-feature-settings: normal; /* 5 */
 	font-variation-settings: normal; /* 6 */
 	-webkit-tap-highlight-color: transparent; /* 7 */
@@ -61,15 +53,25 @@ hr {
 }
 
 /* Add the correct text decoration in Chrome, Edge, and Safari. */
-abbr { text-decoration: none; }
+abbr {
+	text-decoration: none;
+}
 
 /* Remove the default font size and weight for headings. */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
 	font-size: inherit;
 	font-weight: inherit;
 }
 /* Add the correct font weight in Edge and Safari. */
-b, strong { font-weight: bolder; }
+b,
+strong {
+	font-weight: bolder;
+}
 
 /* Reset links to optimize for opt-in styling instead of opt-out. */
 a {
@@ -83,17 +85,13 @@ a {
  * 3. Use the user's configured `mono` font-variation-settings by default.
  * 4. Correct the odd `em` font sizing in all browsers.
  */
-code, kbd, samp, pre {
-	font-family: 
-		ui-monospace,
-		SFMono-Regular,
-		Menlo,
-		Monaco,
-		Consolas,
-		"Liberation Mono",
-		"Courier New",
-		monospace
-	; /* 1 */
+code,
+kbd,
+samp,
+pre {
+	font-family:
+		ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+		"Courier New", monospace; /* 1 */
 	font-feature-settings: normal; /* 2 */
 	font-variation-settings: normal; /* 3 */
 	font-size: 1em; /* 4 */
@@ -103,14 +101,19 @@ code, kbd, samp, pre {
  * Prevent `sub` and `sup` elements from affecting the line height in all
  * browsers.
  */
-sub, sup {
+sub,
+sup {
 	font-size: 75%;
 	line-height: 0;
 	position: relative;
 	vertical-align: baseline;
 }
-sub { bottom: -0.25em; }
-sup { top: -0.5em; }
+sub {
+	bottom: -0.25em;
+}
+sup {
+	top: -0.5em;
+}
 
 /**
  * 1. Remove text indentation from table contents in Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=999088, https://bugs.webkit.org/show_bug.cgi?id=201297)
@@ -125,21 +128,31 @@ table {
 
 /**
  * Remove the additional `:invalid` styles in Firefox.
- * https://github.com/mozilla/gecko-dev/blob/2f9eacd9d3d995c937b4251a5557d95d494c9be1/layout/style/res/forms.css#L728-L737 
+ * https://github.com/mozilla/gecko-dev/blob/2f9eacd9d3d995c937b4251a5557d95d494c9be1/layout/style/res/forms.css#L728-L737
  */
-:-moz-ui-invalid { box-shadow: none; }
+:-moz-ui-invalid {
+	box-shadow: none;
+}
 
 /**
  * Reset the default input placeholder opacity in Firefox.
  * https://github.com/tailwindlabs/tailwindcss/issues/3300
  */
-::placeholder { opacity: 1; }
+::placeholder {
+	opacity: 1;
+}
 
 /** Add the correct vertical alignment in Chrome and Firefox. */
-progress { vertical-align: baseline; }
+progress {
+	vertical-align: baseline;
+}
 
 /** Make lists unstyled by default. */
-ol, ul, menu { list-style: none; }
+ol,
+ul,
+menu {
+	list-style: none;
+}
 
 /**
  * 1. Make replaced elements `display: block` by default.
@@ -148,7 +161,14 @@ ol, ul, menu { list-style: none; }
  *   default.
  *   https://github.com/jensimmons/cssremedy/issues/14#issuecomment-634934210
  */
-img, svg, video, canvas, audio, iframe, embed, object {
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
 	display: block; /* 1 */
 	vertical-align: middle; /* 2 */
 }
@@ -157,7 +177,8 @@ img, svg, video, canvas, audio, iframe, embed, object {
  * Constrain images and videos to the parent width and preserve their
  * intrinsic aspect ratio. https://github.com/mozdevs/cssremedy/issues/14
  */
-img, video {
+img,
+video {
 	max-width: 100%;
 	height: auto;
 }
@@ -168,7 +189,12 @@ img, video {
  * 3. Remove background color in all browsers.
  * 4. Ensure consistent opacity for disabled states in all browsers.
  */
-button, input, select, optgroup, textarea, ::file-selector-button {
+button,
+input,
+select,
+optgroup,
+textarea,
+::file-selector-button {
 	font: inherit; /* 1 */
 	font-feature-settings: inherit; /* 1 */
 	font-variation-settings: inherit; /* 1 */
@@ -180,7 +206,9 @@ button, input, select, optgroup, textarea, ::file-selector-button {
 }
 
 /** Prevent resizing textareas horizontally by default. */
-textarea { resize: vertical; }
+textarea {
+	resize: vertical;
+}
 
 /** Correct the inability to style the border radius in iOS Safari. */
 button,
@@ -190,4 +218,7 @@ input:where([type="button"], [type="reset"], [type="submit"]),
 }
 
 /* Correct the cursor style of increment and decrement buttons in Safari. */
-::-webkit-inner-spin-button, ::-webkit-outer-spin-button { height: auto; }
+::-webkit-inner-spin-button,
+::-webkit-outer-spin-button {
+	height: auto;
+}

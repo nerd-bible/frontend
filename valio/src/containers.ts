@@ -151,10 +151,9 @@ type Extend<A extends Record<any, any>, B extends Record<any, any>> = Flatten<
 			}
 >;
 
-export class ValioObject<Shape extends Record<any, Pipe<any, any>>> extends Pipe<
-	Record<any, any>,
-	ObjectOutput<Shape>
-> {
+export class ValioObject<
+	Shape extends Record<any, Pipe<any, any>>,
+> extends Pipe<Record<any, any>, ObjectOutput<Shape>> {
 	constructor(
 		public shape: Shape,
 		public isLoose: boolean,

@@ -57,7 +57,7 @@ export function open(
 			}),
 		watchOptions,
 	);
-	document.popover ={ anchor, floating, stopUpdate };
+	document.popover = { anchor, floating, stopUpdate };
 }
 
 document.addEventListener("keydown", (ev) => {

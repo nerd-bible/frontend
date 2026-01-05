@@ -8,8 +8,8 @@ type WordElement = HTMLSpanElement & {
 	conllu: Sentences[number]["words"][number];
 };
 
-const main = document.querySelector("main")!;
-const worker = new Worker(new URL("./worker", import.meta.url), {
+const _main = document.querySelector("main")!;
+const _worker = new Worker(new URL("./worker", import.meta.url), {
 	type: "module",
 });
 // worker.postMessage({ sentences: "gen" });

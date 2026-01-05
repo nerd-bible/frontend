@@ -52,7 +52,9 @@
 }
 
 @media (prefers-color-scheme: dark) {
-	.system { @apply .dark; }
+	.system {
+		@apply .dark;
+	}
 }
 
 /* .sr-only { */
@@ -111,7 +113,8 @@ button {
 	align-items: center;
 	background: var(--color-bg-100);
 
-	&:hover, &.active {
+	&:hover,
+	&.active {
 		background: var(--color-bg-200);
 	}
 }
@@ -133,7 +136,7 @@ main {
 /** Inspiration: https://codepen.io/podenemus/pen/eJqwBL?editors=1100 */
 @function --pageAnimation(--amount) {
 	/* biome-ignore lint/correctness/noUnknownProperty: new syntax */
-	result: pageTurn 1s cubic-bezier(0, .39, 1, .68) --amount infinite;
+	result: pageTurn 1s cubic-bezier(0, 0.39, 1, 0.68) --amount infinite;
 }
 .loading {
 	text-align: center;
@@ -168,20 +171,33 @@ main {
 			top: 2%;
 			transform-style: preserve-3d;
 			transform-origin: left center;
-			&:nth-child(1) { animation: --pageAnimation(0.6s); }
-			&:nth-child(2) { animation: --pageAnimation(0.45s); }
-			&:nth-child(3) { animation: --pageAnimation(0.2s); }
+			&:nth-child(1) {
+				animation: --pageAnimation(0.6s);
+			}
+			&:nth-child(2) {
+				animation: --pageAnimation(0.45s);
+			}
+			&:nth-child(3) {
+				animation: --pageAnimation(0.2s);
+			}
 		}
 	}
 }
 
 @keyframes fadeIn {
-	0%, 20% { opacity: 0; }
-	100% { opacity: 1; }
+	0%,
+	20% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
 }
 
 @keyframes pageTurn {
-	0% { transform: rotateY( 0deg); }
+	0% {
+		transform: rotateY(0deg);
+	}
 	40% {
 		background: var(--color-bg-50);
 		transform: rotateY(-180deg);

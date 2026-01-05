@@ -3,4 +3,3 @@
 	/* biome-ignore lint/correctness/noUnknownProperty: new syntax */
 	result: calc(var(--spacing-inc) * --amount);
 }
-

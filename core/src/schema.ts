@@ -8,7 +8,8 @@ function sqliteType(name: string) {
 			return name;
 		case "number":
 			return "double";
-		case "number|string": return "string";
+		case "number|string":
+			return "string";
 		case "array":
 			return "json";
 	}
