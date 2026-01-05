@@ -77,8 +77,6 @@ header {
 	transition: top;
 	top: 0;
 	background: var(--color-bg-50);
-	/* TODO: find way to use opacity */
-	/* biome-ignore lint/suspicious/noDuplicateProperties: if has support */
 	background: color-mix(in srgb, var(--color-bg-50), transparent 4%);
 	height: var(--header-height);
 
