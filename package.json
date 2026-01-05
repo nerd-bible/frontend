@@ -1,7 +1,12 @@
 {
 	"name": "@nerd-bible/frontend",
 	"workspaces": [
-		"./pkgs/*"
+		"app",
+		"core",
+		"fonts",
+		"node",
+		"valio",
+		"web"
 	],
 	"scripts": {
 		"start": "npm run start --workspace='@nerd-bible/app'",

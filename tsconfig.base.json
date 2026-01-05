@@ -9,6 +9,7 @@
 		"jsx": "preserve",
 		"jsxImportSource": "solid-js",
 		"allowJs": true,
+		"allowImportingTsExtensions": true,
 
 		// Bundler mode
 		"moduleResolution": "bundler",
@@ -25,7 +26,6 @@
 		"noPropertyAccessFromIndexSignature": true,
 
 		// Let's also build each package.
-		"rootDir": "${configDir}/src",
 		"outDir": "${configDir}/dist",
 		// Multi-project mode
 		"composite": true,
@@ -34,7 +34,7 @@
 		// Allow detecting linking to *.ts
 		"customConditions": ["bun"]
 	},
-	"include": ["${configDir}/src", "${configDir}/src/**/*.json", "${configDir}/build",],
+	"include": ["${configDir}", "${configDir}/**/*.json"],
 	// Don't typecheck test files
 	"exclude": ["${configDir}/**/*.test.*", "${configDir}/**/__snapshots__/*"]
 }

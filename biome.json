@@ -20,7 +20,8 @@
 			"suspicious": {
 				"noAssignInExpressions": "off",
 				"noUnknownAtRules": "off",
-				"noExplicitAny": "off"
+				"noExplicitAny": "off",
+				"noTsIgnore": "off"
 			},
 			"style": {
 				"noParameterAssign": "off",

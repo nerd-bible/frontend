@@ -1,0 +1,15 @@
+@media only screen and (max-width: 24rem) {
+	:root {
+		padding: 0;
+	}
+	header {
+		gap: --spacing(1);
+		& > .search > div {
+			display: none;
+		}
+	}
+}
+/* @media only screen and (max-width: 48rem) {} */
+/* @media only screen and (max-width: 64rem) {} */
+/* @media only screen and (max-width: 80rem) {} */
+/* @media only screen and (max-width: 96rem) {} */
