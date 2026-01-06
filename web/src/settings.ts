@@ -1,5 +1,3 @@
-import { pickLocale } from "locale-matcher";
-
 type Bindable = HTMLInputElement | HTMLSelectElement;
 
 const bound: Record<
@@ -11,7 +9,7 @@ const bound: Record<
 > = {};
 const storage = localStorage;
 
-function bindSetting(
+export function bindSetting(
 	name: string,
 	defaultValue: string,
 	effect?: (v: string) => void,
@@ -39,18 +37,6 @@ window.addEventListener("storage", (event) => {
 	}
 });
 
-const locales = [];
-const children = document.getElementById("locale")!.children;
-for (let i = 0; i < children.length; i++) {
-	const option = children.item(i) as HTMLOptionElement;
-	locales.push(option.value);
-}
-
-bindSetting(
-	"locale",
-	pickLocale(navigator.languages, locales, locales[0]),
-	(l) => (document.documentElement.lang = l),
-);
 bindSetting("theme", "system", (t) => (document.documentElement.className = t));
 bindSetting(
 	"fontSize",

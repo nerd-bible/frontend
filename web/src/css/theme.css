@@ -22,6 +22,7 @@
 	--color-bg-50: var(--color-yellow-50);
 	--color-bg-100: var(--color-yellow-100);
 	--color-bg-200: var(--color-yellow-200);
+	--color-bg-300: var(--color-yellow-300);
 	--color-focus-100: var(--color-blue-200);
 	--color-focus-200: var(--color-blue-400);
 
@@ -43,8 +44,9 @@
 	--color-bg-50: var(--color-yellow-900);
 	--color-bg-100: var(--color-yellow-800);
 	--color-bg-200: var(--color-yellow-700);
-	--color-focus-100: var(--color-blue-500);
-	--color-focus-200: var(--color-blue-600);
+	--color-bg-300: var(--color-yellow-600);
+	--color-focus-100: var(--color-blue-400);
+	--color-focus-200: var(--color-blue-300);
 
 	--color-primary: var(--color-orange-500);
 	--color-secondary: var(--color-violet-500);
@@ -97,6 +99,39 @@ header {
 			width: 100%;
 			padding: --spacing(2);
 		}
+	}
+}
+
+#settings {
+	padding: --spacing(2) 0;
+	user-select: none;
+	width: --spacing(84);
+	line-height: 2;
+
+	& > * {
+		width: 100%;
+		padding: --spacing(1) --spacing(4);
+	}
+
+	& > a {
+		display: block;
+		&:hover {
+			background: var(--color-bg-100);
+		}
+	}
+
+	& > label {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	& input,
+	& select {
+		width: --spacing(32);
+	}
+
+	& select {
+		background: var(--color-bg-100);
 	}
 }
 

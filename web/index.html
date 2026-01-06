@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html class="system">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -16,7 +16,7 @@
 			<!-- onPointerMove={() => clearTimeout(closeTimeout)} -->
 			<div class="logo"></div>
 			<form class="search">
-				<input aria-label="Search" id="search" autocomplete="off">
+				<input autofocus aria-label="Search" id="search" autocomplete="off">
 			</form>
 			<div class="options">
 				<button id="settingsToggle" aria-label="Quick settings">
@@ -42,39 +42,34 @@
 				</div>
 				<noscript>
 					<div>Please enable JavaScript.</div>
-					<style>.loadingMsg{display:none}</style>
+					<style>[data-l10n-id="Loading"]{display:none}</style>
 				</noscript>
-				<div class="loadingMsg">Loading</div>
+				<div data-l10n-id="Loading"></div>
 			</div>
 		</main>
 		<div class="popover" id="wordHover"></div>
 		<form class="popover" id="settings">
 			<label>
-				Theme
+				<span data-l10n-id="Theme"></span>
 				<select id="theme">
-					<option value="system">System</option>
-					<option value="dark">Dark</option>
-					<option value="light">Light</option>
+					<option value="system" data-l10n-id="System"></option>
+					<option value="dark" data-l10n-id="Dark"></option>
+					<option value="light" data-l10n-id="Light"></option>
 				</select>
 			</label>
 			<label>
-				Font size
+				<span data-l10n-id="Font-size"></span>
 				<input id="fontSize" type="range" min="8" max="48" step="2">
 			</label>
 			<label>
-				Column width
+				<span data-l10n-id="Column-width"></span>
 				<input id="columnWidth" type="range" min="100" max="2000" step="20">
 			</label>
 			<label>
-				Language
-				<select id="locale">
-					<option value="en">English</option>
-					<option value="he">עברית</option>
-					<!-- <option value="el">Ελληνικά</option> -->
-					<!-- <option value="es">español</option> -->
-				</select>
+				<span data-l10n-id="Language"></span>
+				<select id="locale"></select>
 			</label>
-			<a href="/settings">Settings</a>
+			<a href="/settings" data-l10n-id="Settings"></a>
 		</form>
 	</body>
 </html>
