@@ -9,10 +9,10 @@ type WordElement = HTMLSpanElement & {
 };
 
 const _main = document.querySelector("main")!;
-const _worker = new Worker(new URL("./worker", import.meta.url), {
+const worker = new Worker(new URL("./worker", import.meta.url), {
 	type: "module",
 });
-// worker.postMessage({ sentences: "gen" });
+worker.postMessage({ sentences: "gen" });
 // worker.addEventListener("message", (ev) => {
 // 	main.innerHTML = "";
 //

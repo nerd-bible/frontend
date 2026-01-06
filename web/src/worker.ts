@@ -1,8 +1,7 @@
 import * as core from "@nerd-bible/core";
-
-// import bsb from "/Users/zack/src/hbo-UD/data/checked/genesis.conllu?raw";
 // import { DuckDb } from "./db";
-
+// import bsb from "/Users/zack/src/hbo-UD/data/checked/genesis.conllu?raw";
+//
 // const DB = DuckDb;
 // console.time("total");
 // console.time("start");
@@ -13,7 +12,7 @@ import * as core from "@nerd-bible/core";
 // console.time("insert");
 // await db.insert(bsb);
 // console.timeEnd("insert");
-//
+
 // console.time("query");
 // const idk = await db.getAll();
 // let sum = 0;

@@ -5,3 +5,4 @@ tmp
 pkgs/*/tsconfig.tsbuildinfo
 .DS_Store
 generated
+*.tsbuildinfo

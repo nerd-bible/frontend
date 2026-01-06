@@ -9,8 +9,6 @@
 		"@nerd-bible/fonts": "0.0.1",
 		"@nerd-bible/valio": "*",
 		"@tauri-apps/api": "^2.9.0",
-		"alien-signals": "^3.1.1",
-		"fzy.js": "^0.4.1",
 		"locale-matcher": "^2.2.1"
 	},
 	"devDependencies": {

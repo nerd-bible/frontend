@@ -9,7 +9,7 @@ const host = process.env["TAURI_DEV_HOST"];
 export default defineConfig({
 	plugins: [iconify(), analyzer({ analyzerMode: "static" })],
 	resolve: {
-		conditions: ["node"],
+		conditions: ["browser", "node"],
 	},
 	build: {
 		// minify: false,
