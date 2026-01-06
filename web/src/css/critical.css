@@ -2,5 +2,6 @@
 @import "./preflight.css";
 @import "@nerd-bible/fonts/dist/faces.css";
 @import "./theme.css";
+@import "./forms.css";
 @import "./responsive.css";
 @import "iconify-css";

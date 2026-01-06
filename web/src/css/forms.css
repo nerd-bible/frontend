@@ -1,9 +1,18 @@
-/* select { */
-/* 	background: inherit; */
-/* } */
-/* option { */
-/* 	background: inherit; */
-/* } */
+select {
+	background: var(--color-bg-50);
+}
+button {
+	padding: --spacing(2);
+	border-radius: var(--radius-md);
+	display: flex;
+	align-items: center;
+	background: var(--color-bg-100);
+
+	&:hover,
+	&.active {
+		background: var(--color-bg-200);
+	}
+}
 
 @utility thumb-focus {
 	outline-offset: --spacing(4);

@@ -137,19 +137,6 @@ header {
 	}
 }
 
-button {
-	padding: --spacing(2);
-	border-radius: var(--radius-md);
-	display: flex;
-	align-items: center;
-	background: var(--color-bg-100);
-
-	&:hover,
-	&.active {
-		background: var(--color-bg-200);
-	}
-}
-
 main {
 	margin: --spacing(4) auto;
 	font-family: var(--font-serif);

@@ -1,5 +1,11 @@
 Loading = Loading
 
+# Header
+Search = 
+	.aria-label = Search
+Quick-settings = 
+	.aria-label = Quick settings
+
 # Quick settings
 Theme = Theme
 System = System
