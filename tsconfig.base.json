@@ -28,7 +28,7 @@
 		"composite": true,
 		"incremental": true,
 		// Allow detecting linking to *.ts
-		"customConditions": ["node"]
+		"customConditions": ["nbsource"]
 	},
 	"include": ["${configDir}/src/**/*"],
 	// Don't typecheck test files

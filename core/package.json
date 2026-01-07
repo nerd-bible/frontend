@@ -6,6 +6,7 @@
 	"exports": {
 		".": {
 			"import": {
+				"nbsource": "./src/index.ts",
 				"node": "./src/index.ts",
 				"default": "./dist/index.js",
 				"types": "./dist/index.d.ts"

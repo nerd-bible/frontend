@@ -9,13 +9,13 @@ const host = process.env["TAURI_DEV_HOST"];
 export default defineConfig({
 	plugins: [iconify(), analyzer({ analyzerMode: "static" })],
 	resolve: {
-		conditions: ["browser", "node"],
+		conditions: ["nbsource"],
 	},
 	build: {
 		// minify: false,
 		// cssMinify: false,
 		// sourcemap: true,
-		modulePreload: false,
+		// modulePreload: false,
 		rollupOptions: {
 			output: {
 				assetFileNames: (assetInfo) => {
