@@ -1,9 +1,0 @@
-#wordHover > ul {
-	padding: --spacing(4);
-
-	& > li {
-		display: flex;
-		justify-content: space-between;
-		gap: --spacing(4);
-	}
-}

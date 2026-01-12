@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en" class="system">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<meta name="description" content="Personal Bible Study tool.">
+		<link rel="icon" sizes="any" href="/img/logo.svg" />
+		<link rel="icon" sizes="32x32" href="/img/logo-32.png" />
+		<title>nerd Bible</title>
+		<link rel="stylesheet" webc:keep :href="getBundleFileUrl('css')">
+		<script type="module" webc:keep :src="getBundleFileUrl('js')"></script>
+		<link rel="stylesheet" href="css/functions.css">
+		<link rel="stylesheet" href="css/pallette.css">
+		<link rel="stylesheet" href="css/preflight.css">
+		<link rel="stylesheet" href="css/theme.css">
+	</head>
+	<body>
+		<nb-header webc:nokeep></nb-header>
+		<main>
+			<nb-loading webc:nokeep></nb-loading>
+		</main>
+	</body>
+</html>
+<style>
+@import "@nerd-bible/fonts/dist/faces.css";
+
+:root {
+	font-family: var(--font-sans);
+	font-size: 16px;
+	padding: --spacing(2) --spacing(4);
+	padding-top: 0;
+	background: var(--color-bg-50);
+	color: var(--color-fg);
+	width: 100%;
+	margin: auto;
+}
+
+main {
+	margin: --spacing(4) auto;
+	font-family: var(--font-serif);
+	line-height: 1.5;
+}
+
+.popover {
+	position: absolute;
+	display: none;
+	background: var(--color-bg-200);
+	filter: drop-shadow(var(--drop-shadow-xl));
+	border-radius: var(--radius-md);
+}
+</style>

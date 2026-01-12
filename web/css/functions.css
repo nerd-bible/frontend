@@ -1,4 +1,3 @@
-/** This doesn't end up in the built css. */
 @function --spacing(--amount) {
 	/* biome-ignore lint/correctness/noUnknownProperty: new syntax */
 	result: calc(var(--spacing-inc) * --amount);

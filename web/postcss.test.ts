@@ -2,6 +2,8 @@ import postcss from "postcss";
 import config from "./postcss.config.js";
 
 const testCss = `
+@import "@nerd-bible/fonts/dist/faces.css";
+
 @utility thumb-focus {
 	outline-offset: --spacing(4);
 	outline-width: 4px;
@@ -17,8 +19,8 @@ input[type="range"] {
 	}
 }`;
 
-postcss(config)
-	.process(testCss)
+postcss(config as any)
+	.process(testCss, { from: "a.css" })
 	.then((result) => {
 		console.log(result.css);
 	});

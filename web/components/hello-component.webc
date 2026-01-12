@@ -1,0 +1,6 @@
+<p>Hello <span @text="place"></span>.</p>
+<style>
+	p {
+		color: green;
+	}
+</style>
