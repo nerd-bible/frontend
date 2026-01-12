@@ -5,8 +5,7 @@
 		<input autofocus data-l10n-id="Search" id="search" autocomplete="off">
 	</form>
 	<div class="options">
-		<button id="settingsToggle" data-l10n-id="Quick-settings">
-			<div class="mingcute menu-line"></div>
+		<button id="settingsToggle" data-l10n-id="Quick-settings" @raw="icon('menu-line')">
 		</button>
 	</div>
 </header>
