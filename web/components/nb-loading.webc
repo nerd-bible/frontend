@@ -1,7 +1,7 @@
 <div class="loading">
 	<div class="book">
 		<figure class="page turning">
-			<div webc:nokeep @raw="icon('ad-circle-fill')"></div>
+			<div webc:nokeep @raw="icon('menu-line')"></div>
 		</figure>
 		<figure class="page turning">
 			<div webc:nokeep @raw="icon('menu-line')"></div>

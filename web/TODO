@@ -3,8 +3,4 @@
 - [ ] rendering
 
 ## i18n
-- [ ] fix it
-	- [ ] add params/.input column instead of using en
-- [ ] pretty ui for csv editing + custom functions
-	- [ ] must be better than google docs
-- [ ] replace codegen with tsc+vite plugin
+- [ ] find ui + workflow for translators (weblate? runtime injection?)
