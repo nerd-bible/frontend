@@ -1,0 +1,32 @@
+<slot name="toggle"></slot>
+<div class="floating">
+	<slot></slot>
+</div>
+<style>
+nb-dropdown {
+	position: relative;
+	translate: 0 0;
+
+	.floating {
+		display: none;
+		position: absolute;
+		top: auto;
+		/** TODO: CSS logical properties polyfill */
+		inset-inline-end: 0;
+	}
+	&[open] > .floating {
+		display: initial;
+	}
+}
+</style>
+<script>
+class Dropdown extends HTMLElement {
+	constructor() {
+		super();
+		this.querySelector("button").addEventListener("click", (ev) => {
+			this.toggleAttribute("open");
+		});
+	}
+}
+customElements.define("nb-dropdown", Dropdown);
+</script>

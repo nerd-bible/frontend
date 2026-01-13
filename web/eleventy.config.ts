@@ -5,6 +5,8 @@ import pluginIcons from "./build/plugins/eleventy/iconify.ts";
 import postcssConfig from "./postcss.config.js";
 
 async function postcssTransform(content: string) {
+	if (this.type !== "css") return content;
+
 	content = `@import "@nerd-bible/fonts/dist/faces.css";\n${content}`;
 	const result = await postcss(postcssConfig as any).process(content, {
 		from: this.page.inputPath,

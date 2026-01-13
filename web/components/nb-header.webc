@@ -4,10 +4,12 @@
 	<form class="search">
 		<input autofocus data-l10n-id="Search" id="search" autocomplete="off">
 	</form>
-	<div class="options">
-		<button id="settingsToggle" data-l10n-id="Quick-settings" @raw="icon('menu-line')">
-		</button>
-	</div>
+	<nb-dropdown class="options">
+		<button slot="toggle" data-l10n-id="Quick-settings" @raw="icon('menu-line')"></button>
+		<div>
+			quick settings here so cool yayayayayaya
+		</div>
+	</nb-dropdown>
 </header>
 <style>
 header {
