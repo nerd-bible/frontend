@@ -34,6 +34,10 @@
 	margin: auto;
 }
 
+main {
+	padding: --spacing(4) 0;
+}
+
 #popover {
 	position: absolute;
 	display: none;

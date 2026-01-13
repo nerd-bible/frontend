@@ -7,7 +7,7 @@
 		"@fluent/bundle": "^0.19.1",
 		"@fluent/dom": "^0.10.2",
 		"@fluent/langneg": "^0.7.0",
-		"@iconify-icons/mingcute": "^1.2.9",
+		"@iconify-json/mingcute": "^1.2.6",
 		"@nerd-bible/core": "*",
 		"@nerd-bible/fonts": "0.0.1",
 		"@nerd-bible/valio": "*",
@@ -17,7 +17,9 @@
 		"@11ty/eleventy": "^4.0.0-alpha.6",
 		"@11ty/eleventy-plugin-webc": "^0.11.2",
 		"@11ty/is-land": "^4.0.1",
-		"postcss-import": "^16.1.1"
+		"@iconify/types": "^2.0.0",
+		"postcss-import": "^16.1.1",
+		"svgo": "^4.0.0"
 	},
 	"scripts": {
 		"build": "eleventy --config=eleventy.config.ts",
