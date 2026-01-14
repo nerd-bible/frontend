@@ -28,12 +28,12 @@ class Dropdown extends HTMLElement {
 	constructor() {
 		super();
 		/** @type {HTMLDivElement} */
-		this.wrapper = this.querySelector("div");
-		this.wrapper.id = `dropdown-content-${n++}`;
+		const content = this.querySelector("div");
+		content.id = `dropdown-content-${n++}`;
 		/** @type {HTMLButtonElement} */
 		this.button = this.querySelector("button");
 		this.button.ariaExpanded = false;
-		this.button.setAttribute("aria-controls", this.wrapper.id);
+		this.button.setAttribute("aria-controls", content.id);
 		this.button.addEventListener("click", (ev) => {
 			this.toggleAttribute("open");
 			ev.stopImmediatePropagation();
