@@ -12,6 +12,11 @@ nb-dropdown {
 		top: auto;
 		/** TODO: CSS logical properties polyfill */
 		inset-inline-end: 0;
+		display: none;
+	}
+
+	&[open] > .floating {
+		display: initial;
 	}
 }
 </style>
@@ -24,7 +29,6 @@ class Dropdown extends HTMLElement {
 		super();
 		/** @type {HTMLDivElement} */
 		this.wrapper = this.querySelector("div");
-		this.wrapper.hidden = true;
 		this.wrapper.id = `dropdown-content-${n++}`;
 		/** @type {HTMLButtonElement} */
 		this.button = this.querySelector("button");
@@ -43,11 +47,9 @@ class Dropdown extends HTMLElement {
 			const open = newValue !== null;
 			if (open) {
 				this.button.ariaExpanded = true;
-				this.wrapper.hidden = false;
 			}
 			else {
 				this.button.ariaExpanded = false;
-				this.wrapper.hidden = true;
 			}
 		}
 	}
