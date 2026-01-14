@@ -38,6 +38,7 @@ class Dropdown extends HTMLElement {
 			this.toggleAttribute("open");
 			ev.stopImmediatePropagation();
 		});
+		this.addEventListener("blur", this.onBlur, { capture: true });
 	}
 
 	static observedAttributes = ["open"];
@@ -66,6 +67,18 @@ class Dropdown extends HTMLElement {
 			ev.stopImmediatePropagation();
 		}
 	}
+
+	/** @param {FocusEvent} ev */
+	onBlur = (ev) => {
+		if (
+			!ev.relatedTarget ||
+			!(ev.relatedTarget instanceof Element) ||
+			this.contains(ev.relatedTarget)
+		)
+			return;
+
+		this.removeAttribute("open");
+	};
 
 	connectedCallback() {
 		document.addEventListener("click", this.onClick);
