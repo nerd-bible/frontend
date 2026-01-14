@@ -8,24 +8,71 @@ nb-dropdown {
 	translate: 0 0;
 
 	.floating {
-		display: none;
 		position: absolute;
 		top: auto;
 		/** TODO: CSS logical properties polyfill */
 		inset-inline-end: 0;
 	}
-	&[open] > .floating {
-		display: initial;
-	}
 }
 </style>
 <script>
+let n = 0;
+// https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/
+// https://hawkticehurst.com/2023/11/you-are-probably-using-connectedcallback-wrong/
 class Dropdown extends HTMLElement {
 	constructor() {
 		super();
-		this.querySelector("button").addEventListener("click", (ev) => {
+		/** @type {HTMLDivElement} */
+		this.wrapper = this.querySelector("div");
+		this.wrapper.hidden = true;
+		this.wrapper.id = `dropdown-content-${n++}`;
+		/** @type {HTMLButtonElement} */
+		this.button = this.querySelector("button");
+		this.button.ariaExpanded = false;
+		this.button.setAttribute("aria-controls", this.wrapper.id);
+		this.button.addEventListener("click", (ev) => {
 			this.toggleAttribute("open");
+			ev.stopImmediatePropagation();
 		});
+	}
+
+	static observedAttributes = ["open"];
+
+	attributeChangedCallback(name, _oldValue, newValue) {
+		if (name === "open") {
+			const open = newValue !== null;
+			if (open) {
+				this.button.ariaExpanded = true;
+				this.wrapper.hidden = false;
+			}
+			else {
+				this.button.ariaExpanded = false;
+				this.wrapper.hidden = true;
+			}
+		}
+	}
+
+	/** @param {MouseEvent} ev */
+	onClick = (ev) => {
+		if (!this.contains(ev.target)) this.removeAttribute("open");
+	}
+
+	/** @param {KeyboardEvent} ev */
+	onKeydown = (ev) => {
+		if (ev.key === "Escape" && this.hasAttribute("open")) {
+			this.removeAttribute("open");
+			ev.stopImmediatePropagation();
+		}
+	}
+
+	connectedCallback() {
+		document.addEventListener("click", this.onClick);
+		document.addEventListener("keydown", this.onKeydown);
+	}
+
+	disconnectedCallback() {
+		document.removeEventListener("click", this.onClick);
+		document.removeEventListener("keydown", this.onKeydown);
 	}
 }
 customElements.define("nb-dropdown", Dropdown);
