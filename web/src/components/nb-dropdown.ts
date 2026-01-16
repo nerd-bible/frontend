@@ -1,13 +1,8 @@
-<slot name="toggle"></slot>
-<div class="floating">
-	<slot></slot>
-</div>
-<style>
-nb-dropdown {
+const className = css`
 	position: relative;
 	translate: 0 0;
 
-	.floating {
+	& > div {
 		position: absolute;
 		top: auto;
 		/** TODO: CSS logical properties polyfill */
@@ -15,18 +10,18 @@ nb-dropdown {
 		display: none;
 	}
 
-	&[open] > .floating {
+	&[open] > div {
 		display: initial;
 	}
-}
-</style>
-<script>
+`;
+
 let n = 0;
 // https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/
 // https://hawkticehurst.com/2023/11/you-are-probably-using-connectedcallback-wrong/
 class Dropdown extends HTMLElement {
 	constructor() {
 		super();
+		this.classList.add(className);
 		/** @type {HTMLDivElement} */
 		const content = this.querySelector("div");
 		content.id = `dropdown-content-${n++}`;
@@ -91,4 +86,3 @@ class Dropdown extends HTMLElement {
 	}
 }
 customElements.define("nb-dropdown", Dropdown);
-</script>

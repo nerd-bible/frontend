@@ -1,18 +1,20 @@
-<header>
+<header class="site-header">
 	<!-- onPointerMove={() => clearTimeout(closeTimeout)} -->
 	<div class="logo"></div>
 	<form class="search">
 		<input autofocus data-l10n-id="Search" id="search" autocomplete="off">
 	</form>
 	<nb-dropdown class="options">
-		<button slot="toggle" data-l10n-id="Quick-settings" @raw="icon('menu-line')"></button>
+		<button data-l10n-id="Quick-settings">
+			<icon-mingcute-menu-line></icon-mingcute-menu-line>
+		</button>
 		<div>
 			quick settings here so cool yayayayayaya
 		</div>
 	</nb-dropdown>
 </header>
 <style>
-header {
+.site-header {
 	display: flex;
 	gap: --spacing(4);
 	margin: --spacing(2);
@@ -23,12 +25,12 @@ header {
 	transition: top;
 	top: 0;
 	background: var(--color-bg-50);
-	background: color-mix(in srgb, var(--color-bg-50), transparent 4%);
+	background: color-mix(in srgb, var(--color-bg-50), transparent 5%);
 
 	& > .logo {
 		height: 2rem;
 		aspect-ratio: 1;
-		background-image: url(../img/logo.svg), url(../img/logo-32.png);
+		background-image: url(../../img/logo.svg), url(../../img/logo-32.png);
 		background-size: cover;
 	}
 
@@ -37,7 +39,7 @@ header {
 		display: flex;
 		align-items: center;
 
-		& input {
+		& > input {
 			height: 100%;
 			background: var(--color-bg-100);
 			border-radius: var(--radius-md);
@@ -47,4 +49,21 @@ header {
 	}
 }
 </style>
+<style global>
+.site-header {
+	background-color: green;
+}
+</style>
+<script type="module">
+const style = document.createElement("style");
+style.innerHTML = styleLocal;
+document.head.append(style);
+class Header extends HTMLElement {
+	constructor() {
+		super();
+		this.innerHTML = html;
+	}
+}
 
+customElements.define("nb-header", Header);
+</script>

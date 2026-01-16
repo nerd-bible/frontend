@@ -14,17 +14,13 @@
 		"@tauri-apps/api": "^2.9.0"
 	},
 	"devDependencies": {
-		"@11ty/eleventy": "^4.0.0-alpha.6",
-		"@11ty/eleventy-plugin-webc": "^0.11.2",
-		"@11ty/is-land": "^4.0.1",
-		"@iconify/types": "^2.0.0",
-		"postcss-import": "^16.1.1",
-		"postcss-url": "^10.1.3",
-		"svgo": "^4.0.0"
+		"htmlparser2": "^10.0.0",
+		"unplugin-icons": "^23.0.1",
+		"vite": "^8.0.0-beta.7"
 	},
 	"scripts": {
-		"build": "eleventy --config=eleventy.config.ts",
-		"start": "eleventy --config=eleventy.config.ts --serve"
+		"start": "vite",
+		"build": "vite build"
 	},
-	"browserslist": "baseline 2015 with downstream"
+	"browserslist": "baseline 2016 with downstream"
 }

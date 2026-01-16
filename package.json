@@ -10,11 +10,10 @@
 		"start": "npm run start --workspace='@nerd-bible/app'",
 		"start-web": "npm run start --workspace='@nerd-bible/web'",
 		"build": "npm run build --workspaces",
-		"fmt": "biome check",
-		"fmt-fix": "biome check --write --unsafe"
+		"fmt": "prettier",
+		"fmt-fix": "prettier --fix"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.3.11",
-		"typescript": "^5.9.3"
+		"prettier": "^3.8.0"
 	}
 }

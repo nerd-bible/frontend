@@ -7,15 +7,11 @@
 		<link rel="icon" sizes="any" href="img/logo.svg" />
 		<link rel="icon" sizes="32x32" href="img/logo-32.png" />
 		<title>nerd Bible</title>
-		<link rel="stylesheet" webc:keep :href="getBundleFileUrl('css')">
-		<script type="module" webc:keep :src="getBundleFileUrl('js')"></script>
-		<link rel="stylesheet" href="css/functions.css">
-		<link rel="stylesheet" href="css/pallette.css">
-		<link rel="stylesheet" href="css/preflight.css">
-		<link rel="stylesheet" href="css/theme.css">
+		<script type="module" src="./src/index.ts"></script>
+		<link rel="stylesheet" href="./src/css/index.css">
 	</head>
 	<body>
-		<nb-header webc:nokeep></nb-header>
+		<nb-header></nb-header>
 		<main>
 			<noscript>
 				<h1>Please enable JavaScript</h1>
@@ -35,34 +31,3 @@
 		<div id="popover"></div>
 	</body>
 </html>
-<style>
-:root {
-	font-family: var(--font-sans);
-	font-size: 16px;
-	padding: --spacing(2) --spacing(4);
-	padding-top: 0;
-	background: var(--color-bg-50);
-	color: var(--color-fg);
-	width: 100%;
-	margin: auto;
-}
-
-main {
-	padding: --spacing(4) 0;
-	margin: auto;
-	max-width: 80%;
-}
-
-noscript > h1 {
-	display: block;
-	font-size: 32px;
-}
-
-#popover {
-	position: absolute;
-	display: none;
-	background: var(--color-bg-200);
-	filter: drop-shadow(var(--drop-shadow-xl));
-	border-radius: var(--radius-md);
-}
-</style>

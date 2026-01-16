@@ -1,5 +1,6 @@
+import { readFileSync } from "node:fs";
 import type { AtRule, Helpers, Plugin, Root } from "postcss";
-import { Declaration } from "postcss";
+import { Declaration, Processor } from "postcss";
 
 type CssFunction = { args: string[]; value: string };
 
@@ -17,8 +18,31 @@ function parseFn(s: string) {
 }
 
 // Needs a lot of work to be spec-compliant
-export default function plugin(): Plugin {
+export default function plugin(opts: {
+	globalPaths?: string[],
+}): Plugin {
 	const functions: Record<string, CssFunction> = {};
+
+	function saveFunction(atRule: AtRule, helper: Helpers) {
+		const parsed = parseFn(atRule.params);
+
+		if (!parsed) {
+			atRule.warn(helper.result, `Invalid syntax ${atRule.params}`);
+			return;
+		}
+
+		const result = atRule.nodes?.find(
+			(n) => n instanceof Declaration && n.prop === "result",
+		) as Declaration | undefined;
+		if (!result) {
+			atRule.warn(helper.result, "Missing `result:` declaration");
+			return;
+		}
+
+		functions[parsed.name] = { args: parsed.args, value: result.value };
+
+		atRule.remove();
+	}
 
 	function applyDecl(d: Declaration, helper: Helpers) {
 		let nextValue = d.value;
@@ -51,33 +75,19 @@ export default function plugin(): Plugin {
 		d.value = nextValue;
 	}
 
-	function saveFunction(atRule: AtRule, helper: Helpers) {
-		const parsed = parseFn(atRule.params);
-
-		if (!parsed) {
-			atRule.warn(helper.result, `Invalid syntax ${atRule.params}`);
-			return;
-		}
-
-		const result = atRule.nodes?.find(
-			(n) => n instanceof Declaration && n.prop === "result",
-		) as Declaration | undefined;
-		if (!result) {
-			atRule.warn(helper.result, "Missing `result:` declaration");
-			return;
-		}
-
-		functions[parsed.name] = { args: parsed.args, value: result.value };
-
-		atRule.remove();
-	}
-
-	return {
+	const plugin = {
 		postcssPlugin: "postcss-function",
 		Once(root: Root, helper: Helpers) {
 			root.walkAtRules("function", (rule) => saveFunction(rule, helper));
 			root.walkDecls((decl) => applyDecl(decl, helper));
 		},
-		AtRule: {},
 	};
+
+	for (const from of opts.globalPaths ?? []) {
+		const css = readFileSync(from, "utf-8");
+		const processor = new Processor([plugin]);
+		processor.process(css, { from }).sync();
+	}
+
+	return plugin;
 }

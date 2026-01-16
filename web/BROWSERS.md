@@ -15,6 +15,7 @@ https://github.com/browserslist/caniuse-lite/tree/main/data/features
 
 ## CSS
 
+- variables (sorry, IE11)
 - align-[start,end]
 - woff2
 - font weight

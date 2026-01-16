@@ -1,31 +1,13 @@
-import atImport from "postcss-import";
-import resolveUrl from "postcss-url";
-import atApply from "./build/plugins/postcss/at-apply.ts";
-import atFunction from "./build/plugins/postcss/at-function.ts";
+import atApply from "./plugins/postcss/at-apply.ts";
+import atFunction from "./plugins/postcss/at-function.ts";
 
+/** @type { options: import("postcss").ProcessOptions, plugins: import("postcss").AcceptedPlugin[] } */
 export default {
+	options: {},
 	plugins: [
-		atImport(),
 		atApply(),
-		atFunction(),
-		resolveUrl([
-			{
-				filter: /\.woff2$/,
-				url: "copy",
-				basePath: import.meta
-					.resolve("@nerd-bible/fonts/dist")
-					.replace("file://", ""),
-				assetsPath: "../fonts",
-				useHash: true,
-				hashOptions: { append: true },
-			},
-			{
-				filter: /\.(jpe?g|svg|png|webp)$/,
-				url: "copy",
-				basePath: "img",
-				assetsPath: "../img",
-				useHash: false,
-			},
-		]),
+		atFunction({
+			globalPaths: ["./src/css/functions.css"],
+		}),
 	],
 };
