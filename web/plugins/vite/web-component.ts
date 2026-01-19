@@ -4,12 +4,17 @@ import type { Plugin } from "vite";
 import postcssConfig from "../../postcss.config";
 
 export function webComponent(): Plugin {
+	type Id = string;
+	const styleGlobalCache: Record<Id, string> = {};
 	return {
 		name: "vite-plugin-web-component",
 		enforce: "pre",
 		transform: {
-			filter: { id: /\.html\?c$/ },
+			filter: { id: /\.html\?(c|global.css)$/ },
 			async handler(code, id) {
+				// console.log("transform", id);
+				if (id.endsWith("?global.css")) return;
+
 				let styleLocal = "";
 				let styleGlobal = "";
 				let js = "";
@@ -70,10 +75,31 @@ export function webComponent(): Plugin {
 				for (const m of styleLocalResult.messages) console.warn(m.toString());
 				styleLocal = styleLocalResult.css;
 
+				code = "";
+				if (styleGlobal) {
+					const key = id.replace(/\?c$/, "?global.css");
+					styleGlobalCache[key] = styleGlobal;
+					code += `import ${JSON.stringify(key)};`;
+				}
+				code += `const styleLocal = ${JSON.stringify(styleLocal)};\n`;
+				code += `const html = ${JSON.stringify(html)};\n`;
+				code += js;
+
+				return { code };
+			},
+		},
+		resolveId: {
+			filter: { id: /.html\?global.css$/ },
+			handler(id) {
+				return id;
+			},
+		},
+		load: {
+			filter: { id: /.html\?global.css$/ },
+			handler(id) {
 				return {
-					code: `const styleLocal = ${JSON.stringify(styleLocal)};
-const html = ${JSON.stringify(html)};
-${js}`,
+					code: styleGlobalCache[id],
+					moduleType: "text",
 				};
 			},
 		},
