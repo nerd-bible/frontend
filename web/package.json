@@ -7,7 +7,7 @@
 		"@fluent/bundle": "^0.19.1",
 		"@fluent/dom": "^0.10.2",
 		"@fluent/langneg": "^0.7.0",
-		"@iconify-json/mingcute": "^1.2.6",
+		"@iconify-json/lucide": "^1.2.86",
 		"@nerd-bible/core": "*",
 		"@nerd-bible/fonts": "0.1.0",
 		"@nerd-bible/valio": "*",

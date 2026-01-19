@@ -1,5 +1,6 @@
 {
 	"name": "@nerd-bible/frontend",
+	"type": "module",
 	"workspaces": [
 		"app",
 		"core",
@@ -10,8 +11,8 @@
 		"start": "npm run start --workspace='@nerd-bible/app'",
 		"start-web": "npm run start --workspace='@nerd-bible/web'",
 		"build": "npm run build --workspaces",
-		"fmt": "prettier",
-		"fmt-fix": "prettier --fix"
+		"fmt": "prettier .",
+		"fmt-fix": "prettier . --fix"
 	},
 	"devDependencies": {
 		"prettier": "^3.8.0"

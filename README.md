@@ -1,6 +1,7 @@
 # frontend
 
 Interactive Bible study web app packaged as a:
+
 - [Website](https://nerd.bible)
 - Native app for:
   - iOS
