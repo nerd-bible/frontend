@@ -1,4 +1,4 @@
-<form class="popover" id="settings">
+<form class="popover">
 	<label>
 		<span data-l10n-id="Theme"></span>
 		<select id="theme">
@@ -21,13 +21,11 @@
 	</label>
 	<a href="/settings">
 		<span data-l10n-id="Settings"></span>
-		<span>
-			v<span webc:nokeep @text="$data.pkg.version"></span>
-		</span>
+		<span id="version"></span>
 	</a>
 </form>
 <style>
-#settings {
+nb-quick-settings > form {
 	padding: --spacing(2) 0;
 	user-select: none;
 	width: --spacing(84);
@@ -62,3 +60,21 @@
 	}
 }
 </style>
+<script type="module">
+	customElement = class Settings extends customElement {
+		constructor() {
+			super();
+			this.querySelector("#version").textContent = `v${APP_VERSION}`;
+		}
+	};
+</script>
+<l10 lang="en-US">
+Theme = Theme
+System = System
+Dark = Dark
+Light = Light
+Font-size = Font size
+Column-width = Column width
+Language = Language
+Settings = Settings
+</l10n>

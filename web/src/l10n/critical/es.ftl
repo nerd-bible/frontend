@@ -1,5 +1,3 @@
-Loading = Cargando
-
 # Quick settings
 Theme = Tema
 System = Sistema

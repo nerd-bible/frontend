@@ -10,13 +10,6 @@ import enUs from "../l10n/critical/en-US.ftl?raw";
 import es from "../l10n/critical/es.ftl?raw";
 import { bindSetting } from "./settings";
 
-function makeBundle(locale: string, raw: string): FluentBundle {
-	const bundle = new FluentBundle(locale);
-	const resource = new FluentResource(raw);
-	bundle.addResource(resource);
-	return bundle;
-}
-
 const locales = {
 	"en-US": {
 		name: "English",

@@ -1,4 +1,5 @@
-const className = css`
+<style>
+nb-dropdown {
 	position: relative;
 	translate: 0 0;
 
@@ -8,20 +9,21 @@ const className = css`
 		/** TODO: CSS logical properties polyfill */
 		inset-inline-end: 0;
 		display: none;
+		background: var(--color-bg-200);
 	}
 
 	&[open] > div {
 		display: initial;
 	}
-`;
-
+}
+</style>
+<script type="module">
 let n = 0;
 // https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/
 // https://hawkticehurst.com/2023/11/you-are-probably-using-connectedcallback-wrong/
-class Dropdown extends HTMLElement {
+customElement = class Dropdown extends HTMLElement {
 	constructor() {
 		super();
-		this.classList.add(className);
 		/** @type {HTMLDivElement} */
 		const content = this.querySelector("div");
 		content.id = `dropdown-content-${n++}`;
@@ -85,4 +87,4 @@ class Dropdown extends HTMLElement {
 		document.removeEventListener("keydown", this.onKeydown);
 	}
 }
-customElements.define("nb-dropdown", Dropdown);
+</script>

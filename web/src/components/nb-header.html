@@ -1,20 +1,20 @@
-<header class="site-header">
+<header>
 	<!-- onPointerMove={() => clearTimeout(closeTimeout)} -->
 	<div class="logo"></div>
 	<form class="search">
-		<input autofocus data-l10n-id="Search" id="search" autocomplete="off">
+		<input autofocus autocomplete="off" data-l10n-id="search">
 	</form>
 	<nb-dropdown class="options">
-		<button data-l10n-id="Quick-settings">
+		<button data-l10n-id="menu">
 			<icon-lucide-menu></icon-lucide-menu>
 		</button>
 		<div>
-			quick settings here so cool yayayayayaya
+			<nb-quick-settings></nb-quick-settings>
 		</div>
 	</nb-dropdown>
 </header>
 <style>
-.site-header {
+nb-header > header {
 	display: flex;
 	gap: --spacing(4);
 	margin: --spacing(2);
@@ -40,7 +40,6 @@
 		align-items: center;
 
 		& > input {
-			height: 100%;
 			background: var(--color-bg-100);
 			border-radius: var(--radius-md);
 			width: 100%;
@@ -49,16 +48,9 @@
 	}
 }
 </style>
-<script type="module">
-const style = document.createElement("style");
-style.innerHTML = styleLocal;
-document.head.append(style);
-class Header extends HTMLElement {
-	constructor() {
-		super();
-		this.innerHTML = html;
-	}
-}
-
-customElements.define("nb-header", Header);
-</script>
+<l10n lang="en-US">
+search = 
+	.aria-label = Search
+menu = 
+	.aria-label = Quick settings
+</l10n>
