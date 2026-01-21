@@ -9,7 +9,7 @@
 	</label>
 	<label>
 		<span $l10n="Font-size"></span>
-		<input id="fontSize" type="range" min="8" max="48" step="2">
+		<input id="fontSize" type="range" min="8" max="48" step="2" $value="fontSize" @input="setFontSize">
 	</label>
 	<label>
 		<span $l10n="Column-width"></span>
@@ -17,7 +17,7 @@
 	</label>
 	<label>
 		<span $l10n="Language"></span>
-		<select id="locale"></select>
+		<select id="locale" @input="onSelect"></select>
 	</label>
 	<a href="/settings">
 		<span $l10n="Settings"></span>
@@ -56,11 +56,28 @@ nb-quick-settings > form {
 </style>
 <script type="module">
 	import { effect } from "alien-signals";
-	import { locale, locales } from "../l10n";
+	import { locale, locales, persistentSignal } from "../l10n";
+
+	const theme = persistentSignal("theme", "system");
+	effect(() => {
+		document.documentElement.className = theme();
+	});
+
+	const fontSize = persistentSignal("fontSize", "20");
+	effect(() => {
+		document.querySelector("main").style.fontSize = `${fontSize()}px`
+	});
+
+	const columnWidth = persistentSignal("columnWidth", "600");
+	effect(() => {
+		document.querySelector("main").style.maxWidth = `${columnWidth()}px`
+	});
 
 	customElement = class Settings extends customElement {
 		constructor() {
-			super();
+			super({
+				theme, fontSize, columnWidth
+			});
 			this.querySelector("#version").textContent = `v${APP_VERSION}`;
 
 			const select = this.querySelector("#locale");
@@ -71,13 +88,14 @@ nb-quick-settings > form {
 				select.appendChild(opt);
 			}
 			effect(() => select.value = locale());
-			select.addEventListener("input", (ev) => {
-				locale(ev.currentTarget.value);
-			});
 		}
 
-		foo() {
-			console.log("FOO");
+		onSelect(ev) {
+			locale(ev.currentTarget.value);
+		}
+
+		setFontSize(ev) {
+			fontSize(ev.currentTarget.value.toString());
 		}
 	};
 </script>

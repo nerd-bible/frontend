@@ -28,6 +28,7 @@ function template(html: string): Template {
 
 type Ftl = string;
 type Signal<T> = ReturnType<typeof signal<T>>;
+type State = Record<string, Signal<any>>;
 
 export function NbElement(
 	id: string,
@@ -44,13 +45,15 @@ export function NbElement(
 
 	return class extends HTMLElement {
 		refs: Record<string, HTMLElement | SVGElement> = {};
+		state: State = {};
 		l10nBundle = signal(new FluentBundle(locale()));
 		l10n: Record<string, Signal<() => string>> = {};
 
-		constructor() {
+		constructor(state: State) {
 			super();
 			this.append(templ.cloneNode(true));
 
+			this.state = state;
 			effect(async () => {
 				const newBundle = await this.generateBundle(locale());
 				this.l10nBundle(newBundle);
@@ -62,11 +65,16 @@ export function NbElement(
 			);
 			let node: Node | null;
 			while ((node = iterator.nextNode())) {
-				if (!(node instanceof HTMLElement) && !(node instanceof SVGElement)) continue;
-				if (node.tagName.includes("-") && node.tagName !== this.tagName) continue;
+				if (!(node instanceof HTMLElement || node instanceof SVGElement))
+					continue;
+				if (node.tagName.includes("-") && node !== this)
+					continue;
 
-				for (let i = 0; i < node.attributes.length; i++) {
-					const attr = node.attributes.item(i)!;
+				const collected = [];
+				for (let i = 0; i < node.attributes.length; i++)
+					collected.push(node.attributes[i]);
+
+				for (const attr of collected) {
 					if (attr.name === ":ref") {
 						this.refs[attr.value] = node;
 						node.removeAttribute(attr.name);
@@ -82,10 +90,8 @@ export function NbElement(
 					} else if (attr.name.startsWith("$")) {
 						const attrName = attr.name.substring(1);
 						const attrValue = attr.value;
-
-						(this as any)[attrValue] ??= signal<string>();
-
 						const toBind = node;
+
 						if (attrName.startsWith("l10n")) {
 							const bindAttribute = attrName.startsWith("l10n:")
 								? attrName.split(":").pop()!
@@ -99,6 +105,12 @@ export function NbElement(
 									: attrValue;
 								if (bindAttribute === "textContent") toBind.textContent = value;
 								else toBind.setAttribute(bindAttribute, value);
+							});
+						} else {
+							const bindAttribute = attrName === "" ? "textContent" : attrName;
+							this.state[attrValue] ??= signal("");
+							effect(() => {
+								toBind[bindAttribute] = this.state[attrValue]();
 							});
 						}
 

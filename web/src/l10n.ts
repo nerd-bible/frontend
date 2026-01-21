@@ -20,7 +20,7 @@ export const locales = {
 export type Locale = keyof typeof locales;
 const defaultLocale = "en-US";
 
-function persistentSignal(key: string, defaultValue = "") {
+export function persistentSignal(key: string, defaultValue = "") {
 	const res = signal(localStorage.getItem(key) ?? defaultValue);
 	effect(() => localStorage.setItem(key, res() ?? ""));
 	return res;

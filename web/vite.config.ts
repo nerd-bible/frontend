@@ -1,7 +1,8 @@
 import Icons from "unplugin-icons/vite";
 import { defineConfig } from "vite";
-import { webComponent } from "./plugins/vite/web-component";
+import { analyzer } from "vite-bundle-analyzer";
 import pkg from "./package.json";
+import { webComponent } from "./plugins/vite/web-component";
 
 export default defineConfig({
 	build: {
@@ -13,7 +14,7 @@ export default defineConfig({
 		target: "es2016",
 	},
 	define: {
-		"APP_VERSION": JSON.stringify(pkg.version),
+		APP_VERSION: JSON.stringify(pkg.version),
 	},
 	plugins: [
 		Icons({
@@ -23,5 +24,6 @@ export default defineConfig({
 			},
 		}),
 		webComponent(),
+		analyzer({ analyzerMode: "static" }),
 	],
 });
