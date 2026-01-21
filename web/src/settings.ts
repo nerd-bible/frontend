@@ -1,3 +1,4 @@
+
 type Bindable = HTMLInputElement | HTMLSelectElement;
 
 const bound: Record<
@@ -15,8 +16,7 @@ export function bindSetting(
 	effect?: (v: string) => void,
 ) {
 	const ele = document.getElementById(name)! as Bindable;
-	// Does NOT trigger listener
-	const existing = storage.getItem(name);
+	const existing = storage.getItem(name); // Does NOT trigger listener
 	if (existing == null) storage.setItem(name, defaultValue);
 	else ele.value = existing;
 

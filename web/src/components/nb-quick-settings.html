@@ -1,26 +1,26 @@
 <form class="popover">
 	<label>
-		<span data-l10n-id="Theme"></span>
+		<span $l10n="Theme"></span>
 		<select id="theme">
-			<option value="system" data-l10n-id="System"></option>
-			<option value="dark" data-l10n-id="Dark"></option>
-			<option value="light" data-l10n-id="Light"></option>
+			<option value="system" $l10n="System"></option>
+			<option value="dark" $l10n="Dark"></option>
+			<option value="light" $l10n="Light"></option>
 		</select>
 	</label>
 	<label>
-		<span data-l10n-id="Font-size"></span>
+		<span $l10n="Font-size"></span>
 		<input id="fontSize" type="range" min="8" max="48" step="2">
 	</label>
 	<label>
-		<span data-l10n-id="Column-width"></span>
+		<span $l10n="Column-width"></span>
 		<input id="columnWidth" type="range" min="100" max="2000" step="20">
 	</label>
 	<label>
-		<span data-l10n-id="Language"></span>
+		<span $l10n="Language"></span>
 		<select id="locale"></select>
 	</label>
 	<a href="/settings">
-		<span data-l10n-id="Settings"></span>
+		<span $l10n="Settings"></span>
 		<span id="version"></span>
 	</a>
 </form>
@@ -34,41 +34,54 @@ nb-quick-settings > form {
 	& > * {
 		width: 100%;
 		padding: --spacing(1) --spacing(4);
-	}
-
-	& > a {
-		display: block;
-		&:hover {
-			background: var(--color-bg-100);
-		}
-	}
-
-	& > label {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 	}
 
-	& input,
-	& select {
-		width: --spacing(32);
-		padding: --spacing(2);
+	& > a:hover {
+		background: var(--color-bg-100);
 	}
 
-	& select {
+	select {
+		width: --spacing(32);
+		padding: --spacing(2);
 		background: var(--color-bg-300);
+	}
+
+	input {
+		padding: --spacing(2) 0;
 	}
 }
 </style>
 <script type="module">
+	import { effect } from "alien-signals";
+	import { locale, locales } from "../l10n";
+
 	customElement = class Settings extends customElement {
 		constructor() {
 			super();
 			this.querySelector("#version").textContent = `v${APP_VERSION}`;
+
+			const select = this.querySelector("#locale");
+			for (const k in locales) {
+				const opt = document.createElement("option");
+				opt.value = k;
+				opt.innerText = locales[k].name;
+				select.appendChild(opt);
+			}
+			effect(() => select.value = locale());
+			select.addEventListener("input", (ev) => {
+				locale(ev.currentTarget.value);
+			});
+		}
+
+		foo() {
+			console.log("FOO");
 		}
 	};
 </script>
-<l10 lang="en-US">
+<l10n lang="en-US">
 Theme = Theme
 System = System
 Dark = Dark
@@ -77,4 +90,14 @@ Font-size = Font size
 Column-width = Column width
 Language = Language
 Settings = Settings
+</l10n>
+<l10n lang="es">
+Theme = Tema
+System = Sistema
+Dark = Oscura
+Light = Ligera
+Font-size = Tamaño de fuente
+Column-width = Ancho de columna
+Language = Idioma
+Settings = Ajustes
 </l10n>

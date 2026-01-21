@@ -2,10 +2,10 @@
 	<!-- onPointerMove={() => clearTimeout(closeTimeout)} -->
 	<div class="logo"></div>
 	<form class="search">
-		<input autofocus autocomplete="off" data-l10n-id="search">
+		<input autofocus autocomplete="off" $l10n:aria-label="search" id="search">
 	</form>
 	<nb-dropdown class="options">
-		<button data-l10n-id="menu">
+		<button $l10n:aria-label="menu">
 			<icon-lucide-menu></icon-lucide-menu>
 		</button>
 		<div>
@@ -49,8 +49,6 @@ nb-header > header {
 }
 </style>
 <l10n lang="en-US">
-search = 
-	.aria-label = Search
-menu = 
-	.aria-label = Quick settings
+search = Search
+menu = Quick settings
 </l10n>
