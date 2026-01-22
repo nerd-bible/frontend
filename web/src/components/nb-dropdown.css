@@ -1,0 +1,17 @@
+nb-dropdown {
+	position: relative;
+	translate: 0 0;
+
+	& > div {
+		position: absolute;
+		top: auto;
+		/** TODO: CSS logical properties polyfill */
+		inset-inline-end: 0;
+		display: none;
+		background: var(--color-bg-200);
+	}
+
+	&[open] > div {
+		display: initial;
+	}
+}

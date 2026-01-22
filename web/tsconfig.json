@@ -2,6 +2,6 @@
 	"extends": "../tsconfig.base.json",
 	"compilerOptions": {
 		"allowImportingTsExtensions": true,
-		"types": ["vite/client"]
+		"types": ["vite/client", "unplugin-icons/types/svelte"]
 	}
 }

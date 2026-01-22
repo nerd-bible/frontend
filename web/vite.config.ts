@@ -1,8 +1,9 @@
+import { svelte } from "@sveltejs/vite-plugin-svelte";
 import Icons from "unplugin-icons/vite";
 import { defineConfig } from "vite";
 import { analyzer } from "vite-bundle-analyzer";
 import pkg from "./package.json";
-import { webComponent } from "./plugins/vite/web-component";
+import l10n from "./plugins/vite/l10n.ts";
 
 export default defineConfig({
 	build: {
@@ -12,18 +13,18 @@ export default defineConfig({
 			polyfill: false,
 		},
 		target: "es2016",
+		minify: false,
+		cssMinify: false,
 	},
 	define: {
 		APP_VERSION: JSON.stringify(pkg.version),
 	},
 	plugins: [
 		Icons({
-			compiler: "web-components",
-			webComponents: {
-				autoDefine: true,
-			},
+			compiler: "svelte",
 		}),
-		webComponent(),
+		svelte(),
+		l10n(),
 		analyzer({ analyzerMode: "static" }),
 	],
 });

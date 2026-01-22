@@ -1,27 +1,7 @@
-<style>
-nb-dropdown {
-	position: relative;
-	translate: 0 0;
-
-	& > div {
-		position: absolute;
-		top: auto;
-		/** TODO: CSS logical properties polyfill */
-		inset-inline-end: 0;
-		display: none;
-		background: var(--color-bg-200);
-	}
-
-	&[open] > div {
-		display: initial;
-	}
-}
-</style>
-<script type="module">
 let n = 0;
 // https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/
 // https://hawkticehurst.com/2023/11/you-are-probably-using-connectedcallback-wrong/
-customElement = class Dropdown extends HTMLElement {
+class Dropdown extends HTMLElement {
 	constructor() {
 		super();
 		/** @type {HTMLDivElement} */
@@ -45,8 +25,7 @@ customElement = class Dropdown extends HTMLElement {
 			const open = newValue !== null;
 			if (open) {
 				this.button.ariaExpanded = true;
-			}
-			else {
+			} else {
 				this.button.ariaExpanded = false;
 			}
 		}
@@ -55,7 +34,7 @@ customElement = class Dropdown extends HTMLElement {
 	/** @param {MouseEvent} ev */
 	onClick = (ev) => {
 		if (!this.contains(ev.target)) this.removeAttribute("open");
-	}
+	};
 
 	/** @param {KeyboardEvent} ev */
 	onKeydown = (ev) => {
@@ -63,7 +42,7 @@ customElement = class Dropdown extends HTMLElement {
 			this.removeAttribute("open");
 			ev.stopImmediatePropagation();
 		}
-	}
+	};
 
 	/** @param {FocusEvent} ev */
 	onBlur = (ev) => {
@@ -87,4 +66,4 @@ customElement = class Dropdown extends HTMLElement {
 		document.removeEventListener("keydown", this.onKeydown);
 	}
 }
-</script>
+customElements.define("nb-dropdown", Dropdown);

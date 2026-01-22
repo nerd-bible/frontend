@@ -1,20 +1,34 @@
+<script lang="ts">
+import Menu from 'virtual:icons/lucide/menu';
+import QuickSettings from './QuickSettings.svelte';
+import { makeT } from "l10n";
+
+const t = makeT();
+</script>
 <header>
 	<!-- onPointerMove={() => clearTimeout(closeTimeout)} -->
 	<div class="logo"></div>
 	<form class="search">
-		<input autofocus autocomplete="off" $l10n:aria-label="search" $l10n:placeholder="search" id="search">
+		<!-- svelte-ignore a11y_autofocus -->
+		<input
+			autofocus
+			autocomplete="off"
+			aria-label={t("search")}
+			placeholder={t("search")}
+			id="search"
+		>
 	</form>
 	<nb-dropdown class="options">
-		<button $l10n:aria-label="menu">
-			<icon-lucide-menu></icon-lucide-menu>
+		<button aria-label={t("menu")}>
+			<Menu />
 		</button>
 		<div>
-			<nb-quick-settings></nb-quick-settings>
+			<QuickSettings />
 		</div>
 	</nb-dropdown>
 </header>
 <style>
-nb-header > header {
+header {
 	display: flex;
 	gap: --spacing(4);
 	margin: --spacing(2);
@@ -50,5 +64,9 @@ nb-header > header {
 </style>
 <l10n lang="en-US">
 search = Search
-menu = Quick settings
+menu = Settings menu
+</l10n>
+<l10n lang="es">
+search = Busca
+menu = Menú de configuración
 </l10n>
