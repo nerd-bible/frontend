@@ -1,3 +1,5 @@
+import { negotiateLanguages } from "@fluent/langneg";
+
 export const locales = {
 	"en-US": {
 		name: "English",
@@ -15,7 +17,10 @@ export type Theme = "system" | "dark" | "light";
 
 // Add settings here
 const initial = {
-	locale: "en-US" as Locale,
+	locale: negotiateLanguages(navigator.languages, Object.keys(locales), {
+		strategy: "lookup",
+		defaultLocale: "en-US",
+	})[0]! as Locale,
 	theme: "system" as Theme,
 	columnWidth: "600",
 	fontSize: "16",
@@ -33,7 +38,8 @@ $effect.root(() => {
 		$effect(() => localStorage.setItem(key, settings[key]));
 	}
 	$effect(() => {
-		document.querySelector("main")!.style.maxWidth = `${settings.columnWidth}px`;
+		document.querySelector("main")!.style.maxWidth =
+			`${settings.columnWidth}px`;
 		document.querySelector("main")!.style.fontSize = `${settings.fontSize}px`;
 		document.documentElement.className = settings.theme;
 	});

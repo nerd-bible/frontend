@@ -58,7 +58,7 @@ export default function l10nPlugin(): Plugin {
 				if (!importee) return;
 
 				if (id === "l10n/runtime") {
-					return this.resolve("./l10n.runtime.svelte.ts", import.meta.filename);
+					return this.resolve("../../src/l10n.svelte.ts", import.meta.filename);
 				} else if (id === "l10n") {
 					return `${importee}.ts?l10n`;
 				}
