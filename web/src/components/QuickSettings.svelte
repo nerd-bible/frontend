@@ -1,5 +1,7 @@
 <script lang="ts">
-import { locales, settings } from "../settings.svelte";
+import { locales } from "../settings.svelte";
+import settings from "../settings.svelte";
+
 	// import { locale, locales, persistentSignal } from "../l10n";
 	//
 	// const theme = persistentSignal("theme", "system");
@@ -19,23 +21,23 @@ import { locales, settings } from "../settings.svelte";
 </script>
 <form class="popover">
 	<label>
-		<span></span>
-		<select id="theme">
-			<option value="system"></option>
-			<option value="dark"></option>
-			<option value="light"></option>
+		<span>{t("theme")}</span>
+		<select id="theme" bind:value={settings.theme}>
+			<option value="system">{t("system")}</option>
+			<option value="dark">{t("dark")}</option>
+			<option value="light">{t("light")}</option>
 		</select>
 	</label>
 	<label>
-		<span></span>
-		<input id="fontSize" type="range" min="8" max="48" step="2">
+		<span>{t("fontSize")}</span>
+		<input id="fontSize" type="range" min="8" max="48" step="2" bind:value={settings.fontSize}>
 	</label>
 	<label>
-		<span></span>
-		<input id="columnWidth" type="range" min="100" max="2000" step="20">
+		<span>{t("columnWidth")}</span>
+		<input id="columnWidth" type="range" min="100" max="2000" step="20" bind:value={settings.columnWidth}>
 	</label>
 	<label>
-		<span>Locale</span>
+		<span>{t("language")}</span>
 		<select id="locale" bind:value={settings.locale}>
 			{#each Object.entries(locales) as [k, v]}
 				<option value={k}>{v.name}</option>
@@ -43,8 +45,8 @@ import { locales, settings } from "../settings.svelte";
 		</select>
 	</label>
 	<a href="/settings">
-		<span></span>
-		<span>v{ APP_VERSION }</span>
+		<span>{t("settings")}</span>
+		<span>v{APP_VERSION}</span>
 	</a>
 </form>
 <style>
@@ -78,22 +80,22 @@ form {
 }
 </style>
 <l10n lang="en-US">
-Theme = Theme
-System = System
-Dark = Dark
-Light = Light
-Font-size = Font size
-Column-width = Column width
-Language = Language
-Settings = Settings
+theme = Theme
+system = System
+dark = Dark
+light = Light
+fontSize = Font size
+columnWidth = Column width
+language = Language
+settings = Settings
 </l10n>
 <l10n lang="es">
-Theme = Tema
-System = Sistema
-Dark = Oscura
-Light = Ligera
-Font-size = Tamaño de fuente
-Column-width = Ancho de columna
-Language = Idioma
-Settings = Ajustes
+theme = Tema
+system = Sistema
+dark = Oscura
+light = Ligera
+fontSize = Tamaño de fuente
+columnWidth = Ancho de columna
+language = Idioma
+settings = Ajustes
 </l10n>

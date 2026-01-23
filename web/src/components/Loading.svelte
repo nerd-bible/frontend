@@ -10,7 +10,7 @@ import Menu from 'virtual:icons/lucide/menu';
 		<figure class="page"><Menu /></figure>
 		<figure class="page"><Menu /></figure>
 	</div>
-	<div></div>
+	<div>{t("loading")}</div>
 </div>
 <style>
 .loading {
@@ -82,8 +82,8 @@ import Menu from 'virtual:icons/lucide/menu';
 }
 </style>
 <l10n lang="en-US">
-Loading = Loading
+loading = Loading
 </l10n>
 <l10n lang="es">
-Loading = Cargando
+loading = Cargando
 </l10n>

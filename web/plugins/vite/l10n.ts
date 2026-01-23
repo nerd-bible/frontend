@@ -1,4 +1,5 @@
-import type { Plugin } from "vite";
+import type { EnvironmentModuleNode, Plugin } from "vite";
+import { minify } from "./l10n.minifier.ts";
 
 // Save having to use a proper HTML parser + generating source map
 // If we did have to, I'd use parse5 + @jridgewell/gen-mapping
@@ -27,30 +28,32 @@ export default function l10nPlugin(): Plugin {
 		transform: {
 			filter: { id: /\.svelte$/ },
 			async handler(code, id) {
-				// 	{
-				// 		locale: "en-US",
-				// 		ftl: ${JSON.stringify(l10n["en-US"])},
-				// 		alternatives: {
-				// 			${Object.keys(l10n)
-				// 				.filter((k) => k !== "en-US")
-				// 				.map(
-				// 					(cur) =>
-				// 						`${JSON.stringify(cur)}: () => import("l10n/${cur}").then(i => i.default),`,
-				// 				)
-				// 				.join(",\n")}
-				// 		}
-				// 	},
-				// )`;
 				id = normalizeId(id);
-				return code.replace(tagRegex, (_, m1, m2) => {
+				let hasL10n = false;
+				let res = code.replace(tagRegex, (_, m1, m2) => {
+					hasL10n = true;
 					l10nImportees[id] ??= {};
-					l10nImportees[id][m1] = m2;
+					l10nImportees[id][m1] = minify(m2);
+
 					return "";
 				});
+				if (hasL10n) {
+					// Ya, this is ghetto
+					res = res.replace(
+						"</script>",
+						'\nimport { makeT } from "l10n";\nconst t = makeT();\n</script>',
+					);
+				}
+
+				return res;
 			},
 		},
 		resolveId: {
-			filter: { id: { include: [pathRegex, fullPathRegex, /^l10n$/, /^l10n\/runtime$/] } },
+			filter: {
+				id: {
+					include: [pathRegex, fullPathRegex, /^l10n$/, /^l10n\/runtime$/],
+				},
+			},
 			handler(id, importee) {
 				if (!importee) return;
 
@@ -76,27 +79,37 @@ export default function l10nPlugin(): Plugin {
 					);
 					return `export default ${ftl}`;
 				} else if (parts?.importee) {
-					let code = `import en from "l10n?lang=en-US";
+					const normalized = normalizeId(parts.importee);
+					let code = `
+import en from "l10n?lang=en-US";
 import { makeT as makeT2 } from "l10n/runtime";
 
+export function makeT() { return makeT2(l10n); }
 export const l10n = {
 	default: { locale: "en-US", ftl: en },
 	other: {
-		${Object.keys(l10nImportees[normalizeId(parts.importee)] ?? {})
-			.filter(k => k !== "en-US")
-			.map(
-				(lang) =>
-					`"${lang}": () => import("l10n?lang=${lang}").then(m => m.default)`,
-			)
-			.join("\n\t\t,")}
-	},
-};
-
-export const makeT = () => makeT2(l10n);
 `;
+					for (const k in l10nImportees[normalized] ?? {}) {
+						code += `"${k}": () => import("l10n?lang=${k}").then(m => m.default)\n\t\t,`;
+					}
+					code += `
+	 }
+}`;
 					return code;
 				}
 			},
+		},
+		hotUpdate({ file, modules }) {
+			const invalidatedModules = new Set<any>();
+			const invalidateL10n = (m?: EnvironmentModuleNode) => {
+				if (!m) return;
+
+				if (fullPathRegex.test(m?.id ?? "")) invalidatedModules.add(m);
+				for (const m2 of m.importedModules) invalidateL10n(m2);
+			};
+
+			invalidateL10n(modules.find((m) => m.id === file));
+			return [...invalidatedModules];
 		},
 	};
 }

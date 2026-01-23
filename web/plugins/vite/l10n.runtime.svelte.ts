@@ -1,5 +1,5 @@
 import { FluentBundle, FluentResource } from "@fluent/bundle";
-import { settings } from "../../src/settings.svelte";
+import settings from "../../src/settings.svelte";
 
 // Fluent file
 type Ftl = string;

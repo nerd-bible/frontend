@@ -1,9 +1,6 @@
 <script lang="ts">
 import Menu from 'virtual:icons/lucide/menu';
 import QuickSettings from './QuickSettings.svelte';
-import { makeT } from "l10n";
-
-const t = makeT();
 </script>
 <header>
 	<!-- onPointerMove={() => clearTimeout(closeTimeout)} -->
