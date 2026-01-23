@@ -1,5 +1,5 @@
 <script lang="ts">
-import { locales } from "../settings.svelte";
+import locales from "../locales";
 import settings from "../settings.svelte";
 
 	// import { locale, locales, persistentSignal } from "../l10n";

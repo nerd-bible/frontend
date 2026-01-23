@@ -16,7 +16,10 @@ function normalizeId(id: string) {
 	return id.replace(/\?.*$/, "").replace(/\.svelte(\.ts)?$/, "");
 }
 
-export default function l10nPlugin(): Plugin {
+export default function l10nPlugin(opts: {
+	runtimePath: string,
+	defaultLocale: string
+}): Plugin {
 	type Importee = string;
 	type Lang = string;
 	type Ftl = string;
@@ -58,7 +61,7 @@ export default function l10nPlugin(): Plugin {
 				if (!importee) return;
 
 				if (id === "l10n/runtime") {
-					return this.resolve("../../src/l10n.svelte.ts", import.meta.filename);
+					return this.resolve(opts.runtimePath);
 				} else if (id === "l10n") {
 					return `${importee}.ts?l10n`;
 				}
@@ -81,15 +84,16 @@ export default function l10nPlugin(): Plugin {
 				} else if (parts?.importee) {
 					const normalized = normalizeId(parts.importee);
 					let code = `
-import en from "l10n?lang=en-US";
+import en from "l10n?lang=${opts.defaultLocale}";
 import { makeT as makeT2 } from "l10n/runtime";
 
 export function makeT() { return makeT2(l10n); }
 export const l10n = {
-	default: { locale: "en-US", ftl: en },
+	default: { locale: "${opts.defaultLocale}", ftl: en },
 	other: {
 `;
 					for (const k in l10nImportees[normalized] ?? {}) {
+						if (k === opts.defaultLocale) continue;
 						code += `"${k}": () => import("l10n?lang=${k}").then(m => m.default)\n\t\t,`;
 					}
 					code += `

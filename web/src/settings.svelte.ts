@@ -1,17 +1,6 @@
 import { negotiateLanguages } from "@fluent/langneg";
+import locales from "./locales";
 
-export const locales = {
-	"en-US": {
-		name: "English",
-	},
-	// he: {
-	// 	name: "עברית",
-	// },
-	// el: "Ελληνικά",
-	es: {
-		name: "Español",
-	},
-};
 export type Locale = keyof typeof locales;
 export type Theme = "system" | "dark" | "light";
 
