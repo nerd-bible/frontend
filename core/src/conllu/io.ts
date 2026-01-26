@@ -3,12 +3,12 @@ import * as z from "@nerd-bible/valio";
 export const rowNumber = z.number().gt(0);
 export const intId = z.codecs.number().gt(0);
 export const rowId = z.union([
-	// Normal integer like 1, 2
-	intId,
 	// Multiword token like 1-4 or 1.2-4.2
 	z
 		.string()
-		.regex(/[1-9][0-9]*\.\d+-\d+\.\d+/),
+		.regex(/[1-9][0-9]*(\.\d+)?-\d+(\.\d+)?/),
+	// Normal integer like 1, 2
+	intId,
 ]);
 
 export const boolean = z.codecs.boolean({
@@ -87,7 +87,7 @@ const wordConllu = z.codecs.custom(z.string(), word, {
 		let output = "";
 		for (const c of columns) {
 			const v = value[c];
-			if (v === "") output += "_";
+			if (v === "" || Number.isNaN(v)) output += "_";
 			else {
 				const encoded = word.shape[c].encode(v as never);
 				if (!encoded.success) return encoded;
@@ -205,19 +205,3 @@ export const normal = z.codecs.custom(z.string(), z.array(sentence), {
 		return { success: true, output: output.trimEnd() };
 	},
 });
-
-// const decoded = wordConllu.decode(
-// 		"1	In	in	ADP	IN	_	0	case	3:foo	Verse=1|SourceMap=1",
-// 	);
-// if (decoded.success) {
-// 	console.dir(decoded.output, { depth: null });
-// 	console.log(wordConllu.encode(decoded.output).output)
-// }
-
-// const text = readFileSync(join(import.meta.dir, "gum.conllu"), "utf8");
-// const parsed = normal.decode(text);
-// // console.dir(parsed, { depth: null });
-// if (parsed.success) {
-// 	const reencoded = normal.encode(parsed.output);
-// 	if (reencoded.success) console.log(reencoded.output);
-// }
