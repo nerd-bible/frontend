@@ -1,6 +1,7 @@
-import * as core from "@nerd-bible/core";
+console.log("Worker loading");
+
+// import * as core from "@nerd-bible/core";
 // import { DuckDb } from "./db";
-// import bsb from "/Users/zack/src/hbo-UD/data/checked/genesis.conllu?raw";
 //
 // const DB = DuckDb;
 // console.time("total");
@@ -23,14 +24,15 @@ import * as core from "@nerd-bible/core";
 // console.timeEnd("query");
 // console.timeEnd("total");
 
-addEventListener("message", (ev) => {
-	const { data } = ev;
-	// console.log("got message", data, bsb.length);
-	const parsed = core.conllu.normal.decode("");
-	if (parsed.success) {
-		postMessage(parsed.output);
-	} else {
-		// todo
-		console.error(parsed);
-	}
-});
+
+// addEventListener("message", (ev) => {
+// 	const { data } = ev;
+// 	// console.log("got message", data, bsb.length);
+// 	const parsed = core.conllu.normal.decode("");
+// 	if (parsed.success) {
+// 		postMessage(parsed.output);
+// 	} else {
+// 		// todo
+// 		console.error(parsed);
+// 	}
+// });

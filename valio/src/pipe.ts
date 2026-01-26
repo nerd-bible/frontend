@@ -1,4 +1,4 @@
-import enFormat from "./locales/en";
+import enFormat from "./locales/en.ts";
 
 export type Error = { input: any; message: string };
 export type Errors = { [inputPath: string]: Error[] };
@@ -20,14 +20,19 @@ interface Check<T> {
 }
 
 export class HalfPipe<I, O = never> {
+	name: string;
+	typeCheck: (v: any) => v is I;
+	transform?: (v: I, ctx: Context) => Result<O>;
+
 	constructor(
-		/** The type name */
-		public name: string,
-		/** The first check to run */
-		public typeCheck: (v: any) => v is I,
-		/** Optional transform for pipe to run at end. Useful for containers */
-		public transform?: (v: I, ctx: Context) => Result<O>,
-	) {}
+		name: string,
+		typeCheck: (v: any) => v is I,
+		transform?: (v: I, ctx: Context) => Result<O>,
+	) {
+		this.name = name;
+		this.typeCheck = typeCheck;
+		this.transform = transform;
+	}
 	/** The second checks to run */
 	checks: Check<I>[] = [];
 
@@ -83,10 +88,13 @@ export class Context {
 }
 
 export class Pipe<I = any, O = any> {
-	constructor(
-		public i: HalfPipe<I, O>,
-		public o: HalfPipe<O, I>,
-	) {}
+	i: HalfPipe<I, O>;
+	o: HalfPipe<O, I>;
+
+	constructor(i: HalfPipe<I, O>, o: HalfPipe<O, I>) {
+		this.i = i;
+		this.o = o;
+	}
 
 	pipes: Pipe<any, any>[] = [];
 	registry: Record<PropertyKey, any> = {};

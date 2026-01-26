@@ -1,6 +1,6 @@
-import * as c from "./containers";
+import * as c from "./containers.ts";
 import type { Context, Pipe, Result } from "./pipe";
-import * as p from "./primitives";
+import * as p from "./primitives.ts";
 
 export function custom<I, O>(
 	input: Pipe<I, any>,

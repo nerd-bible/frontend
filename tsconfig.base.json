@@ -28,9 +28,8 @@
 		"composite": true,
 		"incremental": true,
 		// Allow detecting linking to *.ts
+		"allowImportingTsExtensions": true,
 		"customConditions": ["nbsource"]
 	},
-	"include": ["${configDir}/src/**/*"],
-	// Don't typecheck test files
-	"exclude": ["${configDir}/**/*.test.*", "${configDir}/test"]
+	"include": ["${configDir}/src/**/*"]
 }

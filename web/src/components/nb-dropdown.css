@@ -2,7 +2,7 @@ nb-dropdown {
 	position: relative;
 	translate: 0 0;
 
-	& > div {
+	& > .content {
 		position: absolute;
 		top: auto;
 		/** TODO: CSS logical properties polyfill */
@@ -11,7 +11,7 @@ nb-dropdown {
 		background: var(--color-bg-200);
 	}
 
-	&[open] > div {
+	&[open] > .content {
 		display: initial;
 	}
 }

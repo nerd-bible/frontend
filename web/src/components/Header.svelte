@@ -19,7 +19,7 @@ import QuickSettings from './QuickSettings.svelte';
 		<button aria-label={t("menu")}>
 			<Menu />
 		</button>
-		<div>
+		<div class="content">
 			<QuickSettings />
 		</div>
 	</nb-dropdown>

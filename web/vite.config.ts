@@ -7,6 +7,16 @@ import l10n from "./plugins/vite/l10n.ts";
 import locales from "./src/locales.ts";
 
 export default defineConfig({
+	resolve: {
+		conditions: [
+			"nbsource",
+			"module",
+			"browser",
+			"development",
+			"svelte",
+			"import",
+		],
+	},
 	build: {
 		manifest: true,
 		// https://guybedford.com/es-module-preloading-integrity#modulepreload-polyfill

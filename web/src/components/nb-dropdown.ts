@@ -5,7 +5,7 @@ class Dropdown extends HTMLElement {
 	constructor() {
 		super();
 		/** @type {HTMLDivElement} */
-		const content = this.querySelector("div");
+		const content = this.querySelector(".content");
 		content.id = `dropdown-content-${n++}`;
 		/** @type {HTMLButtonElement} */
 		this.button = this.querySelector("button");

@@ -27,9 +27,6 @@ $effect.root(() => {
 		$effect(() => localStorage.setItem(key, settings[key]));
 	}
 	$effect(() => {
-		document.querySelector("main")!.style.maxWidth =
-			`${settings.columnWidth}px`;
-		document.querySelector("main")!.style.fontSize = `${settings.fontSize}px`;
 		document.documentElement.className = settings.theme;
 	});
 });

@@ -1,9 +1,10 @@
-import type { Input, Output, Result } from "./pipe";
-import { type Context, HalfPipe, Pipe } from "./pipe";
-import * as p from "./primitives";
+import type { Input, Output, Result } from "./pipe.ts";
+import { type Context, HalfPipe, Pipe } from "./pipe.ts";
+import * as p from "./primitives.ts";
 
 class ValioArray<T> extends p.Arrayish<any[], T[]> {
-	constructor(public element: Pipe<any, T>) {
+	element: Pipe<any, T>;
+	constructor(element: Pipe<any, T>) {
 		super(
 			new HalfPipe(
 				"array",
@@ -31,6 +32,7 @@ class ValioArray<T> extends p.Arrayish<any[], T[]> {
 				return true;
 			}),
 		);
+		this.element = element;
 	}
 }
 export function array<T>(element: Pipe<any, T>): ValioArray<T> {
@@ -41,9 +43,12 @@ class ValioRecord<K extends PropertyKey, V> extends Pipe<
 	Record<any, any>,
 	Record<K, V>
 > {
+		keyPipe: Pipe<any, K>;
+		valPipe: Pipe<any, V>;
+
 	constructor(
-		public keyPipe: Pipe<any, K>,
-		public valPipe: Pipe<any, V>,
+		keyPipe: Pipe<any, K>,
+		valPipe: Pipe<any, V>,
 	) {
 		super(
 			new HalfPipe(
@@ -89,6 +94,8 @@ class ValioRecord<K extends PropertyKey, V> extends Pipe<
 				},
 			),
 		);
+		this.keyPipe = keyPipe;
+		this.valPipe = valPipe;
 	}
 }
 export function record<K extends PropertyKey, V>(
@@ -102,7 +109,9 @@ class Union<T extends Readonly<Pipe[]>> extends Pipe<
 	Output<T[number]>,
 	Output<T[number]>
 > {
-	constructor(public options: T) {
+	options: T;
+
+	constructor(options: T) {
 		const name = options.map((o) => o.o.name).join("|");
 		type O = Output<T[number]>;
 		super(
@@ -128,6 +137,7 @@ class Union<T extends Readonly<Pipe[]>> extends Pipe<
 				return false;
 			}),
 		);
+		this.options = options;
 	}
 }
 export function union<T extends Readonly<Pipe[]>>(options: T): Union<T> {
@@ -154,9 +164,12 @@ type Extend<A extends Record<any, any>, B extends Record<any, any>> = Flatten<
 export class ValioObject<
 	Shape extends Record<any, Pipe<any, any>>,
 > extends Pipe<Record<any, any>, ObjectOutput<Shape>> {
+		 shape: Shape;
+		 isLoose: boolean;
+
 	constructor(
-		public shape: Shape,
-		public isLoose: boolean,
+		shape: Shape,
+		isLoose: boolean,
 	) {
 		super(
 			new HalfPipe(
@@ -172,6 +185,9 @@ export class ValioObject<
 				(v) => this.typeCheckOutput(v),
 			),
 		);
+
+		this.shape = shape;
+		this.isLoose = isLoose;
 	}
 
 	clone(): this {

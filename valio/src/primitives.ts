@@ -1,4 +1,4 @@
-import { HalfPipe, Pipe } from "./pipe";
+import { HalfPipe, Pipe } from "./pipe.ts";
 
 function primitive<T>(name: string, typeCheck: (v: T) => v is T) {
 	const half = new HalfPipe(name, typeCheck);
@@ -88,9 +88,12 @@ export function string(): ValioString {
 export type Lit = string | number | bigint | boolean | null | undefined;
 
 class ValioLiteral<T extends Lit> extends Pipe<T, T> {
-	constructor(public literal: T) {
+	literal: T;
+
+	constructor(literal: T) {
 		const half = new HalfPipe(`${literal}`, (v): v is T => v === literal);
 		super(half, half);
+		this.literal = literal;
 	}
 }
 export function literal<T extends Lit>(literal: T) {
@@ -98,11 +101,14 @@ export function literal<T extends Lit>(literal: T) {
 }
 
 class ValioEnum<T extends Lit> extends Pipe<T, T> {
-	constructor(public literals: readonly T[]) {
+	literals: readonly T[];
+
+	constructor(literals: readonly T[]) {
 		const half = new HalfPipe(`${literals.join(",")}`, (v: any): v is T =>
 			literals.includes(v),
 		);
 		super(half, half);
+		this.literals = literals;
 	}
 }
 function enum_<T extends Lit>(literals: readonly T[]): ValioEnum<T> {
