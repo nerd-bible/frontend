@@ -113,7 +113,7 @@ export const l10n = {
 			};
 
 			invalidateL10n(modules.find((m) => m.id === file));
-			return [...invalidatedModules];
+			if (invalidatedModules.size) return [...invalidatedModules];
 		},
 	};
 }

@@ -5,25 +5,25 @@ import Conllu from "./components/Conllu.svelte";
 import { conllu } from "@nerd-bible/core";
 import settings from "./settings.svelte";
 
+let sentences = $state.raw([]);
+const worker = new Worker(new URL("./worker.ts", import.meta.url), { type: "module" });
 const url = "https://cdn.jsdelivr.net/gh/mr-martian/hbo-UD@master/data/checked/genesis.conllu";
 
-const sentencesPromise = fetch(url).then(r => r.text()).then(t => {
-	const parsed = conllu.normal.decode(t);
-	if (parsed.success) {
-		return parsed.output;
-	} else {
-		throw new Error(parsed.errors.join("\n\n"));
+let gid = 0;
+worker.addEventListener("message", (ev) => {
+	const { id, data } = ev.data;
+	if (id === 0) {
+		sentences = data;
 	}
 });
+worker.postMessage({ type: "get_url_sentences", id: gid, data: { url } });
 </script>
 
 <Header />
 <main style:max-width={`${settings.columnWidth}px`} style:font-size={`${settings.fontSize}px`}>
-	{#await sentencesPromise}
-		<Loading />
-	{:then sentences}
+	{#if sentences.length}
 		<Conllu {sentences} />
-	{:catch someError}
-		System error: {someError.message}.
-	{/await}
+	{:else}
+		<Loading />
+	{/if}
 </main>

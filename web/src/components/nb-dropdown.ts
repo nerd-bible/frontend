@@ -13,7 +13,6 @@ class Dropdown extends HTMLElement {
 		this.button.setAttribute("aria-controls", content.id);
 		this.button.addEventListener("click", (ev) => {
 			this.toggleAttribute("open");
-			ev.stopImmediatePropagation();
 		});
 		this.addEventListener("blur", this.onBlur, { capture: true });
 	}

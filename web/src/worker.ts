@@ -1,6 +1,7 @@
 console.log("Worker loading");
 
-// import * as core from "@nerd-bible/core";
+import { conllu } from "@nerd-bible/core";
+
 // import { DuckDb } from "./db";
 //
 // const DB = DuckDb;
@@ -24,15 +25,26 @@ console.log("Worker loading");
 // console.timeEnd("query");
 // console.timeEnd("total");
 
+async function getUrlSentences(url: string) {
+	const t = await fetch(url).then((r) => r.text());
+	const parsed = conllu.normal.decode(t);
+	if (parsed.success) {
+		return parsed.output;
+	} else {
+		throw new Error(parsed.errors.join("\n\n"));
+	}
+}
 
-// addEventListener("message", (ev) => {
-// 	const { data } = ev;
-// 	// console.log("got message", data, bsb.length);
-// 	const parsed = core.conllu.normal.decode("");
-// 	if (parsed.success) {
-// 		postMessage(parsed.output);
-// 	} else {
-// 		// todo
-// 		console.error(parsed);
-// 	}
-// });
+addEventListener("message", async (ev) => {
+	const { type, id, data } = ev.data;
+
+	switch (type) {
+		case "get_url_sentences": {
+			const data2 = await getUrlSentences(data.url);
+			postMessage({ id, data: data2 });
+			break;
+		}
+		default:
+			throw Error(`unknown message type ${type}`);
+	}
+});

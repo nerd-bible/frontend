@@ -1,23 +1,6 @@
 <script lang="ts">
 import locales from "../locales";
 import settings from "../settings.svelte";
-
-	// import { locale, locales, persistentSignal } from "../l10n";
-	//
-	// const theme = persistentSignal("theme", "system");
-	// effect(() => {
-	// 	document.documentElement.className = theme();
-	// });
-	//
-	// const fontSize = persistentSignal("fontSize", "20");
-	// effect(() => {
-	// 	document.querySelector("main").style.fontSize = `${fontSize()}px`
-	// });
-	//
-	// const columnWidth = persistentSignal("columnWidth", "600");
-	// effect(() => {
-	// 	document.querySelector("main").style.maxWidth = `${columnWidth()}px`
-	// });
 </script>
 <form class="popover">
 	<label>
