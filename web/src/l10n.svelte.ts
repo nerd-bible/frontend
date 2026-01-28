@@ -30,18 +30,19 @@ export function makeBundle(b: Bundle): FluentBundle {
 }
 
 export async function loadBundle(l10n: L10n, locale: string) {
-	if (locale in l10n.other) {
-		const ftl = await l10n.other[locale]();
-		return makeBundle({ locale: locale, ftl });
-	}
-	return makeBundle(l10n.default);
+	const ftl = await l10n.other[locale]();
+	return makeBundle({ locale: locale, ftl });
 }
 
 export function makeT(l10n: L10n) {
-	let bundle = $state(makeBundle(l10n.default));
+	const defaultBundle = makeBundle(l10n.default);
+	let bundle = $state(defaultBundle);
 	$effect(() => {
-		if (bundle.locales[0] !== settings.locale) {
-			loadBundle(l10n, settings.locale).then((b) => (bundle = b));
+		const newLocale = settings.locale;
+		if (newLocale === l10n.default.locale) {
+			bundle = defaultBundle;
+		} else if (bundle.locales[0] !== newLocale && newLocale in l10n.other) {
+			loadBundle(l10n, newLocale).then((b) => (bundle = b));
 		}
 	});
 

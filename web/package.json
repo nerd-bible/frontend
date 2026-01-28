@@ -23,7 +23,8 @@
 	},
 	"scripts": {
 		"start": "vite",
-		"build": "vite build"
+		"build": "vite build",
+		"preview": "vite preview"
 	},
 	"browserslist": "baseline 2016 with downstream"
 }

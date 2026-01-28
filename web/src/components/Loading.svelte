@@ -1,8 +1,6 @@
-<script>
+<script lang="ts">
 import Menu from 'virtual:icons/lucide/menu';
 </script>
-<!-- svelte-ignore css_unused_selector -->
-<!-- svelte-ignore css_unused_selector -->
 <div class="loading">
 	<div class="book">
 		<figure class="page"><Menu /></figure>

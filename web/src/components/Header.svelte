@@ -28,7 +28,7 @@ import QuickSettings from './QuickSettings.svelte';
 header {
 	display: flex;
 	gap: --spacing(4);
-	margin: --spacing(2);
+	padding: --spacing(2);
 	flex-wrap: nowrap;
 	justify-content: space-between;
 	align-items: center;
