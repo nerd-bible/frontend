@@ -36,10 +36,8 @@ export class HalfPipe<I, O = never> {
 	/** The second checks to run */
 	checks: Check<I>[] = [];
 
-	clone(): this {
-		const res = clone(this);
-		res.checks = res.checks.slice();
-		return res;
+	clone(): HalfPipe<I, O> {
+		return new HalfPipe(this.name, this.typeCheck, this.transform);
 	}
 }
 
@@ -53,9 +51,9 @@ export class Context {
 	}
 
 	clone(): Context {
-		const res = clone(this);
-		res.jsonPath = res.jsonPath.slice();
-		res.errors = { ...res.errors };
+		const res = new Context();
+		res.jsonPath = this.jsonPath.slice();
+		res.errors = { ...this.errors };
 		return res;
 	}
 
@@ -98,6 +96,7 @@ export class Pipe<I = any, O = any> {
 
 	pipes: Pipe<any, any>[] = [];
 	registry: Record<PropertyKey, any> = {};
+	debug = false;
 
 	clone(): this {
 		const res = clone(this);

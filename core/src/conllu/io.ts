@@ -1,46 +1,29 @@
 import * as z from "@nerd-bible/valio";
 
-export const rowNumber = z.number().gt(0);
-export const intId = z.codecs.number().gt(0);
-export const rowId = z.union([
-	// Multiword token like 1-4 or 1.2-4.2
-	z
-		.string()
-		.regex(/[1-9][0-9]*(\.\d+)?-\d+(\.\d+)?/),
-	// Normal integer like 1, 2
-	intId,
-]);
-
 export const boolean = z.codecs.boolean({
-	true: ["yes", "true"],
-	false: ["no", "false"],
+	true: /yes|true/i,
+	false: /no|false/i,
 });
-export const primitive = z.union([z.string(), boolean, z.codecs.number()]);
 
 export function recordConllu(delims = { prop: "|", value: "=" }) {
-	return z.codecs.custom(z.string(), z.record(z.string(), primitive), {
+	return z.codecs.custom(z.string(), z.record(z.string(), z.string()), {
 		decode(value: string, ctx: z.Context) {
 			let success = true;
-			const output: Record<string, z.Output<typeof primitive>> = {};
+			const output: Record<string, string> = {};
 
-			const length = ctx.jsonPath.length;
 			for (const cur of value.split(delims.prop)) {
 				// 14:nmod:into
 				const index = cur.indexOf(delims.value);
 				const k = index === -1 ? cur : cur.substring(0, index);
 				if (!k) continue;
-				const v = index === -1 ? "" : cur.substring(index + 1);
-				ctx.jsonPath[length] = k;
-				const decoded = primitive.decode(v, ctx);
-				if (decoded.success) output[k] = decoded.output;
-				else success = false;
+
+				output[k] = index === -1 ? "" : cur.substring(index + 1);
 			}
-			ctx.jsonPath.length = length;
 
 			if (!success) return { success, errors: ctx.errors };
 			return { success, output };
 		},
-		encode(v: Record<string, z.Output<typeof primitive>>) {
+		encode(v: Record<string, string>) {
 			const entries = Object.entries(v);
 			if (!entries.length) return { success: true, output: "_" };
 
@@ -55,7 +38,7 @@ export function recordConllu(delims = { prop: "|", value: "=" }) {
 }
 
 export const word = z.object({
-	id: rowId,
+	id: z.string(),
 	form: z.string(),
 	lemma: z.string(),
 	upos: z.string(),

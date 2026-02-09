@@ -20,37 +20,35 @@ export function custom<I, O>(
 export function number(
 	parser = Number.parseFloat,
 ): p.Comparable<string | number | null | undefined, number> {
-	return custom(
-		c.union([p.string(), p.number(), p.null(), p.undefined()]),
-		p.number(),
-		{
-			decode(input, ctx) {
-				if (typeof input === "number") return { success: true, output: input };
-				if (!input || input.toLowerCase() === "nan")
-					return { success: true, output: Number.NaN };
+	return custom(p.any(), p.number(), {
+		decode(input, ctx) {
+			if (typeof input === "number") return { success: true, output: input };
+			if (!input || input.toLowerCase() === "nan")
+				return { success: true, output: Number.NaN };
 
-				const output = parser(input);
-				if (!Number.isNaN(output)) return { success: true, output };
+			const output = parser(input);
+			if (!Number.isNaN(output)) return { success: true, output };
 
-				ctx.pushErrorFmt("coerce", input, { expected: "number" });
-				return { success: false, errors: ctx.errors };
-			},
+			ctx.pushErrorFmt("coerce", input, { expected: "number" });
+			return { success: false, errors: ctx.errors };
 		},
-	) as ReturnType<typeof number>;
+	}) as ReturnType<typeof number>;
 }
 
 export function boolean(opts: {
-	true?: string[];
-	false?: string[];
+	true?: RegExp;
+	false?: RegExp;
 }): Pipe<any, boolean> {
 	return custom(p.any(), p.boolean(), {
-		decode(input) {
+		decode(input, ctx) {
+			if (typeof input === "boolean") return { success: true, output: input };
 			if (typeof input === "string") {
-				if (opts.true?.includes(input)) return { success: true, output: true };
-				if (opts.false?.includes(input))
-					return { success: true, output: false };
+				if (opts.true?.test(input)) return { success: true, output: true };
+				if (opts.false?.test(input)) return { success: true, output: false };
 			}
-			return { success: true, output: Boolean(input) };
+
+			ctx.pushErrorFmt("coerce", input, { expected: "boolean" });
+			return { success: false, errors: ctx.errors };
 		},
 	});
 }

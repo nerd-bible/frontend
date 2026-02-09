@@ -13,13 +13,21 @@ const initial = {
 	theme: "system" as Theme,
 	columnWidth: "600",
 	fontSize: "16",
+	textBlocking: "paragraph",
 };
 for (const k in initial) {
 	const key = k as keyof typeof initial;
 	(initial[key] as string) = localStorage.getItem(k) ?? initial[key];
 }
-const settings = $state(initial);
-export default settings;
+export const settings = $state(initial);
+export { locales };
+export const textBlockings = [
+	"paragraph",
+	"chapter",
+	"verse",
+	"sentence",
+] as const;
+export type TextBlockings = typeof textBlockings[number];
 
 $effect.root(() => {
 	for (const k in initial) {

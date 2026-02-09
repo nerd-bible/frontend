@@ -1,6 +1,5 @@
 <script lang="ts">
-import locales from "../locales";
-import settings from "../settings.svelte";
+import { settings, locales, textBlockings } from "../settings.svelte";
 </script>
 <form class="popover">
 	<label>
@@ -18,6 +17,14 @@ import settings from "../settings.svelte";
 	<label>
 		<span>{t("columnWidth")}</span>
 		<input id="columnWidth" type="range" min="100" max="2000" step="20" bind:value={settings.columnWidth}>
+	</label>
+	<label>
+		<span>{t("textBlocking")}</span>
+		<select id="textBlocking" bind:value={settings.textBlocking}>
+			{#each textBlockings as textBlocking}
+				<option value={textBlocking}>{t(textBlocking)}</option>
+			{/each}
+		</select>
 	</label>
 	<label>
 		<span>{t("language")}</span>
@@ -71,6 +78,11 @@ fontSize = Font size
 columnWidth = Column width
 language = Language
 settings = Settings
+textBlocking = Text blocking
+paragraph = Paragraph
+chapter = Chapter
+verse = Verse
+sentence = Sentence
 </l10n>
 <l10n lang="es">
 theme = Tema
@@ -81,4 +93,9 @@ fontSize = Tamaño de fuente
 columnWidth = Ancho de columna
 language = Idioma
 settings = Ajustes
+textBlocking = Bloqueo de texto
+paragraph = Párrafo
+chapter = Capítulo
+verse = Versículo
+sentence = Oración
 </l10n>

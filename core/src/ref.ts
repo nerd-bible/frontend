@@ -1,7 +1,7 @@
-import * as Book from "./book";
+import * as Book from "./book.ts";
 
 export type Chapter = number;
-export type Verse = number;
+export type Verse = string;
 export type Part =
 	| "a"
 	| "b"
@@ -38,9 +38,9 @@ export type Bcv = B & Cv;
 export type BcvPart = B & CvPart;
 export type BcvWord = B & CvWord;
 
-const delimiter = ":_# ";
+const delimiter = "\\p{P}\\s";
 const regexes = {
-	book: `(\\d*[^\\d\\n${delimiter.trim()}]{2,})`,
+	book: `([^${delimiter}]{2,})`,
 	chapter: `[${delimiter}]*(\\d+)`,
 	verse: `(?:(?:[${delimiter}v]+|\\s*verse\\s*)(\\d+))`,
 	part: "([a-v])",
@@ -50,6 +50,7 @@ const regexes = {
 // book (chapter (verse (part|word)?)?)?
 const bcvPartOrWord = new RegExp(
 	`${regexes.book}(?:(?:${regexes.chapter}${regexes.verse}?)(?:${regexes.part}|${regexes.word})?)?`,
+	'u'
 );
 export function parseBcvPartOrWord(
 	r: string,
@@ -66,7 +67,7 @@ export function parseBcvPartOrWord(
 	}
 
 	if (match[2]) res.chapter = +match[2];
-	if (match[3]) res.verse = +match[3];
+	if (match[3]) res.verse = match[3];
 	// assert(!(match[4] && match[5]));
 	if (match[4]) res.part = match[4];
 	if (match[5]) res.word = +match[5];
@@ -77,6 +78,7 @@ export function parseBcvPartOrWord(
 // chapter verse (part|word)?
 const cvPartOrWord = new RegExp(
 	`${regexes.chapter}${regexes.verse}(?:${regexes.part}|${regexes.word})?`,
+	'u'
 );
 export function parseCv(r: string): Cv | CvPart | CvWord | undefined {
 	const match = r.match(cvPartOrWord);
@@ -85,7 +87,7 @@ export function parseCv(r: string): Cv | CvPart | CvWord | undefined {
 	const res: any = {};
 
 	if (match[1]) res.chapter = +match[1];
-	if (match[2]) res.verse = +match[2];
+	if (match[2]) res.verse = match[2];
 	// assert(!(match[3] && match[4]));
 	if (match[3]) res.part = match[3];
 	if (match[4]) res.word = +match[4];

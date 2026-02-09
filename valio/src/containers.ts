@@ -1,15 +1,20 @@
 import type { Input, Output, Result } from "./pipe.ts";
-import { type Context, HalfPipe, Pipe } from "./pipe.ts";
+import { Context, HalfPipe, Pipe } from "./pipe.ts";
 import * as p from "./primitives.ts";
 
 class ValioArray<T> extends p.Arrayish<any[], T[]> {
 	element: Pipe<any, T>;
+
+	static typeCheck(v: any): v is any[] {
+		return Array.isArray(v);
+	}
+
 	constructor(element: Pipe<any, T>) {
 		super(
 			new HalfPipe(
 				"array",
-				(v: any): v is any[] => Array.isArray(v),
-				(input: any[], ctx: Context): Result<T[]> => {
+				ValioArray.typeCheck,
+				function parseAnyArr(input: any[], ctx: Context): Result<T[]> {
 					const output = new Array<T>(input.length);
 					let success = true;
 
@@ -26,11 +31,14 @@ class ValioArray<T> extends p.Arrayish<any[], T[]> {
 					return { success, output };
 				},
 			),
-			new HalfPipe(`array<${element.o.name}>`, (v: any): v is T[] => {
-				if (!Array.isArray(v)) return false;
-				for (const e of v) if (!element.o.typeCheck(e)) return false;
-				return true;
-			}),
+			new HalfPipe(
+				`array<${element.o.name}>`,
+				function isArrT(v: any): v is T[] {
+					if (!ValioArray.typeCheck(v)) return false;
+					for (const e of v) if (!element.o.typeCheck(e)) return false;
+					return true;
+				},
+			),
 		);
 		this.element = element;
 	}
@@ -43,19 +51,22 @@ class ValioRecord<K extends PropertyKey, V> extends Pipe<
 	Record<any, any>,
 	Record<K, V>
 > {
-		keyPipe: Pipe<any, K>;
-		valPipe: Pipe<any, V>;
+	keyPipe: Pipe<any, K>;
+	valPipe: Pipe<any, V>;
 
-	constructor(
-		keyPipe: Pipe<any, K>,
-		valPipe: Pipe<any, V>,
-	) {
+	static typeCheck(v: any): v is Record<any, any> {
+		return Object.prototype.toString.call(v) === "[object Object]";
+	}
+
+	constructor(keyPipe: Pipe<any, K>, valPipe: Pipe<any, V>) {
 		super(
 			new HalfPipe(
 				"object",
-				(v): v is Record<any, any> =>
-					Object.prototype.toString.call(v) === "[object Object]",
-				(input: Record<any, any>, ctx: Context): Result<Record<K, V>> => {
+				ValioRecord.typeCheck,
+				function anyToRecordKV(
+					input: Record<any, any>,
+					ctx: Context,
+				): Result<Record<K, V>> {
 					const output = {} as Record<K, V>;
 
 					let success = true;
@@ -82,9 +93,8 @@ class ValioRecord<K extends PropertyKey, V> extends Pipe<
 			),
 			new HalfPipe(
 				`record<${keyPipe.o.name},${valPipe.o.name}>`,
-				(v): v is Record<K, V> => {
-					if (Object.prototype.toString.call(v) !== "[object Object]")
-						return false;
+				function recordCheckV(v): v is Record<K, V> {
+					if (!ValioRecord.typeCheck(v)) return false;
 					for (const k in v) {
 						// Keys will always be strings.
 						// if (!keyPipe.o.typeCheck(k)) return false;
@@ -117,22 +127,26 @@ class Union<T extends Readonly<Pipe[]>> extends Pipe<
 		super(
 			new HalfPipe(
 				name,
-				(v: any): v is O => {
+				function isUnionType(v: any): v is O {
 					for (const f of options) if (f.i.typeCheck(v)) return true;
 					return false;
 				},
 				(data: O, ctx: Context): Result<O> => {
-					const newCtx = ctx.clone();
-					for (const s in options) {
-						const decoded = options[s]!.decode(data, newCtx);
+					// Throw away errors since we expect them.
+					const newCtx = new Context();
+					newCtx.pushErrorFmt = () => {};
+					newCtx.pushError = () => {};
+					for (const f of options) {
+						const decoded = f.decode(data, newCtx);
 						if (decoded.success) return decoded;
 					}
 
-					Object.assign(ctx.errors, newCtx.errors);
+					// Sad path -- do again with real ctx to gather errors.
+					for (const f of options) f.decode(data, ctx);
 					return { success: false, errors: ctx.errors };
 				},
 			),
-			new HalfPipe(name, (v: any): v is O => {
+			new HalfPipe(name, function isUnionType2(v: any): v is O {
 				for (const f of options) if (f.o.typeCheck(v)) return true;
 				return false;
 			}),
@@ -164,18 +178,18 @@ type Extend<A extends Record<any, any>, B extends Record<any, any>> = Flatten<
 export class ValioObject<
 	Shape extends Record<any, Pipe<any, any>>,
 > extends Pipe<Record<any, any>, ObjectOutput<Shape>> {
-		 shape: Shape;
-		 isLoose: boolean;
+	shape: Shape;
+	isLoose: boolean;
 
-	constructor(
-		shape: Shape,
-		isLoose: boolean,
-	) {
+	static typeCheck(v: any): v is Record<any, any> {
+		return typeof v === "object";
+	}
+
+	constructor(shape: Shape, isLoose: boolean) {
 		super(
 			new HalfPipe(
 				"object",
-				(v): v is Record<any, any> =>
-					Object.prototype.toString.call(v) === "[object Object]",
+				ValioObject.typeCheck,
 				(data, ctx) => this.transformInput(data, ctx),
 			),
 			new HalfPipe(
@@ -219,7 +233,7 @@ export class ValioObject<
 	}
 
 	protected typeCheckOutput(v: any): v is ObjectOutput<Shape> {
-		if (Object.prototype.toString.call(v) !== "[object Object]") return false;
+		if (!ValioObject.typeCheck(v)) return false;
 		for (const s in this.shape)
 			if (!this.shape[s]!.o.typeCheck(v[s])) return false;
 		return true;

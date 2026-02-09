@@ -6,7 +6,7 @@
 // it cannot handle compound messages which force some weird multi-message
 // strings.
 import { FluentBundle, FluentResource } from "@fluent/bundle";
-import settings from "./settings.svelte";
+import { settings } from "./settings.svelte";
 
 // Fluent file
 type Ftl = string;

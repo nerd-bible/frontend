@@ -5,6 +5,7 @@ import { analyzer } from "vite-bundle-analyzer";
 import pkg from "./package.json";
 import l10n from "./plugins/vite/l10n.ts";
 import locales from "./src/locales.ts";
+import wasm from "vite-plugin-wasm";
 
 export default defineConfig({
 	resolve: {
@@ -18,7 +19,7 @@ export default defineConfig({
 		],
 	},
 	build: {
-		manifest: true,
+		// manifest: true,
 		// https://guybedford.com/es-module-preloading-integrity#modulepreload-polyfill
 		modulePreload: {
 			polyfill: false,
@@ -56,9 +57,10 @@ export default defineConfig({
 				.replace("file://", ""),
 			defaultLocale: "en-US",
 		}),
-		analyzer({
+		process.env["analyze"] && analyzer({
 			analyzerMode: "static",
 			fileName: "stats.html",
 		}),
+		wasm(),
 	],
 });
