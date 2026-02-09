@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { computePosition, flip, offset, shift, size, autoUpdate } from '@floating-ui/dom';
+	import { onMount } from "svelte";
 	import { settings } from "../settings.svelte";
 	import type { Table } from "@uwdata/flechette";
 
@@ -104,67 +105,66 @@
 	// }
 
 	// Popover
-	let selectedIndex = $state(-1);
-	let selectedRef: HTMLElement | undefined;
+	let selectedRef = $state<HTMLElement | undefined>();
 	let tooltipRef: HTMLElement;
 	let cleanup = () => {};
+	onMount(() => cleanup);
 
-	function onWordClick(ev: MouseEvent | FocusEvent) {
-		if (!(ev.target instanceof HTMLElement)) return;
+	$effect(() => {
+		const reference = selectedRef;
+		const target = tooltipRef;
+		if (!reference) return;
 
-		const wordIndex = parseInt(ev.target.getAttribute("data-index") ?? "-1");
-		if (wordIndex !== selectedIndex) {
-			selectedIndex = wordIndex;
-			ev.stopImmediatePropagation();
-
-			const reference = ev.target as HTMLButtonElement;
-			selectedRef = reference;
-
-			// console.log("click", w);
-			// console.log("click", reference.className);
-			const target = tooltipRef;
-			// console.log("click", reference, target);
-			const updatePosition = () => computePosition(reference, target, {
-				placement: "bottom",
-				middleware: [
-					offset(4), flip(), shift(), size({
+		// console.log("click", w);
+		// console.log("click", reference.className);
+		// console.log("click", reference, target);
+		const updatePosition = () => computePosition(reference, target, {
+			placement: "bottom",
+			middleware: [
+				offset(4),
+				flip(),
+				shift(),
+				size({
 					apply({ availableWidth, availableHeight, elements }) {
-						// Change styles, e.g.
 						Object.assign(elements.floating.style, {
 							maxWidth: `${Math.max(0, availableWidth)}px`,
 							maxHeight: `${Math.max(0, availableHeight)}px`,
 						});
 					},
 				}),
-				],
-			}).then(({ x, y }) => {
-				Object.assign(tooltipRef.style, {
-					left: `${x}px`,
-					top: `${y}px`,
-				});
+			],
+		}).then(({ x, y }) => {
+			Object.assign(tooltipRef.style, {
+				left: `${x}px`,
+				top: `${y}px`,
 			});
+		});
 
-			cleanup = autoUpdate(reference, target, updatePosition);
-		} else {
-			if (!tooltipRef.contains(ev.target)) {
-				selectedIndex = -1;
-				cleanup();
-			}
+		cleanup();
+		cleanup = autoUpdate(reference, target, updatePosition);
+	});
+
+	function onWordClick(ev: MouseEvent | FocusEvent) {
+		if (ev.target instanceof HTMLElement && ev.target.hasAttribute("data-index")) {
+			selectedRef = ev.target as HTMLButtonElement;
+			ev.stopImmediatePropagation();
+		} else if (!tooltipRef.contains(ev.target as any)) {
+			selectedRef = undefined;
 		}
 	}
 	function focusableElements(root: HTMLElement | Document) {
 		return root.querySelectorAll('a[href],button,input,textarea,select,details,[tabindex]:not([tabindex="-1"])');
 	}
 	function onKeyDown(ev: KeyboardEvent) {
-		if (ev.key === "Escape") selectedIndex = -1;
+		if (ev.key === "Escape") selectedRef = undefined;
 		if (ev.key === "Tab") {
-			if (selectedIndex === -1 || !selectedRef) return;
+			if (!selectedRef) return;
 			const focusable = focusableElements(tooltipRef);
 			if (!focusable.length) return;
 
 			if ((ev.target as HTMLButtonElement)?.classList.contains("word")) {
 				if (ev.shiftKey) {
-					selectedIndex = -1;
+					selectedRef = undefined;
 					return;
 				} else {
 					(focusable[0] as HTMLElement).focus();
@@ -179,7 +179,7 @@
 						const next = allFocusable[i + 1] || allFocusable[0];
 						(next as HTMLElement).focus();
 						ev.preventDefault();
-						selectedIndex = -1;
+						selectedRef = undefined;
 						return;
 					}
 				}
@@ -187,7 +187,7 @@
 			if (ev.shiftKey && document.activeElement === focusable[0]) {
 				selectedRef.focus();
 				ev.preventDefault();
-				selectedIndex = -1;
+				selectedRef = undefined;
 				return;
 			}
 		}
@@ -200,7 +200,7 @@
 			{#each block.words as word (word.index)}
 				<button
 					class="word"
-					aria-expanded={word.index === selectedIndex}
+					aria-expanded="false"
 					aria-controls="wordTooltip"
 					data-index={word.index}
 				>
@@ -214,11 +214,11 @@
 	class="tooltip"
 	id="wordTooltip"
 	bind:this={tooltipRef}
-	style:display={selectedIndex === -1 ? "none" : ""}
+	style:display={selectedRef ? "" : "none"}
 	onblur={onWordClick}
 >
 	<button>something to interact with</button>
-	<span>{JSON.stringify(words.at(selectedIndex), null, 2)}</span>
+	<span>{JSON.stringify(words.at(+(selectedRef?.getAttribute("data-index") ?? 0)), null, 2)}</span>
 	<button>something to interact with</button>
 </div>
 <style>
