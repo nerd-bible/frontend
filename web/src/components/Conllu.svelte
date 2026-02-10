@@ -146,7 +146,8 @@
 
 	function onWordClick(ev: MouseEvent | FocusEvent) {
 		if (ev.target instanceof HTMLElement && ev.target.hasAttribute("data-index")) {
-			selectedRef = ev.target as HTMLButtonElement;
+			const newRef = ev.target as HTMLButtonElement;
+			selectedRef = newRef === selectedRef ? undefined : newRef;
 			ev.stopImmediatePropagation();
 		} else if (!tooltipRef.contains(ev.target as any)) {
 			selectedRef = undefined;

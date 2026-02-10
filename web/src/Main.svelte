@@ -3,7 +3,7 @@ import Header from "./components/Header.svelte";
 import Loading from "./components/Loading.svelte";
 import Conllu from "./components/Conllu.svelte";
 import { settings } from "./settings.svelte";
-import { tableFromIPC } from '@uwdata/flechette';
+import { tableFromIPC } from "@uwdata/flechette";
 
 let words = $state.raw();
 const worker = new Worker(new URL("./nb-worker.ts", import.meta.url), { type: "module" });
@@ -23,7 +23,10 @@ worker.addEventListener("message", (ev) => {
 </script>
 
 <Header />
-<main style:max-width={`${settings.columnWidth}px`} style:font-size={`${settings.fontSize}px`}>
+<main
+	style:max-width={`${settings.columnWidth}px`}
+	style:font-size={`${settings.fontSize}px`}
+>
 	{#if words}
 		<Conllu {words} />
 	{:else}

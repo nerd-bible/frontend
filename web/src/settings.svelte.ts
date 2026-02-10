@@ -3,23 +3,54 @@ import locales from "./locales";
 
 export type Locale = keyof typeof locales;
 export type Theme = "system" | "dark" | "light";
+const storage = localStorage;
 
-// Add settings here
+// Add settings with their defaults here
 const initial = {
 	locale: negotiateLanguages(navigator.languages, Object.keys(locales), {
 		strategy: "lookup",
 		defaultLocale: "en-US",
-	})[0]! as Locale,
-	theme: "system" as Theme,
+	})[0]!,
+	theme: "system",
 	columnWidth: "600",
-	fontSize: "16",
+	fontSize: parseFloat(getComputedStyle(document.body).fontSize).toString(),
 	textBlocking: "paragraph",
-};
-for (const k in initial) {
-	const key = k as keyof typeof initial;
-	(initial[key] as string) = localStorage.getItem(k) ?? initial[key];
-}
-export const settings = $state(initial);
+} satisfies Record<string, string /** simple for localStorage */>;
+
+// Source of truth
+export const settings = $state(
+	Object.entries(initial).reduce(
+		(acc, [k, v]) => {
+			(acc[k as keyof typeof initial] as string) = storage.getItem(k) ?? v;
+			return acc;
+		},
+		{} as typeof initial,
+	),
+);
+
+// Persist
+$effect.root(() => {
+	for (const k in initial) {
+		const key = k as keyof typeof initial;
+		$effect(() => {
+			if (settings[key] === initial[key]) storage.removeItem(key);
+			else storage.setItem(key, settings[key]);
+		});
+	}
+	$effect(() => {
+		document.documentElement.className = settings.theme;
+	});
+});
+
+// Watch storage to react to other tabs changing
+window.addEventListener("storage", (ev) => {
+	if (ev.storageArea === storage && ev.key && ev.key in initial) {
+		const k = ev.key as keyof typeof initial;
+		settings[k] = ev.newValue ?? initial[k];
+	}
+});
+
+// Misc constants
 export { locales };
 export const textBlockings = [
 	"paragraph",
@@ -27,14 +58,4 @@ export const textBlockings = [
 	"verse",
 	"sentence",
 ] as const;
-export type TextBlockings = typeof textBlockings[number];
-
-$effect.root(() => {
-	for (const k in initial) {
-		const key = k as keyof typeof initial;
-		$effect(() => localStorage.setItem(key, settings[key]));
-	}
-	$effect(() => {
-		document.documentElement.className = settings.theme;
-	});
-});
+export type TextBlockings = (typeof textBlockings)[number];

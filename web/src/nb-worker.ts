@@ -104,7 +104,7 @@ function parseConlluDoc(
 				nextParaClass = undefined;
 			}
 
-			let type = 'normal';
+			let type = "normal";
 			if (subWordUntil === "") {
 				sentence.text += w.form;
 				if (w.misc["SpaceAfter"] !== "No") sentence.text += " ";
@@ -248,17 +248,14 @@ addEventListener("message", async (ev) => {
 			console.timeEnd("insertArrowFromIPCStream");
 			console.time("queryArrow");
 			const subtable = await conn.queryArrow(
-`select
+				`select
 	sentId,
 	words.id as id,
 	form,
 	chapter,
 	verse,
 	misc['newpar'] as newpar,
-	misc['SpaceAfter'] = 'No' as noSpaceAfter,
-	sentences.position as sPos,
-	words.position as wPos,
-	type
+	misc['SpaceAfter'] = 'No' as noSpaceAfter
 from words
 join sentences on sentences.id = sentId
 where words.docId='gen' and form is not null and type not in ('subword', 'ellision')
@@ -269,6 +266,7 @@ order by sentences.position, words.position
 			console.time("tableToIPC");
 			const subtableIpc = tableToIPC(subtable, { format: "stream" })!;
 			console.timeEnd("tableToIPC");
+			console.log({ bytes: subtableIpc.length });
 			postMessage(
 				{ id, data: subtableIpc },
 				{ transfer: [subtableIpc.buffer] },
@@ -302,7 +300,8 @@ async function getDb() {
 	console.time("duckdb init");
 	await init({
 		wasmUrl: new URL("@ducklings/browser/wasm?url", import.meta.url).href,
-		wasmJsUrl: new URL("@ducklings/browser/wasm/duckdb.js", import.meta.url).href,
+		wasmJsUrl: new URL("@ducklings/browser/wasm/duckdb.js", import.meta.url)
+			.href,
 		worker: new Worker(new URL("@ducklings/browser/worker", import.meta.url), {
 			type: "module",
 		}),
@@ -317,7 +316,6 @@ async function getConn() {
 }
 
 async function initWorker() {
-
 	// Ready to start receiving messages.
 	postMessage({ id: -1 });
 }
