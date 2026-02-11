@@ -1,8 +1,16 @@
 <script lang="ts">
 import Menu from 'virtual:icons/lucide/menu';
 import QuickSettings from './QuickSettings.svelte';
+
+let lastScrollY = window.scrollY;
+let isHidden = $state(false);
+function onScroll() {
+	isHidden = window.scrollY > lastScrollY;
+	lastScrollY = window.scrollY;
+}
 </script>
-<header>
+<svelte:document onscroll={onScroll} />
+<header class:hidden={isHidden}>
 	<!-- onPointerMove={() => clearTimeout(closeTimeout)} -->
 	<div class="logo"></div>
 	<form class="search">
@@ -37,6 +45,8 @@ header {
 	top: 0;
 	background: var(--color-bg-50);
 	background: color-mix(in srgb, var(--color-bg-50), transparent 5%);
+	/* appear over tooltips which have z-index 10 */
+	z-index: 20;
 
 	& > .logo {
 		height: 2rem;
@@ -56,6 +66,12 @@ header {
 			width: 100%;
 			padding: --spacing(2);
 		}
+	}
+
+	&.hidden {
+		transition-property: translate;
+		transition-duration: 1s;
+		translate: 0 calc(-2rem - --spacing(8));
 	}
 }
 </style>

@@ -266,7 +266,6 @@ order by sentences.position, words.position
 			console.time("tableToIPC");
 			const subtableIpc = tableToIPC(subtable, { format: "stream" })!;
 			console.timeEnd("tableToIPC");
-			console.log({ bytes: subtableIpc.length });
 			postMessage(
 				{ id, data: subtableIpc },
 				{ transfer: [subtableIpc.buffer] },
