@@ -106,9 +106,16 @@
 
 	// Popover
 	let selectedRef = $state<HTMLElement | undefined>();
+	let lastSelectedRef: HTMLElement | undefined;
 	let tooltipRef: HTMLElement;
 	let cleanup = () => {};
 	onMount(() => cleanup);
+
+	$effect(() => {
+		lastSelectedRef?.setAttribute("aria-expanded", "false")
+		selectedRef?.setAttribute("aria-expanded", "true");
+		lastSelectedRef = selectedRef;
+	});
 
 	$effect(() => {
 		const reference = selectedRef;
@@ -193,20 +200,33 @@
 			}
 		}
 	}
+
+	// highlight
+	let selecting = $state(false);
 </script>
-<svelte:document onkeydown={onKeyDown} onclick={onWordClick} />
-<div class="conllu">
+<svelte:document
+	onkeydown={onKeyDown}
+	onclick={onWordClick}
+	onselectionchange={() => {
+		const selection = document.getSelection();
+		const range = selection?.getRangeAt(0);
+		console.log("onselectionchange", range);
+		selecting = Boolean(range?.toString());
+	}}
+/>
+<div class="conllu" class:selecting={selecting}>
 	{#each blocks as block}
 		<p class={block.class} dir="auto">
 			{#each block.words as word (word.index)}
-				<button
+				<span
 					class="word"
+					role="button"
 					aria-expanded="false"
 					aria-controls="wordTooltip"
 					data-index={word.index}
 				>
 					{word.form}
-				</button>{#if !word.noSpaceAfter}{" "}{/if}
+				</span>{#if !word.noSpaceAfter}{" "}{/if}
 			{/each}
 		</p>
 	{/each}
@@ -215,7 +235,7 @@
 	class="tooltip"
 	id="wordTooltip"
 	bind:this={tooltipRef}
-	style:display={selectedRef ? "" : "none"}
+	style:display={selectedRef && !selecting ? "" : "none"}
 	onblur={onWordClick}
 >
 	<button>something to interact with</button>
@@ -228,6 +248,10 @@
 	background: none;
 	padding: 0;
 	margin: 0;
+	user-select: text;
+}
+.selecting .word:focus {
+	outline-style: none;
 }
 .tooltip {
 	white-space: pre-wrap;

@@ -17,12 +17,11 @@ firstIngestRequest.then(
 		misc['SpaceAfter'] = 'No' as noSpaceAfter
 	from word
 	join sentence on sentence.id = sentId
-	where word.docId='gen' and form is not null and type not in ('subword', 'ellision')
+	where word.docId='gen' and form is not null and isElision is null and morphemeOf is null
 	order by sentence.position, word.position
 	`).then(r => words = r)
 );
 </script>
-
 <main
 	style:max-width={`${settings.columnWidth}px`}
 	style:font-size={`${settings.fontSize}px`}
@@ -36,6 +35,6 @@ firstIngestRequest.then(
 <style>
 main {
 	padding: --spacing(4) 0;
-	margin: auto;
+	margin: 0 auto;
 }
 </style>

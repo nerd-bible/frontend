@@ -91,7 +91,7 @@ const headers = z.record(z.string(), z.union([z.string(), z.undefined()])).pipe(
 		.loose(),
 );
 
-const headerPrefix = "# ";
+const headerPrefix = "#";
 const headersConllu = z.codecs.custom(z.string(), headers, {
 	decode(str: string, ctx: z.Context) {
 		const kvs: Record<string, string | undefined> = {};
@@ -100,13 +100,12 @@ const headersConllu = z.codecs.custom(z.string(), headers, {
 			line = line.substring(headerPrefix.length);
 			const i = line.indexOf("=");
 			if (i === -1) {
-				kvs[line] = undefined;
+				kvs[line.trim()] = undefined;
 			} else {
 				kvs[line.substring(0, i).trim()] = line.substring(i + 1).trim();
 			}
 			(ctx.jsonPath[0] as number) += 1;
 		}
-
 		return headers.decode(kvs);
 	},
 	encode(obj: z.Output<typeof headers>) {

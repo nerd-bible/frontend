@@ -1,7 +1,16 @@
 - [x] navigation
-- [ ] sql console
+	- [ ] searchbar
+- [x] sql console
+  - [x] form
+	- [x] tabs
+	- [ ] tree view
 - [x] hide header on scroll down
-- [ ] bsb
 - [ ] highlighting
+- [ ] error messages
+	- [ ] working on mobile
 - [ ] notes
-- [ ] replace nb-dropdown
+- [ ] bsb w/ proper schema
+	- [ ] good word tooltip
+		- [ ] morphemes
+		- [ ] source
+- [ ] replace svelte :where selectors

@@ -43,7 +43,6 @@ import { settings, locales, textBlockings } from "../settings.svelte";
 <style>
 form {
 	padding: --spacing(2) 0;
-	user-select: none;
 	width: --spacing(84);
 	line-height: 2;
 

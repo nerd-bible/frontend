@@ -54,6 +54,8 @@ header {
 	background: color-mix(in srgb, var(--color-bg-50), transparent 5%);
 	/* appear over tooltips which have z-index 10 */
 	z-index: 20;
+	/* dont affect selection in body */
+	user-select: none;
 
 	& > .logo {
 		height: 2rem;

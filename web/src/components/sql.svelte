@@ -4,7 +4,7 @@
 import { Table, tableFromIPC } from "@uwdata/flechette";
 import { request } from "../worker.svelte";
 
-let queryString = $state("select * from word limit 10");
+let queryString = $state("select * from word");
 let nBytes = $state(0);
 let queryResults = $state(new Table({ fields: [] }, [], false));
 
@@ -18,11 +18,13 @@ function onSubmit(ev: SubmitEvent) {
 }
 </script>
 <form onsubmit={onSubmit}>
-	<textarea placeholder="query" bind:value={queryString}></textarea>
-	<input type="submit" />
+	<textarea name="query" placeholder="query" bind:value={queryString}></textarea>
+	<div class="submit">
+		<input type="submit" />
+		{queryResults.numRows} rows, {nBytes} bytes
+	</div>
 </form>
 <output>
-	{queryResults.numRows} rows, {nBytes} bytes
 	<table>
 		<thead>
 			<tr>
@@ -50,5 +52,13 @@ textarea {
 }
 table {
 	width: 100%;
+}
+.submit {
+	display: flex;
+	justify-content: space-between;
+}
+output {
+	display: block;
+	margin-top: --spacing(4);
 }
 </style>
