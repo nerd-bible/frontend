@@ -38,6 +38,8 @@ const wordSchema = {
 export type SentenceTable = Table;
 export type WordTable = Table;
 
+let db: DuckDB;
+
 function parseConlluDoc(
 	docId: string,
 	source: string,
@@ -230,72 +232,55 @@ export async function getUrlSentences(url: string) {
 	return parseConlluDoc("gen", text);
 }
 
+export type Message = {
+	type: "ingestUrl",
+	data: { url: string }
+} | {
+	type: "query",
+	data: { query: string }
+};
+
+export type Request = Message & { id: number };
+
 addEventListener("message", async (ev) => {
-	const { type, id, data } = ev.data;
+	const { type, id, data } = ev.data as Request;
 	switch (type) {
-		case "get_url_words": {
+		case "ingestUrl": {
 			const { url } = data;
 			const { sentences, words } = await getUrlSentences(url);
 			console.time("tableToIPC");
 			const sentenceIpc = tableToIPC(sentences, { format: "stream" })!;
 			const wordsIpc = tableToIPC(words, { format: "stream" })!;
 			console.timeEnd("tableToIPC");
+
+			const conn = await db.connect();
 			console.time("insertArrowFromIPCStream");
-
-			const conn = await getConn();
-			conn.insertArrowFromIPCStream("sentences", sentenceIpc);
-			conn.insertArrowFromIPCStream("words", wordsIpc);
+			conn.insertArrowFromIPCStream("sentence", sentenceIpc);
+			conn.insertArrowFromIPCStream("word", wordsIpc);
 			console.timeEnd("insertArrowFromIPCStream");
-			console.time("queryArrow");
-			const subtable = await conn.queryArrow(
-				`select
-	sentId,
-	words.id as id,
-	form,
-	chapter,
-	verse,
-	misc['newpar'] as newpar,
-	misc['SpaceAfter'] = 'No' as noSpaceAfter
-from words
-join sentences on sentences.id = sentId
-where words.docId='gen' and form is not null and type not in ('subword', 'ellision')
-order by sentences.position, words.position
-`,
-			);
-			console.timeEnd("queryArrow");
-			console.time("tableToIPC");
-			const subtableIpc = tableToIPC(subtable, { format: "stream" })!;
-			console.timeEnd("tableToIPC");
-			postMessage(
-				{ id, data: subtableIpc },
-				{ transfer: [subtableIpc.buffer] },
-			);
-			break;
-		}
-		case "get_word": {
-			const { docId, sentId, wordId } = data;
 
-			const conn = await getConn();
-			const stmt = await conn.prepare(
-				"select * from words where docId=? and sentId=? and wordId=?",
-			);
-			stmt.bindVarchar(1, docId);
-			stmt.bindUInt16(2, sentId);
-			stmt.bindUInt16(3, wordId);
-			const rows = await stmt.run();
-			await stmt.close();
-			postMessage({ id, data: rows });
+			postMessage({ id });
 			break;
 		}
+		case "query":
+			console.time(`queryArrow ${id}`);
+			const conn = await db.connect();
+			const table = await conn.queryArrow(data.query);
+			console.timeEnd(`queryArrow ${id}`);
+			console.time(`tableToIPC ${id}`);
+			const tableIpc = tableToIPC(table, { format: "stream" })!;
+			console.timeEnd(`tableToIPC ${id}`);
+			postMessage(
+				{ id, data: tableIpc },
+				{ transfer: [tableIpc.buffer] },
+			);
+			break;
 		default:
 			throw Error(`unknown message type ${type}`);
 	}
 });
 
-let db: DuckDB | undefined;
-async function getDb() {
-	if (db) return db;
-
+async function initWorker() {
 	console.time("duckdb init");
 	await init({
 		wasmUrl: new URL("@ducklings/browser/wasm?url", import.meta.url).href,
@@ -306,15 +291,7 @@ async function getDb() {
 		}),
 	});
 	console.timeEnd("duckdb init");
-	return new DuckDB();
-}
-
-async function getConn() {
-	const db = await getDb();
-	return db.connect();
-}
-
-async function initWorker() {
+	db = new DuckDB();
 	// Ready to start receiving messages.
 	postMessage({ id: -1 });
 }

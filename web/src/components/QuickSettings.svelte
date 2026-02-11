@@ -1,4 +1,5 @@
 <script lang="ts">
+import { route } from "@mateothegreat/svelte5-router";
 import { settings, locales, textBlockings } from "../settings.svelte";
 </script>
 <form class="popover">
@@ -34,7 +35,7 @@ import { settings, locales, textBlockings } from "../settings.svelte";
 			{/each}
 		</select>
 	</label>
-	<a href="/settings">
+	<a href="/settings" use:route>
 		<span>{t("settings")}</span>
 		<span>v{APP_VERSION}</span>
 	</a>
@@ -67,6 +68,16 @@ form {
 	input {
 		padding: --spacing(2) 0;
 	}
+}
+:global(#popover) {
+	position: absolute;
+	display: none;
+	background: var(--color-bg-200);
+	filter: drop-shadow(var(--drop-shadow-xl));
+	border-radius: var(--radius-md);
+}
+:global(nb-dropdown:not(:defined) > div) {
+	display: none;
 }
 </style>
 <l10n lang="en-US">

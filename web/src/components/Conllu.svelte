@@ -134,7 +134,7 @@
 				}),
 			],
 		}).then(({ x, y }) => {
-			Object.assign(tooltipRef.style, {
+			if (tooltipRef) Object.assign(tooltipRef.style, {
 				left: `${x}px`,
 				top: `${y}px`,
 			});

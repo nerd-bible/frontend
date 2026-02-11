@@ -1,7 +1,8 @@
 <script lang="ts">
 import Menu from 'virtual:icons/lucide/menu';
+let { width }: { width?: string } = $props();
 </script>
-<div class="loading">
+<div class="loading" style:width={width}>
 	<div class="book">
 		<figure class="page"><Menu /></figure>
 		<figure class="page"><Menu /></figure>

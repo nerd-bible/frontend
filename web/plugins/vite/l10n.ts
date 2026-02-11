@@ -66,9 +66,7 @@ export default function l10nPlugin(opts: {
 					return `${importee}.ts?l10n`;
 				}
 				let match = id.match(pathRegex);
-				if (match) {
-					return `${normalizeId(importee)}?l10n&lang=${match[1]}`;
-				}
+				if (match) return `${normalizeId(importee)}?l10n&lang=${match[1]}`;
 				if (id.match(fullPathRegex)) return id;
 			},
 		},
@@ -104,16 +102,27 @@ export const l10n = {
 			},
 		},
 		hotUpdate({ file, modules }) {
+			// Docs really aren't great. I learned via a couple hours of trial and
+			// error.
+			// https://vite.dev/changes/hotupdate-hook
+			// https://bjornlu.com/blog/hot-module-replacement-is-easy
+			// https://github.com/sveltejs/vite-plugin-svelte/blob/main/packages/vite-plugin-svelte/src/plugins/hot-update.js
 			const invalidatedModules = new Set<any>();
-			const invalidateL10n = (m?: EnvironmentModuleNode) => {
-				if (!m) return;
+			const invalidateL10n = (m?: EnvironmentModuleNode): boolean => {
+				if (!m) return false;
 
 				if (fullPathRegex.test(m?.id ?? "")) invalidatedModules.add(m);
 				for (const m2 of m.importedModules) invalidateL10n(m2);
+
+				return invalidatedModules.size > 0;
 			};
 
-			invalidateL10n(modules.find((m) => m.id === file));
-			if (invalidatedModules.size) return [...invalidatedModules];
+			const untouched: EnvironmentModuleNode[] = [];
+			for (const m of modules) {
+				if (m.id === file) invalidateL10n(m);
+				else untouched.push(m);
+			}
+			if (invalidatedModules.size) return [...invalidatedModules, ...untouched];
 		},
 	};
 }

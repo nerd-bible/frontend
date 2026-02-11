@@ -1,18 +1,25 @@
 <script lang="ts">
 import Menu from 'virtual:icons/lucide/menu';
 import QuickSettings from './QuickSettings.svelte';
+import { route } from '@mateothegreat/svelte5-router';
 
+let headerRef: HTMLElement;
 let lastScrollY = window.scrollY;
 let isHidden = $state(false);
+let pointerOver = $state(false);
 function onScroll() {
-	isHidden = window.scrollY > lastScrollY;
+	isHidden = !pointerOver && window.scrollY > lastScrollY && !headerRef.contains(document.activeElement);
 	lastScrollY = window.scrollY;
 }
 </script>
 <svelte:document onscroll={onScroll} />
-<header class:hidden={isHidden}>
-	<!-- onPointerMove={() => clearTimeout(closeTimeout)} -->
-	<div class="logo"></div>
+<header
+	bind:this={headerRef}
+	class:hidden={isHidden}
+	onpointerenter={() => pointerOver = true}
+	onpointerleave={() => pointerOver = false}
+>
+	<a href="/" use:route class="logo" title={t("home")}></a>
 	<form class="search">
 		<!-- svelte-ignore a11y_autofocus -->
 		<input
@@ -78,8 +85,10 @@ header {
 <l10n lang="en-US">
 search = Search
 menu = Settings menu
+home = Home
 </l10n>
 <l10n lang="es">
 search = Busca
 menu = Menú de configuración
+home = Casa
 </l10n>
