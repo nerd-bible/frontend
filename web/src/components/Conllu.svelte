@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { computePosition, flip, offset, shift, size, autoUpdate } from '@floating-ui/dom';
-	import { onMount } from "svelte";
+	import { onMount, tick } from "svelte";
 	import { settings } from "../settings.svelte";
 	import type { Table } from "@uwdata/flechette";
 
@@ -49,77 +49,129 @@
 		return res;
 	});
 
-	// Render sentences. I would LOVE to use svelte templating syntax, but it has
-	// bad behavior:
-	// - Puts paragraphs into a fragment and appends it, which lags the browser.
-	// - Adds a needless comment node per paragraph and word.
-	// - Templating using `selected` is slow on update (~50ms) due to effect tree.
-	// const wordTemplate = document.createElement("button");
-	// wordTemplate.className = "word";
-	// wordTemplate.setAttribute("aria-expanded", "false");
-	// wordTemplate.setAttribute("aria-controls", "wordTooltip");
-	//
-	// function createWord(form: string, index: number) {
-	// 	const res = wordTemplate.cloneNode() as HTMLButtonElement;
-	// 	res.appendChild(document.createTextNode(form));
-	// 	(res as any).wordIndex = index;
-	// 	return res;
-	// }
-	//
-	// function createParagraph(className: string) {
-	// 	const res = document.createElement("p");
-	// 	res.dir = "auto";
-	// 	res.className = className;
-	// 	return res;
-	// }
-	//
-	// let p = createParagraph("");
-	// let wordI = 0;
-	// function renderWords(element: Element, n: number) {
-	// 	const words = [];
-	// 	// const subtable = table.select(['delay', 'time']);
-	// 	const ids = words.getChild("id");
-	// 	const forms = words.getChild("form");
-	// 	const miscs = words.getChild("misc");
-	// 	const length = Math.min(wordI + n, words.numRows);
-	// 	for (; wordI < length; wordI++) {
-	// 		const word = createWord(forms.at(wordI), wordI);
-	// 		p.appendChild(word);
-	//
-	// 		const misc = Object.fromEntries(miscs.at(wordI)); 
-	// 		if (misc["newpar"]) {
-	// 			element.appendChild(p);
-	// 			p = createParagraph(misc["newpar"]);
-	// 		}
-	// 		if (misc["SpaceAfter"] !== "No") {
-	// 			p.appendChild(document.createTextNode(" "));
-	// 		}
-	//
-	// 		// Skip multiword subwords
-	// 		const wid = ids.at(wordI) as number;
-	// 		if (wid < 0) wordI += -wid;
-	// 	}
-	// 	// Append last p. If already appended from an earlier run that's OK as long
-	// 	// as it's still last.
-	// 	element.appendChild(p);
-	// }
-
-	// Popover
-	let selectedRef = $state<HTMLElement | undefined>();
-	let lastSelectedRef: HTMLElement | undefined;
-	let tooltipRef: HTMLElement;
+	// Word
+	let lastFocusedWord: HTMLElement | undefined;
+	let focusedWord = $state<HTMLElement | undefined>();
+	let wordTooltip: HTMLElement;
 	let cleanup = () => {};
 	onMount(() => cleanup);
 
 	$effect(() => {
-		lastSelectedRef?.setAttribute("aria-expanded", "false")
-		selectedRef?.setAttribute("aria-expanded", "true");
-		lastSelectedRef = selectedRef;
+		lastFocusedWord?.setAttribute("aria-expanded", "false")
+		focusedWord?.setAttribute("aria-expanded", "true");
+		lastFocusedWord = focusedWord;
 	});
 
+	function onWordClick(ev: MouseEvent | FocusEvent) {
+		if (ev.target instanceof HTMLElement && ev.target.hasAttribute("data-index")) {
+			const newRef = ev.target as HTMLButtonElement;
+			focusedWord = newRef === focusedWord ? undefined : newRef;
+			ev.stopImmediatePropagation();
+		} else if (!wordTooltip.contains(ev.target as any)) {
+			focusedWord = undefined;
+		}
+	}
+	function focusableElements(root: HTMLElement | Document) {
+		return root.querySelectorAll('a[href],button,input,textarea,select,details,[tabindex]:not([tabindex="-1"])');
+	}
+	function onKeyDown(ev: KeyboardEvent) {
+		if (ev.key === "Escape") focusedWord = undefined;
+		if (ev.key === "Tab") {
+			if (!focusedWord) return;
+			const focusable = focusableElements(wordTooltip);
+			if (!focusable.length) return;
+
+			if ((ev.target as HTMLButtonElement)?.classList.contains("word")) {
+				if (ev.shiftKey) {
+					focusedWord = undefined;
+					return;
+				} else {
+					(focusable[0] as HTMLElement).focus();
+					ev.preventDefault();
+					return;
+				}
+			}
+			if (!ev.shiftKey && document.activeElement === focusable[focusable.length - 1]) {
+				const allFocusable = focusableElements(document);
+				for (let i = 0; i < allFocusable.length; i++) {
+					if (allFocusable[i] === focusedWord) {
+						const next = allFocusable[i + 1] || allFocusable[0];
+						(next as HTMLElement).focus();
+						ev.preventDefault();
+						focusedWord = undefined;
+						return;
+					}
+				}
+			}
+			if (ev.shiftKey && document.activeElement === focusable[0]) {
+				focusedWord.focus();
+				ev.preventDefault();
+				focusedWord = undefined;
+				return;
+			}
+		}
+	}
+
+	// Highlights
+	let highlightCss = $state<Record<string, string>>({
+		red: "background-color: red",
+		green: "background-color: green",
+	});
+	let selectedRange = $state<Range>();
+
+	function getOrAddHighlight(id: string): Highlight {
+		const maybeExisting = CSS.highlights.get(id);
+		if (maybeExisting) return maybeExisting;
+		const res = new Highlight();
+		CSS.highlights.set(id, res);
+		return res;
+	}
+
+	function onSelectionChange() {
+		const selection = document.getSelection();
+		if (!selection?.rangeCount) {
+			selectedRange = undefined;
+			return;
+		}
+		const range = selection.getRangeAt(0);
+		if (!range || range.startContainer === range.endContainer && range.startOffset === range.endOffset) {
+			selectedRange = undefined;
+			return;
+		}
+		selectedRange = range;
+	}
+	function annotateRange(range: Range, id: string) {
+		const highlight = getOrAddHighlight(id);
+		highlight.add(range);
+	}
+	function annotate(fromIndex: number, toIndex: number, id: string) {
+		const fromElement = document.querySelector(`.word[data-index='${fromIndex}']`);
+		const toElement = document.querySelector(`.word[data-index='${toIndex}']`);
+
+		if (!fromElement || !toElement) {
+			console.warn("cannot find elements in page to annotate", {
+				fromIndex,
+				fromElement,
+				toIndex,
+				toElement,
+			});
+			return;
+		}
+		console.log("annotate", fromElement, toElement);
+
+		const range = document.createRange();
+		range.setStartBefore(fromElement);
+		range.setEndAfter(toElement);
+		annotateRange(range, id);
+	}
+	// tick().then(() => {
+	// 	annotate(1, 3, "red");
+	// });
+
+	// tooltip (word or annotation menu)
 	$effect(() => {
-		const reference = selectedRef;
-		const target = tooltipRef;
+		const reference = focusedWord ?? selectedRange;
+		const target = wordTooltip;
 		if (!reference) return;
 
 		// console.log("click", w);
@@ -141,7 +193,7 @@
 				}),
 			],
 		}).then(({ x, y }) => {
-			if (tooltipRef) Object.assign(tooltipRef.style, {
+			if (wordTooltip) Object.assign(wordTooltip.style, {
 				left: `${x}px`,
 				top: `${y}px`,
 			});
@@ -150,71 +202,18 @@
 		cleanup();
 		cleanup = autoUpdate(reference, target, updatePosition);
 	});
-
-	function onWordClick(ev: MouseEvent | FocusEvent) {
-		if (ev.target instanceof HTMLElement && ev.target.hasAttribute("data-index")) {
-			const newRef = ev.target as HTMLButtonElement;
-			selectedRef = newRef === selectedRef ? undefined : newRef;
-			ev.stopImmediatePropagation();
-		} else if (!tooltipRef.contains(ev.target as any)) {
-			selectedRef = undefined;
-		}
-	}
-	function focusableElements(root: HTMLElement | Document) {
-		return root.querySelectorAll('a[href],button,input,textarea,select,details,[tabindex]:not([tabindex="-1"])');
-	}
-	function onKeyDown(ev: KeyboardEvent) {
-		if (ev.key === "Escape") selectedRef = undefined;
-		if (ev.key === "Tab") {
-			if (!selectedRef) return;
-			const focusable = focusableElements(tooltipRef);
-			if (!focusable.length) return;
-
-			if ((ev.target as HTMLButtonElement)?.classList.contains("word")) {
-				if (ev.shiftKey) {
-					selectedRef = undefined;
-					return;
-				} else {
-					(focusable[0] as HTMLElement).focus();
-					ev.preventDefault();
-					return;
-				}
-			}
-			if (!ev.shiftKey && document.activeElement === focusable[focusable.length - 1]) {
-				const allFocusable = focusableElements(document);
-				for (let i = 0; i < allFocusable.length; i++) {
-					if (allFocusable[i] === selectedRef) {
-						const next = allFocusable[i + 1] || allFocusable[0];
-						(next as HTMLElement).focus();
-						ev.preventDefault();
-						selectedRef = undefined;
-						return;
-					}
-				}
-			}
-			if (ev.shiftKey && document.activeElement === focusable[0]) {
-				selectedRef.focus();
-				ev.preventDefault();
-				selectedRef = undefined;
-				return;
-			}
-		}
-	}
-
-	// highlight
-	let selecting = $state(false);
 </script>
 <svelte:document
 	onkeydown={onKeyDown}
 	onclick={onWordClick}
-	onselectionchange={() => {
-		const selection = document.getSelection();
-		const range = selection?.getRangeAt(0);
-		console.log("onselectionchange", range);
-		selecting = Boolean(range?.toString());
-	}}
+	onselectionchange={onSelectionChange}
 />
-<div class="conllu" class:selecting={selecting}>
+<div class="conllu" class:selecting={selectedRange}>
+	<svelte:element this={"style"}>
+		{Object.entries(highlightCss)
+			.map(([k, v]) => `::highlight(${k}){${v}}`)
+			.join("")}}}
+	</svelte:element>
 	{#each blocks as block}
 		<p class={block.class} dir="auto">
 			{#each block.words as word (word.index)}
@@ -224,6 +223,7 @@
 					aria-expanded="false"
 					aria-controls="wordTooltip"
 					data-index={word.index}
+					tabindex="0"
 				>
 					{word.form}
 				</span>{#if !word.noSpaceAfter}{" "}{/if}
@@ -234,13 +234,18 @@
 <div
 	class="tooltip"
 	id="wordTooltip"
-	bind:this={tooltipRef}
-	style:display={selectedRef && !selecting ? "" : "none"}
+	bind:this={wordTooltip}
+	style:display={focusedWord || selectedRange ? "" : "none"}
 	onblur={onWordClick}
 >
-	<button>something to interact with</button>
-	<span>{JSON.stringify(words.at(+(selectedRef?.getAttribute("data-index") ?? 0)), null, 2)}</span>
-	<button>something to interact with</button>
+	{#if selectedRange}
+		<button onclick={() => annotateRange(selectedRange!, "red")}>red</button>
+		<button onclick={() => annotateRange(selectedRange!, "green")}>green</button>
+	{:else}
+		<button>something to interact with</button>
+		<span>{JSON.stringify(words.at(+(focusedWord?.getAttribute("data-index") ?? 0)), null, 2)}</span>
+		<button>something to interact with</button>
+	{/if}
 </div>
 <style>
 .word {
