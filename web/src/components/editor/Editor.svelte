@@ -147,6 +147,7 @@
 	:global(h2) {
 		font-size: 3em;
 		text-align: center;
+		user-select: none;
 	}
 	&[data-chapter-display=normal] :global(h2) {
 		line-height: normal;
