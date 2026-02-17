@@ -43,8 +43,8 @@ export default function l10nPlugin(opts: {
 				if (hasL10n) {
 					// Ya, this is ghetto
 					res = res.replace(
-						"</script>",
-						'\nimport { makeT } from "l10n";\nconst t = makeT();\n</script>',
+						/(<script[^>]*>)/,
+						'$1\nimport { makeT } from "l10n";\nconst t = makeT();\n',
 					);
 				}
 

@@ -1,1 +1,1 @@
-declare function t(msg: string, opts?: Record<string, any>): string;
+declare function t(msg: string, args?: Record<string, any>): string;

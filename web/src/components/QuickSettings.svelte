@@ -1,6 +1,6 @@
 <script lang="ts">
 import { route } from "@mateothegreat/svelte5-router";
-import { settings, locales, textBlockings } from "../settings.svelte";
+import { settings, locales, textBlockings, chapterNumDisplays } from "../settings.svelte";
 </script>
 <form class="popover">
 	<label>
@@ -26,6 +26,23 @@ import { settings, locales, textBlockings } from "../settings.svelte";
 				<option value={textBlocking}>{t(textBlocking)}</option>
 			{/each}
 		</select>
+	</label>
+	<label>
+		<span>{t("chapterDisplay")}</span>
+		<select id="chapterDisplay" bind:value={settings.chapterNumDisplay}>
+			{#each chapterNumDisplays as numDisplay}
+				<option value={numDisplay}>{t(numDisplay)}</option>
+			{/each}
+		</select>
+	</label>
+	<label>
+		<span>{t("hideVerse")}</span>
+		<input
+			type="checkbox"
+			id="hideVerse"
+			value={settings.hideVerseNum === "true"}
+			onchange={(ev) => settings.hideVerseNum = ev.currentTarget.checked ? "true" : "false"}
+		>
 	</label>
 	<label>
 		<span>{t("language")}</span>
@@ -93,6 +110,12 @@ paragraph = Paragraph
 chapter = Chapter
 verse = Verse
 sentence = Sentence
+hideVerse = Hide verse numbers
+chapterDisplay = Chapter display
+float = Float
+normal = Normal
+small = Small
+none = None
 </l10n>
 <l10n lang="es">
 theme = Tema

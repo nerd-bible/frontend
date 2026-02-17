@@ -1,8 +1,7 @@
-<script lang="ts">
+<script>
 import Menu from 'virtual:icons/lucide/menu';
-let { width }: { width?: string } = $props();
 </script>
-<div class="loading" style:width={width}>
+<div class="loading">
 	<div class="book">
 		<figure class="page"><Menu /></figure>
 		<figure class="page"><Menu /></figure>
@@ -20,6 +19,7 @@ let { width }: { width?: string } = $props();
 	/** https://philipwalton.com/articles/what-no-one-told-you-about-z-index/ */
 	position: relative;
 	z-index: -10;
+
 	.book {
 		border: 4px solid var(--color-fg);
 		border-radius: var(--radius-md);

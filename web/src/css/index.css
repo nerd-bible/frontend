@@ -20,5 +20,5 @@ body {
 
 noscript > h1 {
 	display: block;
-	font-size: 32px;
+	font-size: 2rem;
 }

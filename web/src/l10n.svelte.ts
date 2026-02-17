@@ -5,7 +5,11 @@
 // programmatic strings. MessageFormat 2.0 was considered and rejected because
 // it cannot handle compound messages which force some weird multi-message
 // strings.
-import { FluentBundle, FluentResource } from "@fluent/bundle";
+import {
+	FluentBundle,
+	FluentResource,
+	type FluentVariable,
+} from "@fluent/bundle";
 import { settings } from "./settings.svelte";
 
 // Fluent file
@@ -46,8 +50,8 @@ export function makeT(l10n: L10n) {
 		}
 	});
 
-	return (msg: string) => {
+	return (msg: string, args?: Record<string, FluentVariable> | null) => {
 		const message = bundle.getMessage(msg);
-		return message?.value ? bundle.formatPattern(message.value) : msg;
+		return message?.value ? bundle.formatPattern(message.value, args) : msg;
 	};
 }

@@ -1,11 +1,10 @@
 <script lang="ts">
 import Loading from "../components/Loading.svelte";
-import Conllu from "../components/Conllu.svelte";
+import Editor from "../components/editor/Editor.svelte";
 import { settings } from "../settings.svelte";
 import { firstIngestRequest, query } from "../worker.svelte";
 
-let words = $state.raw();
-
+let words = $state();
 firstIngestRequest.then(
 	() => query(`select
 		sentId,
@@ -22,19 +21,24 @@ firstIngestRequest.then(
 	`).then(r => words = r)
 );
 </script>
-<main
-	style:max-width={`${settings.columnWidth}px`}
-	style:font-size={`${settings.fontSize}px`}
->
-	{#if words}
-		<Conllu {words} />
-	{:else}
-		<Loading width={`${settings.columnWidth}px`} />
-	{/if}
-</main>
+<div>
+	<main
+		style:width={`${settings.columnWidth}px`}
+		style:--font-size={`${settings.fontSize}px`}
+		style:--line-height-offset={settings.lineHeightOffset}
+	>
+		{#if words}
+			<Editor docId="Genesis" {words} />
+		{:else}
+			<Loading />
+		{/if}
+	</main>
+</div>
 <style>
 main {
 	padding: --spacing(4) 0;
+	max-width: 100%;
 	margin: 0 auto;
+	font-size: var(--font-size);
 }
 </style>

@@ -8,6 +8,10 @@ let queryString = $state("select * from word");
 let nBytes = $state(0);
 let queryResults = $state(new Table({ fields: [] }, [], false));
 
+// Fun queries
+// Most popular words:
+// select lemma, count(*) as c, any_value(misc['Gloss']), any_value(misc['Translit']) from word group by lemma order by c desc
+
 function onSubmit(ev: SubmitEvent) {
 	ev.preventDefault();
 
@@ -17,6 +21,7 @@ function onSubmit(ev: SubmitEvent) {
 	});
 }
 </script>
+<a href="https://duckdb.org/docs/1.3/sql/introduction">{t("reference")}</a>
 <form onsubmit={onSubmit}>
 	<textarea name="query" placeholder="query" bind:value={queryString}></textarea>
 	<div class="submit">
@@ -62,3 +67,9 @@ output {
 	margin-top: --spacing(4);
 }
 </style>
+<l10n lang="en-US">
+reference = Reference manual
+</l10n>
+<l10n lang="es">
+reference = Manual de referencia
+</l10n>

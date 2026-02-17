@@ -13,6 +13,12 @@
 		"@nerd-bible/fonts": "0.1.0",
 		"@nerd-bible/valio": "*",
 		"@tauri-apps/api": "^2.9.0",
+		"prosemirror-commands": "^1.7.1",
+		"prosemirror-state": "^1.4.4",
+		"prosemirror-test-builder": "^1.1.1",
+		"prosemirror-transform": "^1.11.0",
+		"prosemirror-view": "^1.41.6",
+		"quill-delta": "^5.1.0",
 		"svelte": "^5.47.1"
 	},
 	"devDependencies": {

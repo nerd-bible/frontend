@@ -14,7 +14,10 @@ const initial = {
 	theme: "system",
 	columnWidth: "600",
 	fontSize: parseFloat(getComputedStyle(document.body).fontSize).toString(),
-	textBlocking: "paragraph",
+	lineHeightOffset: "1.2rem",
+	textBlocking: "paragraph" as TextBlocking,
+	chapterNumDisplay: "float" as ChapterNumDisplay,
+	hideVerseNum: "true",
 } satisfies Record<string, string /** simple for localStorage */>;
 
 // Source of truth
@@ -58,4 +61,11 @@ export const textBlockings = [
 	"verse",
 	"sentence",
 ] as const;
-export type TextBlockings = (typeof textBlockings)[number];
+export type TextBlocking = (typeof textBlockings)[number];
+export const chapterNumDisplays = [
+	"float",
+	"normal",
+	"small",
+	"none",
+] as const;
+export type ChapterNumDisplay = (typeof chapterNumDisplays)[number];

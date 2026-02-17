@@ -1,14 +1,16 @@
 - [x] navigation
+	- [ ] change focus on nav (+ aria?)
+		- [ ] quick settings + other tooltips close on nav
 	- [ ] searchbar
 - [x] sql console
   - [x] form
 	- [x] tabs
 	- [ ] tree view
 - [x] hide header on scroll down
-- [ ] highlighting
-- [ ] error messages
+- [ ] loading + error messages
 	- [ ] working on mobile
-- [ ] notes
+- [ ] highlighting + notes
+	- [x] does on pointer up/down work on mobile?
 - [ ] bsb w/ proper schema
 	- [ ] good word tooltip
 		- [ ] morphemes

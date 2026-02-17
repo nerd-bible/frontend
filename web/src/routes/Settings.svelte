@@ -1,9 +1,9 @@
 <script lang="ts">
 import { Router, type RouteConfig, route } from "@mateothegreat/svelte5-router";
-import SQL from "../components/sql.svelte";
+import Sql from "../components/Sql.svelte";
 const routes = [
-	{ component: SQL },
-	{ component: SQL, path: "sql" }
+	{ component: Sql },
+	{ component: Sql, path: "sql" }
 ] satisfies RouteConfig[];
 </script>
 <div class="settings">
