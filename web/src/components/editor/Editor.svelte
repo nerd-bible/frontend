@@ -114,7 +114,7 @@
 	class="editor"
 	dir="rtl"
 	bind:this={editor}
-	class:hide-verse-num={settings.hideVerseNum === "true"}
+	class:hide-verse-num={settings.showVerseNum !== "true"}
 	data-chapter-display={settings.chapterNumDisplay}
 >
 </div>

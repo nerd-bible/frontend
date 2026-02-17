@@ -13,7 +13,6 @@ body {
 	flex-direction: column;
 	padding: 0 --spacing(2) --spacing(4) --spacing(2);
 	width: 100%;
-	height: 100vh;
 	/* avoid relayout when reader is tall */
 	overflow-y: scroll;
 }

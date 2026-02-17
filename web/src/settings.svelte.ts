@@ -17,7 +17,7 @@ const initial = {
 	lineHeightOffset: "1.2rem",
 	textBlocking: "paragraph" as TextBlocking,
 	chapterNumDisplay: "float" as ChapterNumDisplay,
-	hideVerseNum: "true",
+	showVerseNum: "false",
 } satisfies Record<string, string /** simple for localStorage */>;
 
 // Source of truth

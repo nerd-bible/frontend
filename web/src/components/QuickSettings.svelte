@@ -36,12 +36,12 @@ import { settings, locales, textBlockings, chapterNumDisplays } from "../setting
 		</select>
 	</label>
 	<label>
-		<span>{t("hideVerse")}</span>
+		<span>{t("showVerse")}</span>
 		<input
 			type="checkbox"
-			id="hideVerse"
-			value={settings.hideVerseNum === "true"}
-			onchange={(ev) => settings.hideVerseNum = ev.currentTarget.checked ? "true" : "false"}
+			id="showVerse"
+			value={settings.showVerseNum === "true"}
+			onchange={(ev) => settings.showVerseNum = ev.currentTarget.checked ? "true" : "false"}
 		>
 	</label>
 	<label>
@@ -110,7 +110,7 @@ paragraph = Paragraph
 chapter = Chapter
 verse = Verse
 sentence = Sentence
-hideVerse = Hide verse numbers
+showVerse = Show verse numbers
 chapterDisplay = Chapter display
 float = Float
 normal = Normal
