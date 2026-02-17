@@ -40,7 +40,7 @@ import { settings, locales, textBlockings, chapterNumDisplays } from "../setting
 		<input
 			type="checkbox"
 			id="showVerse"
-			value={settings.showVerseNum === "true"}
+			checked={settings.showVerseNum === "true"}
 			onchange={(ev) => settings.showVerseNum = ev.currentTarget.checked ? "true" : "false"}
 		>
 	</label>

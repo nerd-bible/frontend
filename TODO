@@ -7,12 +7,16 @@
 	- [x] tabs
 	- [ ] tree view
 - [x] hide header on scroll down
+- [ ] good editor
+	- [ ] tooltip menu
+	- [ ] highlighting
+	- [ ] footnotes
+	- [ ] user notes
 - [ ] loading + error messages
 	- [ ] working on mobile
-- [ ] highlighting + notes
-	- [x] does on pointer up/down work on mobile?
 - [ ] bsb w/ proper schema
 	- [ ] good word tooltip
 		- [ ] morphemes
 		- [ ] source
-- [ ] replace svelte :where selectors
+- [ ] 
+- [ ] replace svelte :where selectors (or bump browserslist to 2021)

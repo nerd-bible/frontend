@@ -3,9 +3,11 @@
 	import type { Table } from "@uwdata/flechette";
 	import { EditorView } from "prosemirror-view";
 	import "prosemirror-view/style/prosemirror.css";
-	import { EditorState } from "prosemirror-state";
+	import { EditorState, Plugin } from "prosemirror-state";
 	import { Node as PmNode } from 'prosemirror-model';
 	import { bible } from "./schema";
+	import Tooltip from "./Tooltip.svelte";
+	import pluginAnnotation from "./annotations";
 
 	type Word = {
 		index: number,
@@ -19,9 +21,11 @@
 	};
 	interface Props {
 		words: Table<Word>;
+		dir: "ltr" | "rtl";
+		id: string;
 	}
 
-	const { words }: Props = $props();
+	const { words, dir }: Props = $props();
 
 	const doc = $derived.by(() => {
 		console.time("buildDoc");
@@ -67,7 +71,7 @@
 				if (textBlocking === "verse") flushPara("verse");
 				if (w.verse) {
 					flushText();
-					const string = bible.text(w.verse);
+					const string = bible.text(w.verse + " ");
 					paragraph.push(bible.nodes.verseNum.create(null, string));
 				}
 				verse = w.verse;
@@ -87,58 +91,50 @@
 		return res
 	});
 
-	// Highlights
+	let tooltip: Tooltip;
 	let highlightCss = $state<Record<string, string>>({
 		red: "background-color: rgba(255, 0, 0, 0.5)",
 		green: "background-color: rgba(0, 255, 0, 0.5)",
 	});
 
 	let editor: HTMLElement;
+	let view = $state<EditorView>();
 	$effect(() => {
-		console.time("render");
 		console.log(doc);
-		const view = new EditorView(editor, {
-			state: EditorState.create({ doc }),
+		console.time("render");
+		const newView = new EditorView(editor, {
+			state: EditorState.create({
+				doc,
+				plugins: [
+					new Plugin({ view: () => ({ update: tooltip.update }) }),
+					pluginAnnotation,
+				],
+			}),
 			editable: () => false,
 		});
+		view = newView;
 		console.timeEnd("render");
-		return () => view.destroy();
+		return () => newView.destroy();
 	});
 </script>
 <svelte:element this={"style"}>
 	{Object.entries(highlightCss)
-		.map(([k, v]) => `::highlight(${k}){${v}}`)
+		.map(([k, v]) => `.${k}{${v}}`)
 		.join("")}}}
 </svelte:element>
 <div
 	class="editor"
-	dir="rtl"
+	{dir}
 	bind:this={editor}
 	class:hide-verse-num={settings.showVerseNum !== "true"}
 	data-chapter-display={settings.chapterNumDisplay}
->
-</div>
+></div>
+<Tooltip bind:this={tooltip} {view} />
 <style>
 .editor {
 	/* Offset allows room for verse and inline chapter numbers */
 	line-height: calc(var(--font-size) + var(--line-height-offset));
 
-	:global(.tooltip) {
-		white-space: pre-wrap;
-		overflow: auto;
-		position: absolute;
-		top: 0;
-		left: 0;
-		background: var(--color-bg-300);
-		filter: drop-shadow(var(--drop-shadow-xl));
-		border-radius: var(--radius-md);
-		z-index: 10;
-	}
-
-	:global(sup) {
-		user-select: none;
-		margin-inline-end: --spacing(2);
-	}
 	&.hide-verse-num :global(sup),
 	&[data-chapter-display=float] :global(h2 + p > sup:first-child) {
 		display: none;
@@ -159,6 +155,7 @@
 		}
 	}
 	&[data-chapter-display=float] :global(h2) {
+		/* TODO: make work in older browsers */
 		float: inline-start;
 		margin-inline-start: --spacing(-1);
 		margin-inline-end: --spacing(5);

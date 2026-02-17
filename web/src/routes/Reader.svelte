@@ -3,8 +3,20 @@ import Loading from "../components/Loading.svelte";
 import Editor from "../components/editor/Editor.svelte";
 import { settings } from "../settings.svelte";
 import { firstIngestRequest, query } from "../worker.svelte";
+import { tableFromArrays } from '@uwdata/flechette';
 
-let words = $state();
+const arrays = {
+	sentId: [1, 1, 1],
+	id: [256, 512, 768],
+	form: ["In", "the", "beginning"],
+	chapter: [1, 1, 1],
+	verse: ["1", "1", "1"],
+	newpar: ['normal', null, null],
+	noSpaceAfter: [null, null, null],
+};
+let dir = $state<"ltr" | "rtl">("ltr");
+let id = $state("gen");
+let words = $state(tableFromArrays(arrays));
 firstIngestRequest.then(
 	() => query(`select
 		sentId,
@@ -16,9 +28,12 @@ firstIngestRequest.then(
 		misc['SpaceAfter'] = 'No' as noSpaceAfter
 	from word
 	join sentence on sentence.id = sentId
-	where word.docId='gen' and form is not null and isElision is null and morphemeOf is null
+	where word.docId='${id}' and form is not null and isElision is null and morphemeOf is null
 	order by sentence.position, word.position
-	`).then(r => words = r)
+	`).then(r => {
+			words = r;
+			dir = "rtl";
+		})
 );
 </script>
 <div>
@@ -28,7 +43,7 @@ firstIngestRequest.then(
 		style:--line-height-offset={settings.lineHeightOffset}
 	>
 		{#if words}
-			<Editor docId="Genesis" {words} />
+			<Editor {id} {dir} {words} />
 		{:else}
 			<Loading />
 		{/if}
