@@ -36,19 +36,17 @@ firstIngestRequest.then(
 		})
 );
 </script>
-<div>
-	<main
-		style:width={`${settings.columnWidth}px`}
-		style:--font-size={`${settings.fontSize}px`}
-		style:--line-height-offset={settings.lineHeightOffset}
-	>
-		{#if words}
-			<Editor {id} {dir} {words} />
-		{:else}
-			<Loading />
-		{/if}
-	</main>
-</div>
+<main
+	style:width={`${settings.columnWidth}px`}
+	style:--font-size={`${settings.fontSize}px`}
+	style:--line-height-offset={settings.lineHeightOffset}
+>
+	{#if words}
+		<Editor {id} {dir} {words} />
+	{:else}
+		<Loading />
+	{/if}
+</main>
 <style>
 main {
 	padding: --spacing(4) 0;

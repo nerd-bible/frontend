@@ -18,6 +18,11 @@ const initial = {
 	textBlocking: "paragraph" as TextBlocking,
 	chapterNumDisplay: "float" as ChapterNumDisplay,
 	showVerseNum: "false",
+	// TODO: sync these to DB (+ make reactive) instead of localStorage
+	userHighlights: JSON.stringify({
+		red: "background-color: rgb(155, 0, 0)",
+		green: "background-color: rgb(0, 155, 0)",
+	}),
 } satisfies Record<string, string /** simple for localStorage */>;
 
 // Source of truth
@@ -49,7 +54,7 @@ $effect.root(() => {
 window.addEventListener("storage", (ev) => {
 	if (ev.storageArea === storage && ev.key && ev.key in initial) {
 		const k = ev.key as keyof typeof initial;
-		settings[k] = ev.newValue ?? initial[k];
+		(settings[k] as string) = ev.newValue ?? initial[k];
 	}
 });
 

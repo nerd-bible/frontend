@@ -2,12 +2,11 @@
 	import { settings } from "../../settings.svelte";
 	import type { Table } from "@uwdata/flechette";
 	import { EditorView } from "prosemirror-view";
-	import "prosemirror-view/style/prosemirror.css";
 	import { EditorState, Selection } from "prosemirror-state";
 	import { Node as PmNode } from 'prosemirror-model';
 	import { bible } from "./schema";
 	import pluginAnnotations from "./annotations";
-	import pluginTooltip from "./tooltip";
+	import pluginTooltip from "./tooltip.svelte";
 
 	type Word = {
 		index: number,
@@ -90,11 +89,6 @@
 		return res;
 	});
 
-	let highlightCss = $state<Record<string, string>>({
-		red: "background-color: rgba(255, 0, 0, 0.5)",
-		green: "background-color: rgba(0, 255, 0, 0.5)",
-	});
-
 	let editor: HTMLElement;
 	$effect(() => {
 		const view = new EditorView(editor, {
@@ -112,9 +106,8 @@
 	});
 </script>
 <svelte:element this={"style"}>
-	{Object.entries(highlightCss)
-		// This $ trick makes the order dependent on the classes in the DOM.
-		.map(([k, v]) => `[class$="${k}"]{${v}}`)
+	{Object.entries(JSON.parse(settings.userHighlights))
+		.map(([k, v]) => `.${k}{${v}}`)
 		.join("")}}}
 </svelte:element>
 <div
@@ -124,8 +117,10 @@
 	class:hide-verse-num={settings.showVerseNum !== "true"}
 	data-chapter-display={settings.chapterNumDisplay}
 ></div>
-<div>not editor
-<button>not editor</button></div>
+<div>
+	not editor
+	<button>not editor</button>
+</div>
 <style>
 .editor {
 	/* Offset allows room for verse and inline chapter numbers */
@@ -187,21 +182,17 @@
 		text-decoration: none;
 	}
 
-	:global(.tooltip) {
-		position: absolute;
-		background: var(--color-bg-300);
-		filter: drop-shadow(var(--drop-shadow-xl));
-		border-radius: var(--radius-md);
-		z-index: 10;
-
-		/* If need to remove overflow-x hidden on body, add these + inner wrapper element: */
-		/* https://stackoverflow.com/questions/9933092/css-prevent-absolute-positioned-element-from-overflowing-body */
-		/* right: 0; */
-		/* overflow: hidden; */
-
-		display: flex;
-		gap: --spacing(1);
-		padding: --spacing(2);
+	/* Modified prosemirror.css */
+	:global(.ProseMirror) {
+		word-wrap: break-word;
+		white-space: pre-wrap;
+		white-space: break-spaces;
+		font-variant-ligatures: none;
+		font-feature-settings: "liga" 0;
 	}
+
+	/* .ProseMirror-selectednode { */
+	/* 	outline: 2px solid #8cf; */
+	/* } */
 }
 </style>

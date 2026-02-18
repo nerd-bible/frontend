@@ -17,7 +17,8 @@ import Menu from 'virtual:icons/lucide/menu';
 	margin: auto;
 	/** Create stacking context underneath dropdowns */
 	/** https://philipwalton.com/articles/what-no-one-told-you-about-z-index/ */
-	position: relative;
+	/* We would like to put this on <main>, but that makes Chrome devtools unable */
+	/* to select elements in <main>. */
 	z-index: -10;
 
 	.book {
