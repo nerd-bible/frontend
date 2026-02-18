@@ -3,11 +3,11 @@
 	import type { Table } from "@uwdata/flechette";
 	import { EditorView } from "prosemirror-view";
 	import "prosemirror-view/style/prosemirror.css";
-	import { EditorState, Plugin } from "prosemirror-state";
+	import { EditorState, Selection } from "prosemirror-state";
 	import { Node as PmNode } from 'prosemirror-model';
 	import { bible } from "./schema";
-	import Tooltip from "./Tooltip.svelte";
-	import pluginAnnotation from "./annotations";
+	import pluginAnnotations from "./annotations";
+	import pluginTooltip from "./tooltip";
 
 	type Word = {
 		index: number,
@@ -28,7 +28,6 @@
 	const { words, dir }: Props = $props();
 
 	const doc = $derived.by(() => {
-		console.time("buildDoc");
 		const textBlocking = settings.textBlocking;
 		const paragraphs: PmNode[] = [];
 		let paragraph: PmNode[] = [];
@@ -71,9 +70,9 @@
 				if (textBlocking === "verse") flushPara("verse");
 				if (w.verse) {
 					flushText();
-					// Add space to avoid having to use padding-inline-end
-					const string = bible.text(w.verse + " ");
+					const string = bible.text(w.verse);
 					paragraph.push(bible.nodes.verseNum.create({ id: `${chapter}:${w.verse}` }, string));
+					text += " ";
 				}
 				verse = w.verse;
 			}
@@ -88,39 +87,34 @@
 		flushPara("");
 
 		const res = bible.nodes.doc.create(null, paragraphs); 
-		console.timeEnd("buildDoc");
-		return res
+		return res;
 	});
 
-	let tooltip: Tooltip;
 	let highlightCss = $state<Record<string, string>>({
 		red: "background-color: rgba(255, 0, 0, 0.5)",
 		green: "background-color: rgba(0, 255, 0, 0.5)",
 	});
 
 	let editor: HTMLElement;
-	let view = $state<EditorView>();
 	$effect(() => {
-		console.log(doc);
-		console.time("render");
-		const newView = new EditorView(editor, {
+		const view = new EditorView(editor, {
 			state: EditorState.create({
 				doc,
 				plugins: [
-					new Plugin({ view: () => ({ update: tooltip.update }) }),
-					pluginAnnotation,
+					pluginTooltip,
+					pluginAnnotations,
 				],
+				selection: Selection.atEnd(doc),
 			}),
 			editable: () => false,
 		});
-		view = newView;
-		console.timeEnd("render");
-		return () => newView.destroy();
+		return () => view.destroy();
 	});
 </script>
 <svelte:element this={"style"}>
 	{Object.entries(highlightCss)
-		.map(([k, v]) => `.${k}{${v}}`)
+		// This $ trick makes the order dependent on the classes in the DOM.
+		.map(([k, v]) => `[class$="${k}"]{${v}}`)
 		.join("")}}}
 </svelte:element>
 <div
@@ -130,7 +124,8 @@
 	class:hide-verse-num={settings.showVerseNum !== "true"}
 	data-chapter-display={settings.chapterNumDisplay}
 ></div>
-<Tooltip bind:this={tooltip} {view} />
+<div>not editor
+<button>not editor</button></div>
 <style>
 .editor {
 	/* Offset allows room for verse and inline chapter numbers */
@@ -164,6 +159,9 @@
 		/* must keep in sync with font-size */
 		padding-top: calc((var(--font-size) + var(--line-height-offset)) / 2);
 	}
+	&[data-chapter-display=float] :global(p) {
+		min-height: calc((var(--font-size) + var(--line-height-offset)) * 2);
+	}
 	&[data-chapter-display=none] :global(h2) {
 		display: none;
 		width: 100%;
@@ -187,6 +185,23 @@
 
 	:global(a) {
 		text-decoration: none;
+	}
+
+	:global(.tooltip) {
+		position: absolute;
+		background: var(--color-bg-300);
+		filter: drop-shadow(var(--drop-shadow-xl));
+		border-radius: var(--radius-md);
+		z-index: 10;
+
+		/* If need to remove overflow-x hidden on body, add these + inner wrapper element: */
+		/* https://stackoverflow.com/questions/9933092/css-prevent-absolute-positioned-element-from-overflowing-body */
+		/* right: 0; */
+		/* overflow: hidden; */
+
+		display: flex;
+		gap: --spacing(1);
+		padding: --spacing(2);
 	}
 }
 </style>

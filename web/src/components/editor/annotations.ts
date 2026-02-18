@@ -1,57 +1,28 @@
-import { Plugin, TextSelection } from "prosemirror-state";
-import { Decoration, DecorationSet, type NodeView } from "prosemirror-view";
-import { DOMSerializer, type Node as PmNode } from "prosemirror-model";
+import { Plugin, PluginKey } from "prosemirror-state";
+import { Decoration, DecorationSet } from "prosemirror-view";
 
-function getDecorations(doc: PmNode) {
-	const decos: Decoration[] = [];
-	decos.push(Decoration.inline(0, 130, { class: "red" }, { type: "userHighlight" }));
-	return DecorationSet.create(doc, decos);
-}
+export const key = new PluginKey("annotate");
 
 export default new Plugin({
+	key,
 	state: {
-		init(_, { doc }) {
-			return getDecorations(doc);
+		init() {
+			return DecorationSet.empty;
 		},
 		apply(tr, old) {
-			if (tr.docChanged) return getDecorations(tr.doc);
-			// TODO: fix after adding versioning
-			return old.map(tr.mapping, tr.doc);
+			old = old.map(tr.mapping, tr.doc);
+			const meta: string = tr.getMeta("annotate");
+			if (meta) {
+				const { from, to } = tr.selection;
+				const deco = Decoration.inline(from, to, { class: meta });
+				old = old.add(tr.doc, [deco]);
+			}
+			return old;
 		},
 	},
 	props: {
 		decorations(state) {
 			return this.getState(state);
-		},
-		// No annotating verse or chapter numbers because they aren't semantic.
-		nodeViews: {
-			// text(
-			//  	node,
-			//  	_view,
-			//  	_getPos,
-			//  	decorations,
-			//  	innerDecorations,
-			// ) {
-			// 	if (decorations.length) console.log(arguments);
-			// 	return document.createTextNode(node.textContent);
-			// },
-			// verseNum(
-			// 	node,
-			// 	_view,
-			// 	_getPos,
-			// 	decorations,
-			// 	innerDecorations,
-			// ) {
-			// 	if (decorations.length) console.log(decorations);
-			// 	const { dom } = DOMSerializer.renderSpec(document, node.type.spec.toDOM!(node), null);
-			// 	return { dom };
-			// },
-			// chapterNum(node) {
-			// 	// don't include contentDom
-			// 	const { dom } = DOMSerializer.renderSpec(document, node.type.spec.toDOM!(node), null);
-			// 	dom.textContent = node.textContent;
-			// 	return { dom };
-			// },
 		},
 	},
 });

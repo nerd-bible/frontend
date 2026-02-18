@@ -4,6 +4,7 @@ nb-dropdown {
 
 	& > .content {
 		position: absolute;
+		border-radius: var(--radius-md);
 		top: auto;
 		/** TODO: CSS logical properties polyfill */
 		inset-inline-end: 0;

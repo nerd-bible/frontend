@@ -14,23 +14,14 @@ export const bible = new Schema({
 		},
 		chapterNum: {
 			group: "block",
-			content: "inline*",
-			annotations: "",
 			attrs: { id: {} },
 			// This avoids chapter numbers being decorated.
-			toDOM(node) {
-				const res = document.createElement("h2");
-				res.textContent = node.textContent;
-				res.id = node.attrs["id"];
-				return res;
-			},
+			toDOM: (node) => ["h2", node.attrs, 0],
 			parseDOM: [{ tag: "h2" }],
-			selectable: false,
 		},
 		heading: {
 			group: "block",
 			content: "inline*",
-			annotations: "",
 			toDOM: () => ["h3", 0],
 			parseDOM: [{ tag: "h3" }],
 		},
@@ -47,13 +38,12 @@ export const bible = new Schema({
 		},
 		verseNum: {
 			group: "inline",
-			inline: true,
-			marks: "",
 			content: "text*",
-			attrs: { id: { default: "foo" } },
+			inline: true,
+			attrs: { id: {} },
+			// Add space to avoid having to use padding-inline-end
 			toDOM: (node) => ["sup", node.attrs, 0],
 			parseDOM: [{ tag: "sup" }],
-			selectable: false,
 		},
 		footnote: {
 			group: "inline",

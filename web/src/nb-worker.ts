@@ -252,16 +252,12 @@ addEventListener("message", async (ev) => {
 		case "ingestUrl": {
 			const { url } = data;
 			const { sentences, words } = await getUrlSentences(url);
-			console.time("tableToIPC");
 			const sentenceIpc = tableToIPC(sentences, { format: "stream" })!;
 			const wordsIpc = tableToIPC(words, { format: "stream" })!;
-			console.timeEnd("tableToIPC");
 
 			const conn = await db.connect();
-			console.time("insertArrowFromIPCStream");
 			conn.insertArrowFromIPCStream("sentence", sentenceIpc);
 			conn.insertArrowFromIPCStream("word", wordsIpc);
-			console.timeEnd("insertArrowFromIPCStream");
 
 			postMessage({ id });
 			break;
@@ -271,9 +267,7 @@ addEventListener("message", async (ev) => {
 			const conn = await db.connect();
 			const table = await conn.queryArrow(data.query);
 			console.timeEnd(`queryArrow ${id}`);
-			console.time(`tableToIPC ${id}`);
 			const tableIpc = tableToIPC(table, { format: "stream" })!;
-			console.timeEnd(`tableToIPC ${id}`);
 			postMessage(
 				{ id, data: tableIpc },
 				{ transfer: [tableIpc.buffer] },

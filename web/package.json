@@ -18,7 +18,6 @@
 		"prosemirror-test-builder": "^1.1.1",
 		"prosemirror-transform": "^1.11.0",
 		"prosemirror-view": "^1.41.6",
-		"quill-delta": "^5.1.0",
 		"svelte": "^5.47.1"
 	},
 	"devDependencies": {
