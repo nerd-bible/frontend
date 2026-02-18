@@ -6,13 +6,13 @@ import { firstIngestRequest, query } from "../worker.svelte";
 import { tableFromArrays } from '@uwdata/flechette';
 
 const arrays = {
-	sentId: [1, 1, 1],
-	id: [256, 512, 768],
-	form: ["In", "the", "beginning"],
-	chapter: [1, 1, 1],
-	verse: ["1", "1", "1"],
-	newpar: ['normal', null, null],
-	noSpaceAfter: [null, null, null],
+	sentId: [1, 1, 1, 2, 2],
+	id: [0, 1, 2, 3, 4],
+	form: ["In", "the", "beginning", "God", "created"],
+	chapter: [1, 1, 1, 1, 1],
+	verse: ["1", "1", "1", "2", "2"],
+	newpar: ['normal', null, null, null, null],
+	noSpaceAfter: [null, null, null, null, null],
 };
 let dir = $state<"ltr" | "rtl">("ltr");
 let id = $state("gen");

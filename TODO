@@ -1,14 +1,11 @@
 - [x] navigation
-	- [ ] change focus on nav (+ aria?)
-		- [ ] quick settings + other tooltips close on nav
-	- [ ] searchbar
 - [x] sql console
   - [x] form
 	- [x] tabs
 	- [ ] tree view
 - [x] hide header on scroll down
 - [ ] good editor
-	- [ ] tooltip menu
+	- [x] tooltip menu
 	- [ ] highlighting
 	- [ ] footnotes
 	- [ ] user notes
@@ -18,5 +15,16 @@
 	- [ ] good word tooltip
 		- [ ] morphemes
 		- [ ] source
-- [ ] 
-- [ ] replace svelte :where selectors (or bump browserslist to 2021)
+- [ ] good duckdb-wasm
+	- [ ] persistence
+- [ ] search
+	- [ ] better nav
+		- [ ] change focus (+ aria?)
+		- [ ] tooltips close
+		- [ ] transitions?
+	- [ ] chapter + verse anchors
+- [ ] versioning
+
+confirm works on older browsers
+- [ ] investigate free browserstack
+- [ ] remove svelte :where selectors

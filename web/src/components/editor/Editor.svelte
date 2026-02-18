@@ -64,15 +64,16 @@
 			if (chapter !== w.chapter && w.chapter) {
 			 flushPara("chapter");
 				const string = bible.text(w.chapter.toString());
-				paragraphs.push(bible.nodes.chapterNum.create(null, string));
+				paragraphs.push(bible.nodes.chapterNum.create({ id: w.chapter.toString() }, string));
 				chapter = w.chapter;
 			}
 			if (verse !== w.verse) {
 				if (textBlocking === "verse") flushPara("verse");
 				if (w.verse) {
 					flushText();
+					// Add space to avoid having to use padding-inline-end
 					const string = bible.text(w.verse + " ");
-					paragraph.push(bible.nodes.verseNum.create(null, string));
+					paragraph.push(bible.nodes.verseNum.create({ id: `${chapter}:${w.verse}` }, string));
 				}
 				verse = w.verse;
 			}
@@ -182,6 +183,10 @@
 			/* width: --spacing(12); */
 			border-bottom: 1px solid;
 		}
+	}
+
+	:global(a) {
+		text-decoration: none;
 	}
 }
 </style>

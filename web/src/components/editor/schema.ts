@@ -16,10 +16,12 @@ export const bible = new Schema({
 			group: "block",
 			content: "inline*",
 			annotations: "",
+			attrs: { id: {} },
 			// This avoids chapter numbers being decorated.
 			toDOM(node) {
 				const res = document.createElement("h2");
 				res.textContent = node.textContent;
+				res.id = node.attrs["id"];
 				return res;
 			},
 			parseDOM: [{ tag: "h2" }],
@@ -43,13 +45,13 @@ export const bible = new Schema({
 			group: "inline",
 			inline: true,
 		},
-		// TODO: wrap in highlighted span for decorations
 		verseNum: {
 			group: "inline",
 			inline: true,
 			marks: "",
 			content: "text*",
-			toDOM: () => ["sup", 0],
+			attrs: { id: { default: "foo" } },
+			toDOM: (node) => ["sup", node.attrs, 0],
 			parseDOM: [{ tag: "sup" }],
 			selectable: false,
 		},
