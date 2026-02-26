@@ -289,3 +289,19 @@ input[type="range"] {
 		@apply thumb;
 	}
 }
+input[type="checkbox"] {
+	appearance: none;
+	background: var(--color-secondary);
+	cursor: pointer;
+
+	width: 1.5rem;
+	height: 1.5rem;
+
+	&:checked {
+		background: var(--color-primary);
+		background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 32 32" xml:space="preserve"><path style="fill: %23274c77" d="M11.941,28.877l-11.941-11.942l5.695-5.696l6.246,6.246l14.364-14.364L32,8.818"/></svg>');
+		background-size: 90% 90%;
+		background-position: 50% 50%;
+		background-repeat: no-repeat;
+	}
+}

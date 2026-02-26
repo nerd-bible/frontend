@@ -131,6 +131,10 @@
 		display: none;
 	}
 
+	:global(p) {
+		margin-bottom: --spacing(4);
+	}
+
 	:global(h2) {
 		font-size: 3em;
 		text-align: center;
@@ -138,7 +142,6 @@
 	}
 	&[data-chapter-display=normal] :global(h2) {
 		line-height: normal;
-		margin-top: --spacing(3);
 		margin-bottom: --spacing(1);
 
 		&:first-child {

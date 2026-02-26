@@ -6,7 +6,7 @@
 - [x] hide header on scroll down
 - [ ] good editor
 	- [x] tooltip menu
-	- [ ] highlighting
+	- [x] highlighting
 	- [ ] footnotes
 	- [ ] user notes
 - [ ] loading + error messages
@@ -22,7 +22,7 @@
 		- [ ] change focus (+ aria?)
 		- [ ] tooltips close
 		- [ ] transitions?
-	- [ ] chapter + verse anchors
+	- [x] chapter + verse anchors
 - [ ] versioning
 
 confirm works on older browsers
