@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { settings } from "../../settings.svelte";
 	import type { Table } from "@uwdata/flechette";
-	import { EditorView } from "prosemirror-view";
-	import { EditorState, Selection } from "prosemirror-state";
+	import { Decoration, DecorationSet, EditorView } from "prosemirror-view";
+	import { EditorState, Selection, Plugin } from "prosemirror-state";
 	import { Node as PmNode } from 'prosemirror-model';
 	import { bible } from "./schema";
-	import pluginAnnotations from "./annotations";
-	import pluginTooltip from "./tooltip.svelte";
+	import annotationPlugin, { key } from "./annotations";
+	import selectionTooltipPlugin from "./tooltip";
+	import type { Attachment } from "svelte/attachments";
 
 	type Word = {
 		index: number,
@@ -69,15 +70,19 @@
 				if (textBlocking === "verse") flushPara("verse");
 				if (w.verse) {
 					flushText();
-					const string = bible.text(w.verse);
+					const string = bible.text(w.verse + " ");
 					paragraph.push(bible.nodes.verseNum.create({ id: `${chapter}:${w.verse}` }, string));
-					text += " ";
 				}
 				verse = w.verse;
 			}
 			if (sentId !== w.sentId) {
 				if (textBlocking === "sentence") flushPara("sentence");
 				sentId = w.sentId;
+			}
+			if (i && i % 100 == 0) {
+				flushText();
+				const note = bible.text("hello");
+				paragraph.push(bible.nodes.footnote.create({}, note));
 			}
 
 			text += w.form;
@@ -89,34 +94,87 @@
 		return res;
 	});
 
-	let editor: HTMLElement;
+	let tooltipRef: HTMLElement;
+	let editorRef: HTMLElement;
+	let view: EditorView;
 	$effect(() => {
-		const view = new EditorView(editor, {
-			state: EditorState.create({
-				doc,
-				plugins: [
-					pluginTooltip,
-					pluginAnnotations,
-				],
-				selection: Selection.atEnd(doc),
-			}),
-			editable: () => false,
-		});
+		if (!tooltipRef || !editorRef) return;
+
+new EditorView(editorRef, {
+	state: EditorState.create({
+		doc,
+		plugins: [
+			// There are ways to use Svelte in plugins via
+			// `@prosemirror-adapter/svelte`. I gave up after a day because 
+			// overriding methods like `update` and `stopEvent` that need
+			// component state is too difficult. The reactive model of svelte
+			// is mostly incompatible with the stateful class model of
+			// prosemirror-view.
+			// As a bonus the editor isn't dependent on Svelte and is sharable
+			// with others.
+			// selectionTooltipPlugin(tooltipRef),
+			// annotationPlugin,
+			new Plugin({
+				props: {
+					decorations(state) {
+						return state.selection.empty ? null : DecorationSet.create(
+							state.doc,
+							[Decoration.inline(state.selection.from, state.selection.to, {class: 'selection'})]
+						)
+					}
+				}
+			})
+		],
+	}),
+	editable: () => false,
+});
 		return () => view.destroy();
 	});
 </script>
 <svelte:element this={"style"}>
 	{Object.entries(JSON.parse(settings.userHighlights))
 		.map(([k, v]) => `.${k}{${v}}`)
-		.join("")}}}
+		.join("")}
+	{`
+	.red.green {
+		background-color: purple;
+	}
+	`}
 </svelte:element>
 <div
 	class="editor"
 	{dir}
-	bind:this={editor}
+	bind:this={editorRef}
 	class:hide-verse-num={settings.showVerseNum !== "true"}
+	class:hide-footnotes={settings.showFootnotes !== "true"}
 	data-chapter-display={settings.chapterNumDisplay}
-></div>
+>
+</div>
+<div class="tooltip" bind:this={tooltipRef}>
+	{#each Object.keys(JSON.parse(settings.userHighlights)) as k}
+		<button
+			onclick={() => {
+				view?.dispatch(view.state.tr.setMeta("annotate", k));
+			}}
+			onmousedown={e => {
+				e.preventDefault();
+				view?.focus()
+			}}
+		>
+			{k}
+		</button>
+	{/each}
+	<button onclick={() => {
+		if (!view) return;
+
+		const decoSet: DecorationSet = key.getState(view.state); 
+		const { from, to } = view.state.selection;
+		const decos = decoSet.find(from, to);
+		console.log(decos);
+	}}>
+		debug
+	</button>
+</div>
 <div>
 	not editor
 	<button>not editor</button>
@@ -126,7 +184,8 @@
 	/* Offset allows room for verse and inline chapter numbers */
 	line-height: calc(var(--font-size) + var(--line-height-offset));
 
-	&.hide-verse-num :global(sup),
+	&.hide-verse-num :global(.verseNum),
+	&.hide-footnotes :global(.footnote),
 	&[data-chapter-display=float] :global(h2 + p > sup:first-child) {
 		display: none;
 	}
@@ -193,9 +252,36 @@
 		font-variant-ligatures: none;
 		font-feature-settings: "liga" 0;
 	}
+}
+.tooltip {
+	position: absolute;
+	background: var(--color-bg-300);
+	filter: drop-shadow(var(--drop-shadow-xl));
+	border-radius: var(--radius-md);
 
-	/* .ProseMirror-selectednode { */
-	/* 	outline: 2px solid #8cf; */
-	/* } */
+	user-select: none;
+	display: flex;
+	gap: --spacing(1);
+	padding: --spacing(2);
+
+	/* If need to remove overflow-x hidden on body, add these + inner wrapper element: */
+	/* https://stackoverflow.com/questions/9933092/css-prevent-absolute-positioned-element-from-overflowing-body */
+	/* right: 0; */
+	/* overflow: hidden; */
+}
+/** Footnote */
+:global(editor p) {
+	counter-reset: footnote;
+}
+:global(.footnote) {
+	cursor: pointer;
+
+	&::after {
+		content: counter(footnote, lower-alpha);
+		counter-increment: footnote;
+	}
+}
+:global(.selection) {
+	background-color: yellow;
 }
 </style>

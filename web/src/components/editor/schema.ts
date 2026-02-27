@@ -1,4 +1,5 @@
 import { Schema } from "prosemirror-model";
+import { ref } from "@nerd-bible/core"
 
 export const bible = new Schema({
 	nodes: {
@@ -9,27 +10,31 @@ export const bible = new Schema({
 		paragraph: {
 			group: "block",
 			content: "inline*",
+			/*
+			 * Copy/pasting inline elements that may contain block elements (like
+			 * footnotes) does not work if implicit closing tags (`p`, `li`, `dt`,
+			 * `dd`, `tbody`, `thead`, `tfoot`, `tr`, `th`, `td`) may be contained by
+			 * this selector.
+			 *
+			 * https://discuss.prosemirror.net/t/pasting-footnotes-with-content/2479/5
+			 */
 			toDOM: () => ["p", 0],
-			parseDOM: [{ tag: "p" }],
 		},
 		chapterNum: {
 			group: "block",
 			attrs: { id: {} },
 			// This avoids chapter numbers being decorated.
 			toDOM: (node) => ["h2", node.attrs, 0],
-			parseDOM: [{ tag: "h2" }],
 		},
 		heading: {
 			group: "block",
 			content: "inline*",
 			toDOM: () => ["h3", 0],
-			parseDOM: [{ tag: "h3" }],
 		},
 		blockquote: {
 			group: "block",
 			content: "inline*",
 			toDOM: () => ["blockquote", 0],
-			parseDOM: [{ tag: "blockquote" }],
 		},
 		// inline
 		text: {
@@ -40,20 +45,28 @@ export const bible = new Schema({
 			group: "inline",
 			content: "text*",
 			inline: true,
-			attrs: { id: {} },
-			// Add space to avoid having to use padding-inline-end
-			toDOM: (node) => ["sup", node.attrs, 0],
-			parseDOM: [{ tag: "sup" }],
+			toDOM: (node) => ["sup", { ...node.attrs, class: "verseNum" }, 0],
 		},
+		// Footnotes are semantically `inline+ block+` where the `inline+` is the
+		// content and `block+` is its footnote.
+		//
+		// For display we just stick to a leaf node because it better matches
+		// in-print Bibles and is technically easier. Usually the context of the
+		// footnote is usually good enough to resolve the text it's talking about.
 		footnote: {
 			group: "inline",
 			content: "block+",
 			inline: true,
-			// This makes the view treat the node as a leaf, even though it
-			// technically has content
 			atom: true,
-			toDOM: () => ["footnote", 0],
-			parseDOM: [{ tag: "footnote" }],
+			toDOM: (node) => ["sup", { ...node.attrs, class: "footnote" }],
+		},
+	},
+	marks: {
+		strong: {
+			toDOM: () => ["strong", 0],
+		},
+		em: {
+			toDOM: () => ["em", 0],
 		},
 	},
 });

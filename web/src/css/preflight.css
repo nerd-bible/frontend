@@ -1,3 +1,9 @@
+@utility box-focus {
+	outline-color: var(--color-focus-200);
+	outline-style: solid;
+	outline-width: 0.2rem;
+	outline-offset: 0.1rem;
+}
 /* Fork of https://github.com/tailwindlabs/tailwindcss/blob/main/packages/tailwindcss/preflight.css */
 /**
  * 1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
@@ -13,12 +19,13 @@
 	margin: 0; /* 2 */
 	padding: 0; /* 2 */
 	border: 0 solid; /* 3 */
-	outline-color: var(--color-focus-200);
+
 	&:focus {
-		outline-style: solid;
-		outline-width: 0.2rem;
-		outline-offset: 0.1rem;
+		@apply box-focus;
 	}
+}
+.ProseMirror-selectednode {
+	@apply box-focus;
 }
 
 /**
@@ -106,15 +113,15 @@ sub,
 sup {
 	font-size: 75%;
 	line-height: 0;
-	/* position: relative; */
-	/* vertical-align: baseline; */
+	position: relative;
+	vertical-align: baseline;
 }
-/* sub { */
-/* 	bottom: -0.25em; */
-/* } */
-/* sup { */
-/* 	top: -0.5em; */
-/* } */
+sub {
+	bottom: -0.25em;
+}
+sup {
+	top: -0.5em;
+}
 
 /**
  * 1. Remove text indentation from table contents in Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=999088, https://bugs.webkit.org/show_bug.cgi?id=201297)
@@ -296,12 +303,12 @@ input[type="checkbox"] {
 
 	width: 1.5rem;
 	height: 1.5rem;
+	font-size: 2rem;
 
-	&:checked {
-		background: var(--color-primary);
-		background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 32 32" xml:space="preserve"><path style="fill: %23274c77" d="M11.941,28.877l-11.941-11.942l5.695-5.696l6.246,6.246l14.364-14.364L32,8.818"/></svg>');
-		background-size: 90% 90%;
-		background-position: 50% 50%;
-		background-repeat: no-repeat;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	&:checked::before {
+		content: "✓";
 	}
 }

@@ -45,6 +45,15 @@ import { settings, locales, textBlockings, chapterNumDisplays } from "../setting
 		>
 	</label>
 	<label>
+		<span>{t("showFootnote")}</span>
+		<input
+			type="checkbox"
+			id="showFootnote"
+			checked={settings.showFootnotes === "true"}
+			onchange={(ev) => settings.showFootnotes = ev.currentTarget.checked ? "true" : "false"}
+		>
+	</label>
+	<label>
 		<span>{t("language")}</span>
 		<select id="locale" bind:value={settings.locale}>
 			{#each Object.entries(locales) as [k, v]}
@@ -111,6 +120,7 @@ chapter = Chapter
 verse = Verse
 sentence = Sentence
 showVerse = Show verse numbers
+showFootnote = Show footnotes
 chapterDisplay = Chapter display
 float = Float
 normal = Normal

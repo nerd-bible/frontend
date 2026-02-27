@@ -7,10 +7,16 @@
 - [ ] good editor
 	- [x] tooltip menu
 	- [x] highlighting
+		- [ ] blending
+		- [ ] customization (borders, etc)
+		- [ ] editing
 	- [ ] footnotes
 	- [ ] user notes
+	- [ ] marks
+		- [ ] which kinds?
 - [ ] loading + error messages
 	- [ ] working on mobile
+	- [ ] better timeouts
 - [ ] bsb w/ proper schema
 	- [ ] good word tooltip
 		- [ ] morphemes
@@ -23,6 +29,8 @@
 		- [ ] tooltips close
 		- [ ] transitions?
 	- [x] chapter + verse anchors
+	- [ ] algos
+		- [ ] vss + bm25
 - [ ] versioning
 
 confirm works on older browsers

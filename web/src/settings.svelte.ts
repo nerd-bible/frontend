@@ -18,6 +18,7 @@ const initial = {
 	textBlocking: "paragraph" as TextBlocking,
 	chapterNumDisplay: "float" as ChapterNumDisplay,
 	showVerseNum: "false",
+	showFootnotes: "false",
 	// TODO: sync these to DB (+ make reactive) instead of localStorage
 	userHighlights: JSON.stringify({
 		red: "background-color: rgb(155, 0, 0)",
