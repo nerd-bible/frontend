@@ -7,14 +7,13 @@ import {
 	inline,
 } from "@floating-ui/dom";
 import { EditorView } from "prosemirror-view";
-import { EditorState, Plugin, PluginKey } from "prosemirror-state";
+import {
+	EditorState,
+	Plugin,
+	PluginKey,
+	TextSelection,
+} from "prosemirror-state";
 import type { PluginView } from "prosemirror-state";
-
-function hasDomSelection() {
-	const s = document.getSelection();
-	if (s?.type !== "Range") return false;
-	return s.anchorNode !== s.focusNode && s.anchorOffset != s.focusOffset;
-}
 
 class SelectionTooltipPlugin implements PluginView {
 	view: EditorView;
@@ -27,6 +26,9 @@ class SelectionTooltipPlugin implements PluginView {
 
 	mousedown: (ev: MouseEvent) => void;
 	mouseup: (ev: MouseEvent) => void;
+	selectionchange: () => void;
+
+	selectedState?: EditorState;
 
 	constructor(view: EditorView, target: HTMLElement) {
 		this.view = view;
@@ -38,10 +40,21 @@ class SelectionTooltipPlugin implements PluginView {
 		};
 		this.mouseup = () => {
 			this.maybeSelecting = false;
-			this.update();
+			if (this.selectionInView()) this.update();
+		};
+		this.selectionchange = () => {
+			// Workaround Chrome issue:
+			// https://github.com/ProseMirror/prosemirror/issues/1563
+			if (!this.selectionInView()) {
+				const { doc } = this.view.state;
+				const atStart = TextSelection.between(doc.resolve(0), doc.resolve(0));
+				const tr = this.view.state.tr.setSelection(atStart);
+				this.view.dispatch(tr);
+			}
 		};
 		document.addEventListener("mousedown", this.mousedown);
 		document.addEventListener("mouseup", this.mouseup);
+		document.addEventListener("selectionchange", this.selectionchange);
 
 		this.close();
 		// this.target.addEventListener("click", () => {
@@ -56,22 +69,23 @@ class SelectionTooltipPlugin implements PluginView {
 		// });
 	}
 
-	update(view: EditorView = this.view, prevState?: EditorState) {
-		console.log("update", this.view.state.selection);
+	selectionInView() {
+		const s = document.getSelection();
+		return this.view.dom.contains(s?.anchorNode ?? null);
+	}
+
+	update(view = this.view) {
 		this.view = view;
 		const { state } = view;
 
 		if (
-			(prevState?.doc.eq(state.doc) &&
-				prevState.selection.eq(state.selection)) ||
-			this.maybeSelecting || state.selection.empty
+			(this.selectedState?.doc.eq(state.doc) &&
+				this.selectedState.selection.eq(state.selection)) ||
+			this.maybeSelecting ||
+			state.selection.empty
 		) {
-			console.log("close");
 			this.close();
 			return;
-		} else {
-			console.log(
-				"uhhhh this is cray", state.selection.from, state.selection.to, document.getSelection()?.getRangeAt(0).cloneRange());
 		}
 
 		const { from, to } = state.selection;
@@ -137,6 +151,7 @@ class SelectionTooltipPlugin implements PluginView {
 	}
 
 	open() {
+		this.selectedState = this.view.state;
 		this.target.style.display = "";
 	}
 
@@ -149,6 +164,7 @@ class SelectionTooltipPlugin implements PluginView {
 		this.close();
 		document.removeEventListener("mousedown", this.mousedown);
 		document.removeEventListener("mouseup", this.mouseup);
+		document.removeEventListener("selectionchange", this.selectionchange);
 	}
 }
 
@@ -156,5 +172,10 @@ export const key = new PluginKey("selectionTooltip");
 export default (tooltipRef: HTMLElement) =>
 	new Plugin({
 		key,
+		// state: {
+		// 	init() {
+		// 		return {};
+		// 	},
+		// },
 		view: (v) => new SelectionTooltipPlugin(v, tooltipRef),
 	});

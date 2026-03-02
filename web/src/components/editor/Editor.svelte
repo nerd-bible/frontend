@@ -2,7 +2,7 @@
 	import { settings } from "../../settings.svelte";
 	import type { Table } from "@uwdata/flechette";
 	import { Decoration, DecorationSet, EditorView } from "prosemirror-view";
-	import { EditorState, Selection, Plugin } from "prosemirror-state";
+	import { EditorState, Selection, Plugin, TextSelection } from "prosemirror-state";
 	import { Node as PmNode } from 'prosemirror-model';
 	import { bible } from "./schema";
 	import annotationPlugin, { key } from "./annotations";
@@ -100,34 +100,35 @@
 	$effect(() => {
 		if (!tooltipRef || !editorRef) return;
 
-new EditorView(editorRef, {
-	state: EditorState.create({
-		doc,
-		plugins: [
-			// There are ways to use Svelte in plugins via
-			// `@prosemirror-adapter/svelte`. I gave up after a day because 
-			// overriding methods like `update` and `stopEvent` that need
-			// component state is too difficult. The reactive model of svelte
-			// is mostly incompatible with the stateful class model of
-			// prosemirror-view.
-			// As a bonus the editor isn't dependent on Svelte and is sharable
-			// with others.
-			// selectionTooltipPlugin(tooltipRef),
-			// annotationPlugin,
-			new Plugin({
-				props: {
-					decorations(state) {
-						return state.selection.empty ? null : DecorationSet.create(
-							state.doc,
-							[Decoration.inline(state.selection.from, state.selection.to, {class: 'selection'})]
-						)
-					}
-				}
-			})
-		],
-	}),
-	editable: () => false,
-});
+		view = new EditorView(editorRef, {
+			state: EditorState.create({
+				doc,
+				plugins: [
+					// There are ways to use Svelte in plugins via
+					// `@prosemirror-adapter/svelte`. I gave up after a day because 
+					// overriding methods like `update` and `stopEvent` that need
+					// component state is too difficult. The reactive model of svelte
+					// is mostly incompatible with the stateful class model of
+					// prosemirror-view.
+					// As a bonus the editor isn't dependent on Svelte and is sharable
+					// with others.
+					selectionTooltipPlugin(tooltipRef),
+					annotationPlugin,
+					// new Plugin({
+					// 	props: {
+					// 		decorations(state) {
+					// 			return state.selection.empty ? null : DecorationSet.create(
+					// 				state.doc,
+					// 				[Decoration.inline(state.selection.from, state.selection.to, {class: 'selection'})]
+					// 			)
+					// 		}
+					// 	}
+					// })
+				],
+				selection: TextSelection.between(doc.resolve(0), doc.resolve(0)),
+			}),
+			editable: () => false,
+		});
 		return () => view.destroy();
 	});
 </script>
@@ -141,6 +142,10 @@ new EditorView(editorRef, {
 	}
 	`}
 </svelte:element>
+<div>
+	not editor
+	<button>not editor</button>
+</div>
 <div
 	class="editor"
 	{dir}
