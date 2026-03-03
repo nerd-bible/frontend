@@ -21,9 +21,6 @@ const initial = {
 	showFootnotes: "false",
 	// TODO: sync these to DB (+ make reactive) instead of localStorage
 	userHighlights: JSON.stringify({
-		red: "background-image: linear-gradient(to right, rgb(155, 0, 0), rgb(155, 0, 0)); background-blend-mode: lighten; outline: 2px dotted gray;",
-		green: "background-image: linear-gradient(to right, rgb(0, 155, 0), rgb(0, 155, 0)); background-blend-mode: lighten;",
-		blue: "background-image: linear-gradient(to right, rgb(0, 0, 155), rgb(0, 0, 155)); background-blend-mode: lighten;",
 	}),
 } satisfies Record<string, string /** simple for localStorage */>;
 

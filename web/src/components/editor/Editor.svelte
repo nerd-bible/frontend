@@ -138,11 +138,6 @@
 		return () => view.destroy();
 	});
 </script>
-<svelte:element this={"style"}>
-	{#each Object.entries(JSON.parse(settings.userHighlights)) as [k, v]}
-		{`.${k}{${v}}`}
-	{/each}
-</svelte:element>
 <div>
 	not editor
 	<button>not editor</button>
@@ -158,34 +153,23 @@
 </div>
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div class="tooltip" bind:this={tooltipRef} onmousedown={ev => ev.preventDefault()}>
-	{#each Object.keys(JSON.parse(settings.userHighlights)) as k}
+	{#each ["red", "green", "blue"] as k}
 		<button
 			onclick={() => {
-				view?.dispatch(view.state.tr.setMeta("annotate", k));
+				if (!view) return;
+
+				const { from, to } = view.state.selection;
+				view?.dispatch(view.state.tr.setMeta("annotate", { from, to, class: k }));
 				document.getSelection()?.removeAllRanges();
+
+				// const decoSet: DecorationSet = key.getState(view.state); 
+				// const decos = decoSet.find(from, to);
+				// console.log(decos);
 			}}
 		>
 			{k}
 		</button>
 	{/each}
-	<button
-		onclick={() => {
-			const fn = toggleMark(bible.marks.strong);
-			fn(view.state, tr => view.dispatch(tr));
-		}}
-	>
-		strong
-	</button>
-	<button onclick={() => {
-		if (!view) return;
-
-		const decoSet: DecorationSet = key.getState(view.state); 
-		const { from, to } = view.state.selection;
-		const decos = decoSet.find(from, to);
-		console.log(decos);
-	}}>
-		debug
-	</button>
 </div>
 <div>
 	not editor
