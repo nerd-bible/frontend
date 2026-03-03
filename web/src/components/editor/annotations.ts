@@ -109,8 +109,11 @@ export default new Plugin({
 				.keys()
 				.toArray()
 				.map(
-					(k) => `.${k}{background-image: ${
-		k.split(".").map((c) => toGradient(state.classes[c]["background-color"])).join(",")};background-blend-mode: lighten;}`,
+					(k) =>
+						`.${k}{background-image: ${k
+							.split(".")
+							.map((c) => toGradient(state.classes[c]["background-color"]))
+							.join(",")};background-blend-mode: lighten;}`,
 				)
 				.join("\n");
 			ele.innerText = css;

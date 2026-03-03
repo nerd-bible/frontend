@@ -11,19 +11,20 @@
 - [ ] good editor
 	- [x] tooltip menu
 	- [x] highlighting
-		- [ ] blending
+		- [x] blending
 		- [ ] customization (borders, etc)
-		- [ ] editing
+		- [x] editing
 	- [x] footnotes
+		- [ ] select inside
 	- [ ] user notes
 	- [ ] marks
+		- [x] schema
+	- [ ] morpheme tooltip
 - [ ] loading + error messages
 	- [x] working on mobile
 	- [ ] better timeouts
 - [ ] bsb w/ proper schema
-	- [ ] good word tooltip
-		- [ ] morphemes
-		- [ ] source
+	- [ ] source word tooltip
 - [ ] good duckdb-wasm
 	- [ ] persistence
 - [ ] search
