@@ -2,9 +2,9 @@ import { StepMap } from "prosemirror-transform";
 // import { keymap } from "prosemirror-keymap";
 // import { undo, redo } from "prosemirror-history";
 import { EditorView, type NodeView } from "prosemirror-view";
-import { EditorState, PluginKey, Plugin, Transaction, TextSelection } from "prosemirror-state";
+import { EditorState, PluginKey, Plugin, Transaction } from "prosemirror-state";
 import type { Node } from "prosemirror-model";
-import { updatePositionFactory } from "./tooltip";
+import { selToRef, updatePositionFactory } from "./tooltip";
 import { autoUpdate } from "@floating-ui/dom";
 import "./footnote.css";
 
@@ -40,6 +40,7 @@ class FootnoteView implements NodeView {
 	open() {
 		this.tooltip = this.dom.appendChild(document.createElement("div"));
 		this.tooltip.classList.add("tooltip");
+		this.tooltip.role = "note";
 		this.tooltip.dir = "auto";
 		this.innerView = new EditorView(this.tooltip, {
 			state: EditorState.create({
@@ -60,11 +61,8 @@ class FootnoteView implements NodeView {
 			editable: () => this.outerView.editable,
 		});
 
-		const { reference, update } = updatePositionFactory(
-			this.outerView,
-			this.outerView.state.selection,
-			this.tooltip,
-		);
+		const reference = selToRef(this.outerView);
+		const update = updatePositionFactory(reference, this.tooltip, "top", false);
 		this.cleanup();
 		this.cleanup = autoUpdate(reference, this.tooltip, update);
 	}

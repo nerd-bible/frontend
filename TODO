@@ -1,4 +1,8 @@
 - [x] navigation
+	- [ ] to chapter/verse/word
+	- [ ] to wordId
+	- [ ] to book
+	- [ ] partial doc rendering
 - [x] sql console
   - [x] form
 	- [x] tabs
@@ -13,7 +17,6 @@
 	- [x] footnotes
 	- [ ] user notes
 	- [ ] marks
-		- [ ] which kinds?
 - [ ] loading + error messages
 	- [x] working on mobile
 	- [ ] better timeouts
@@ -24,14 +27,13 @@
 - [ ] good duckdb-wasm
 	- [ ] persistence
 - [ ] search
-	- [ ] better nav
-		- [ ] change focus (+ aria?)
-		- [ ] tooltips close
-		- [ ] transitions?
 	- [x] chapter + verse anchors
 	- [ ] algos
 		- [ ] vss + bm25
 - [ ] versioning
+
+confirm works with screenreaders
+- voiceover
 
 confirm works on older browsers
 - [ ] investigate free browserstack

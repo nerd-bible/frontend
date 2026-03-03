@@ -11,10 +11,10 @@ export default new Plugin({
 		},
 		apply(tr, old) {
 			old = old.map(tr.mapping, tr.doc);
-			const meta: string = tr.getMeta("annotate");
-			if (meta) {
+			const className: string = tr.getMeta("annotate");
+			if (className) {
 				const { from, to } = tr.selection;
-				const deco = Decoration.inline(from, to, { class: meta });
+				const deco = Decoration.inline(from, to, { class: className });
 				old = old.add(tr.doc, [deco]);
 			}
 			return old;

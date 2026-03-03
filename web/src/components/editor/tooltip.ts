@@ -5,6 +5,7 @@ import {
 	inline,
 	shift,
 	type ReferenceElement,
+	type Placement,
 } from "@floating-ui/dom";
 import { EditorView } from "prosemirror-view";
 import {
@@ -18,76 +19,77 @@ import {
 import type { PluginView } from "prosemirror-state";
 import "./tooltip.css";
 
-export function updatePositionFactory(
+export function selToRef(
 	view: EditorView,
-	selection: PmSelection,
-	target: HTMLElement,
-) {
-	// TODO: use prosemirror selection and figure out how to handle
-	// view.coordsAtPos returning `0 0 0 0` when start/end is on display:none
-	// node
-	let reference: ReferenceElement | undefined = document.getSelection()?.getRangeAt(0);
-	if (!reference) {
-		const { from, to } = selection;
-		reference = {
-			getBoundingClientRect: () => {
-				const start = view.coordsAtPos(from);
-				const end = view.coordsAtPos(to);
-				const rect = new DOMRect(
-					start.left,
-					start.top,
-					end.right - start.left,
-					end.bottom - start.top,
-				);
-				return rect;
-			},
-			// Support floating-ui's `inline`
-			getClientRects: () => {
-				const start = view.coordsAtPos(from);
-				const end = view.coordsAtPos(to);
-				return [
-					new DOMRect(start.left, start.top, 1, start.bottom - start.top),
-					new DOMRect(end.left, end.top, 1, end.bottom - end.top),
-				];
-			},
-		};
-	}
+	selection: PmSelection = view.state.selection,
+): ReferenceElement {
+	const { from, to } = selection;
 
 	return {
-		reference,
-		update() {
-			const computed = getComputedStyle(document.body);
-			const remToPx = (rem: string) =>
-				parseFloat(rem) * parseFloat(computed.fontSize);
-			const spacing = remToPx(computed.getPropertyValue("--spacing-inc"));
-			const selectionDirection = document.getSelection()?.direction;
+		getBoundingClientRect: () => {
+			const start = view.coordsAtPos(from);
+			const end = view.coordsAtPos(to);
+			const rect = new DOMRect(
+				start.left,
+				start.top,
+				end.right - start.left,
+				end.bottom - start.top,
+			);
+			return rect;
+		},
+		// Support floating-ui's `inline`
+		getClientRects: () => {
+			const start = view.coordsAtPos(from);
+			const end = view.coordsAtPos(to);
+			return [
+				new DOMRect(start.left, start.top, 1, start.bottom - start.top),
+				new DOMRect(end.left, end.top, 1, end.bottom - end.top),
+			];
+		},
+	};
+}
 
-			computePosition(reference, target, {
-				// Stay out of way of selection
-				placement: selectionDirection === "backward" ? "bottom" : "top",
-				middleware: [
-					offset(spacing * 2), // from `placement`
-					// flip(), // to opposite of `placement` if cannot fit
-					shift({
-						// if would overflow container shift to inside
-						crossAxis: true,
-						padding: {
-							left: parseFloat(computed.paddingLeft),
-							right: parseFloat(computed.paddingRight),
-							// needs to be taller than header because appears under header
-							// this is difficult to fix because of stacking contexts
-							// TODO: make stack above header and change to same as bottom
-							top: spacing * 14,
-							bottom: spacing * 2,
-						},
-					}),
-					inline({ padding: 0 }),
-				], // position at start/end of multilines
-			}).then(({ x, y }) => {
+export function updatePositionFactory(
+	reference: ReferenceElement,
+	target: HTMLElement,
+	placement?: Placement,
+	isInline?: boolean,
+) {
+	return () => {
+		const computed = getComputedStyle(document.body);
+		const remToPx = (rem: string) =>
+			parseFloat(rem) * parseFloat(computed.fontSize);
+		const spacing = remToPx(computed.getPropertyValue("--spacing-inc"));
+		const selectionDirection = document.getSelection()?.direction;
+		// Stay out of way of selection
+		placement ??= selectionDirection === "forward" ? "top" : "bottom";
+
+		const middleware = [
+			offset(spacing * 2), // from `placement`
+			// flip(), // to opposite of `placement` if cannot fit
+			shift({
+				padding: {
+					left: parseFloat(computed.paddingLeft),
+					right: parseFloat(computed.paddingRight),
+					// needs to be taller than header because appears under header
+					// this is difficult to fix because of stacking contexts
+					// TODO: make stack above header and change to same as bottom
+					top: spacing * 14,
+					bottom: spacing * 2,
+				},
+			}),
+		];
+		if (isInline) {
+			// position at start/end of multilines
+			middleware.push(inline({ padding: 0 }));
+		}
+
+		computePosition(reference, target, { placement, middleware }).then(
+			({ x, y }) => {
 				target.style.left = `${x}px`;
 				target.style.top = `${y}px`;
-			});
-		},
+			},
+		);
 	};
 }
 
@@ -98,7 +100,6 @@ class SelectionTooltipPlugin implements PluginView {
 	/** Stop updating tooltip position */
 	cleanup = () => {};
 
-	mousedown: (ev: MouseEvent) => void;
 	contextMenu: (ev: PointerEvent) => void;
 	selectionchange: () => void;
 	selectedState?: EditorState;
@@ -107,9 +108,6 @@ class SelectionTooltipPlugin implements PluginView {
 		this.view = view;
 		this.target = target;
 
-		this.mousedown = (ev: MouseEvent) => {
-			if (!this.target.contains(ev.target as any)) this.close();
-		};
 		this.selectionchange = () => {
 			// Workaround Chrome issue:
 			// https://github.com/ProseMirror/prosemirror/issues/1563
@@ -120,8 +118,9 @@ class SelectionTooltipPlugin implements PluginView {
 				this.view.dispatch(tr);
 			}
 		};
-		this.contextMenu = (ev) => ev.preventDefault();
-		document.addEventListener("mousedown", this.mousedown);
+		this.contextMenu = (ev) => {
+			if (this.view.dom.contains(ev.target as any)) ev.preventDefault();
+		};
 		document.addEventListener("selectionchange", this.selectionchange);
 		// Replace android's context menu with our own.
 		document.addEventListener("contextmenu", this.contextMenu);
@@ -149,11 +148,15 @@ class SelectionTooltipPlugin implements PluginView {
 			return;
 		}
 
-		const { reference, update } = updatePositionFactory(
-			this.view,
-			state.selection,
-			this.target,
-		);
+		// TODO: use prosemirror selection and figure out how to handle
+		// view.coordsAtPos returning `0 0 0 0` when start/end is on display:none
+		// node
+		const sel = document.getSelection();
+		const reference: ReferenceElement | undefined = sel?.rangeCount
+			? sel?.getRangeAt(0)
+			: selToRef(this.view, state.selection);
+
+		const update = updatePositionFactory(reference, this.target, undefined, true);
 		this.cleanup();
 		this.cleanup = autoUpdate(reference, this.target, update);
 
@@ -172,7 +175,6 @@ class SelectionTooltipPlugin implements PluginView {
 
 	destroy() {
 		this.close();
-		document.removeEventListener("mousedown", this.mousedown);
 		document.removeEventListener("selectionchange", this.selectionchange);
 		document.removeEventListener("contextmenu", this.contextMenu);
 	}

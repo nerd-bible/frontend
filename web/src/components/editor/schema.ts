@@ -10,6 +10,7 @@ export const bible = new Schema({
 		paragraph: {
 			group: "block",
 			content: "inline*",
+			attrs: { class: {} },
 			/*
 			 * Copy/pasting inline elements that may contain block elements (like
 			 * footnotes) does not work if implicit closing tags (`p`, `li`, `dt`,
@@ -18,13 +19,12 @@ export const bible = new Schema({
 			 *
 			 * https://discuss.prosemirror.net/t/pasting-footnotes-with-content/2479/5
 			 */
-			toDOM: () => ["p", 0],
+			toDOM: (node) => ["p", node.attrs, 0],
 		},
 		chapterNum: {
 			group: "block",
-			attrs: { id: {} },
 			// This avoids chapter numbers being decorated.
-			toDOM: (node) => ["h2", node.attrs, 0],
+			toDOM: () => ["h2", 0],
 		},
 		heading: {
 			group: "block",
@@ -45,7 +45,7 @@ export const bible = new Schema({
 			group: "inline",
 			content: "text*",
 			inline: true,
-			toDOM: (node) => ["sup", { ...node.attrs, class: "verseNum" }, node.textContent],
+			toDOM: (node) => ["sup", { class: "verseNum" }, node.textContent],
 		},
 		// Footnotes are semantically `inline+ block+` where the `inline+` is the
 		// content and `block+` is its footnote.
@@ -69,7 +69,11 @@ export const bible = new Schema({
 			toDOM: () => ["strong", 0],
 		},
 		em: {
-			toDOM: () => ["strong", 0],
+			toDOM: () => ["em", 0],
+		},
+		quote: {
+			attrs: { speaker: {} },
+			toDOM: () => ["q", 0],
 		},
 	},
 });

@@ -11,6 +11,7 @@
 	import { gapCursor } from "prosemirror-gapcursor";
 	import "prosemirror-view/style/prosemirror.css";
 	import "prosemirror-gapcursor/style/gapcursor.css";
+	import { toggleMark } from "prosemirror-commands";
 
 	type Word = {
 		index: number,
@@ -41,7 +42,7 @@
 			paragraph.push(bible.text(text));
 			text = '';
 		}
-		let nextParaClass = '';
+		let nextParaClass = words.at(0)?.newpar ?? '';
 		function flushPara(nextClass: string) {
 			flushText();
 			if (!paragraph.length) return;
@@ -64,7 +65,7 @@
 				flushPara(w.newpar);
 			}
 			if (chapter !== w.chapter && w.chapter) {
-			 flushPara("chapter");
+				if (textBlocking === "chapter") flushPara("chapter");
 				const string = bible.text(w.chapter.toString());
 				paragraphs.push(bible.nodes.chapterNum.create({ id: w.chapter.toString() }, string));
 				chapter = w.chapter;
@@ -73,7 +74,7 @@
 				if (textBlocking === "verse") flushPara("verse");
 				if (w.verse) {
 					flushText();
-					const string = bible.text(w.verse + " ");
+					const string = bible.text(w.verse);
 					paragraph.push(bible.nodes.verseNum.create({ id: `${chapter}:${w.verse}` }, string));
 				}
 				verse = w.verse;
@@ -84,7 +85,7 @@
 			}
 			if (i && i % 100 == 0) {
 				flushText();
-				const note = bible.nodes.paragraph.create({}, bible.text("hello there the angel from my nightmare it's funny how i meet you here tonight i love pie and filling that's cherry it's so yummy in ym tummy"));
+				const note = bible.nodes.paragraph.create(null, bible.text("hello there the angel from my nightmare it's funny how i meet you here tonight i love pie and filling that's cherry it's so yummy in ym tummy"));
 				paragraph.push(bible.nodes.footnote.create({}, note));
 			}
 
@@ -138,14 +139,9 @@
 	});
 </script>
 <svelte:element this={"style"}>
-	{Object.entries(JSON.parse(settings.userHighlights))
-		.map(([k, v]) => `.${k}{${v}}`)
-		.join("")}
-	{`
-	.red.green {
-		background-color: purple;
-	}
-	`}
+	{#each Object.entries(JSON.parse(settings.userHighlights)) as [k, v]}
+		{`.${k}{${v}}`}
+	{/each}
 </svelte:element>
 <div>
 	not editor
@@ -172,6 +168,14 @@
 			{k}
 		</button>
 	{/each}
+	<button
+		onclick={() => {
+			const fn = toggleMark(bible.marks.strong);
+			fn(view.state, tr => view.dispatch(tr));
+		}}
+	>
+		strong
+	</button>
 	<button onclick={() => {
 		if (!view) return;
 
@@ -229,7 +233,6 @@
 	}
 	&[data-chapter-display=none] :global(h2) {
 		display: none;
-		width: 100%;
 	}
 	&[data-chapter-display=small] :global(h2) {
 		opacity: 0.5;
@@ -250,6 +253,20 @@
 
 	:global(a) {
 		text-decoration: none;
+	}
+
+	:global(p) {
+		/* follow dir instead of being all smart */
+		unicode-bidi: bidi-override;
+	}
+	:global(sup) {
+		/* except here, be smart here! */
+		unicode-bidi: isolate;
+	}
+
+	:global(.verseNum) {
+		opacity: 0.75;
+		padding-inline-end: --spacing(1);
 	}
 }
 </style>

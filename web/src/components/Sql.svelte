@@ -40,7 +40,7 @@ function onSubmit(ev: SubmitEvent) {
 		</thead>
 		<tbody>
 			<!-- TODO: virtual scroll -->
-			{#each { length: Math.min(queryResults.numRows, 100) }, i}
+			{#each { length: queryResults.numRows }, i}
 				<tr>
 					{#each queryResults.names as n}
 						<td>{queryResults.at(i)[n]}</td>

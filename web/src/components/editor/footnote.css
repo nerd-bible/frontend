@@ -2,7 +2,7 @@
 	counter-reset: footnote;
 }
 .footnote {
-	&::after {
+	&::before {
 		cursor: pointer;
 		content: counter(footnote, lower-alpha);
 		counter-increment: footnote;
