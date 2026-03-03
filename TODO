@@ -10,12 +10,12 @@
 		- [ ] blending
 		- [ ] customization (borders, etc)
 		- [ ] editing
-	- [ ] footnotes
+	- [x] footnotes
 	- [ ] user notes
 	- [ ] marks
 		- [ ] which kinds?
 - [ ] loading + error messages
-	- [ ] working on mobile
+	- [x] working on mobile
 	- [ ] better timeouts
 - [ ] bsb w/ proper schema
 	- [ ] good word tooltip

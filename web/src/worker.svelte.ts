@@ -19,21 +19,19 @@ worker.addEventListener("message", (ev) => {
 async function ready(): Promise<boolean> {
 	if (isReady) return true;
 	
-	return new Promise((res, rej) => {
+	return new Promise((res) => {
 		worker.addEventListener("message", (ev) => ev.data.id === -1 && res(true));
-		setTimeout(() => rej("timeout"), 5000);
 	});
 }
 
 export async function request(msg: Message): Promise<any> {
 	await ready();
 
-	return new Promise((res, rej) => {
+	return new Promise((res) => {
 		const req = msg as Request;
 		req.id = requestId++;
 		pending.set(req.id, (data) => res(data));
 		worker.postMessage(req);
-		setTimeout(() => rej("timeout"), 5000);
 	});
 }
 
@@ -43,11 +41,10 @@ export const firstIngestRequest = request({ type: "ingestUrl", data: { url } });
 export async function query(query: string): Promise<Table> {
 	await ready();
 
-	return new Promise((res, rej) => {
+	return new Promise((res) => {
 		const req: Request = { type: "query", id: requestId++, data: { query } };
 		pending.set(req.id, (data) => res(tableFromIPC(data, { useProxy: true })));
 		worker.postMessage(req);
-		setTimeout(() => rej("timeout"), 5000);
 	});
 }
 

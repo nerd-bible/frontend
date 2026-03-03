@@ -1,20 +1,22 @@
-// We cannot use @prosemirror-adapter because overriding `stopEvent` and
-// `update` with context from the component are too difficult.
-//
-// Downside is we don't get nice svelte templates and CSS.
 import { StepMap } from "prosemirror-transform";
 // import { keymap } from "prosemirror-keymap";
 // import { undo, redo } from "prosemirror-history";
 import { EditorView, type NodeView } from "prosemirror-view";
-import { EditorState, Transaction } from "prosemirror-state";
+import { EditorState, PluginKey, Plugin, Transaction, TextSelection } from "prosemirror-state";
 import type { Node } from "prosemirror-model";
+import { updatePositionFactory } from "./tooltip";
+import { autoUpdate } from "@floating-ui/dom";
+import "./footnote.css";
 
-export default class FootnoteView implements NodeView {
+class FootnoteView implements NodeView {
 	node: Node;
 	outerView: EditorView;
 	innerView: EditorView | null;
+	tooltip?: HTMLElement;
 	dom: HTMLElement;
 	getPos: () => number | undefined;
+	/** Stop updating tooltip position */
+	cleanup = () => {};
 
 	constructor(node: Node, view: EditorView, getPos: () => number | undefined) {
 		this.node = node;
@@ -32,13 +34,14 @@ export default class FootnoteView implements NodeView {
 
 	deselectNode() {
 		this.dom.classList.remove("ProseMirror-selectednode");
-		if (this.innerView) this.close();
+		if (this.innerView) this.destroy();
 	}
 
 	open() {
-		let tooltip = this.outerView.dom.appendChild(document.createElement("div"));
-		tooltip.className = "tooltip";
-		this.innerView = new EditorView(tooltip, {
+		this.tooltip = this.dom.appendChild(document.createElement("div"));
+		this.tooltip.classList.add("tooltip");
+		this.tooltip.dir = "auto";
+		this.innerView = new EditorView(this.tooltip, {
 			state: EditorState.create({
 				doc: this.node,
 				// plugins: [
@@ -49,22 +52,28 @@ export default class FootnoteView implements NodeView {
 				// ],
 			}),
 			dispatchTransaction: this.dispatchInner.bind(this),
-			handleDOMEvents: {
-				mousedown: () => {
-					// Kludge to prevent issues due to the fact that the whole
-					// footnote is node-selected (and thus DOM-selected) when
-					// the parent editor is focused.
-					if (this.outerView.hasFocus()) this.innerView?.focus();
-				},
-			},
+			// handleDOMEvents: {
+			// 	mousedown: () => {
+			// 		if (this.outerView.hasFocus()) this.innerView?.focus();
+			// 	},
+			// },
 			editable: () => this.outerView.editable,
 		});
+
+		const { reference, update } = updatePositionFactory(
+			this.outerView,
+			this.outerView.state.selection,
+			this.tooltip,
+		);
+		this.cleanup();
+		this.cleanup = autoUpdate(reference, this.tooltip, update);
 	}
 
-	close() {
+	destroy() {
 		this.innerView?.destroy();
 		this.innerView = null;
-		this.dom.textContent = "";
+		this.tooltip?.remove();
+		this.cleanup();
 	}
 
 	dispatchInner(tr: Transaction) {
@@ -111,10 +120,6 @@ export default class FootnoteView implements NodeView {
 		return true;
 	}
 
-	destroy() {
-		if (this.innerView) this.close();
-	}
-
 	stopEvent(event: Event) {
 		return this.innerView?.dom.contains(event.target as any) ?? false;
 	}
@@ -123,3 +128,13 @@ export default class FootnoteView implements NodeView {
 		return true;
 	}
 }
+
+export const key = new PluginKey("footnote");
+export default new Plugin({
+	key,
+	props: {
+		nodeViews: {
+			footnote: (node, view, getPos) => new FootnoteView(node, view, getPos),
+		},
+	},
+});

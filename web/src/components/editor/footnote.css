@@ -1,0 +1,14 @@
+.editor p {
+	counter-reset: footnote;
+}
+.footnote {
+	&::after {
+		cursor: pointer;
+		content: counter(footnote, lower-alpha);
+		counter-increment: footnote;
+	}
+
+	.tooltip {
+		line-height: 1.2;
+	}
+}

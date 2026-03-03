@@ -1,13 +1,16 @@
 <script lang="ts">
 	import { settings } from "../../settings.svelte";
 	import type { Table } from "@uwdata/flechette";
-	import { Decoration, DecorationSet, EditorView } from "prosemirror-view";
-	import { EditorState, Selection, Plugin, TextSelection } from "prosemirror-state";
+	import { DecorationSet, EditorView } from "prosemirror-view";
+	import { EditorState, TextSelection } from "prosemirror-state";
 	import { Node as PmNode } from 'prosemirror-model';
 	import { bible } from "./schema";
 	import annotationPlugin, { key } from "./annotations";
 	import selectionTooltipPlugin from "./tooltip";
-	import type { Attachment } from "svelte/attachments";
+	import footnotePlugin from "./footnote";
+	import { gapCursor } from "prosemirror-gapcursor";
+	import "prosemirror-view/style/prosemirror.css";
+	import "prosemirror-gapcursor/style/gapcursor.css";
 
 	type Word = {
 		index: number,
@@ -21,8 +24,8 @@
 	};
 	interface Props {
 		words: Table<Word>;
-		dir: "ltr" | "rtl";
 		id: string;
+		dir: "ltr" | "rtl";
 	}
 
 	const { words, dir }: Props = $props();
@@ -81,7 +84,7 @@
 			}
 			if (i && i % 100 == 0) {
 				flushText();
-				const note = bible.text("hello");
+				const note = bible.nodes.paragraph.create({}, bible.text("hello there the angel from my nightmare it's funny how i meet you here tonight i love pie and filling that's cherry it's so yummy in ym tummy"));
 				paragraph.push(bible.nodes.footnote.create({}, note));
 			}
 
@@ -114,12 +117,14 @@
 					// with others.
 					selectionTooltipPlugin(tooltipRef),
 					annotationPlugin,
+					footnotePlugin,
+					gapCursor(),
 					// new Plugin({
 					// 	props: {
 					// 		decorations(state) {
 					// 			return state.selection.empty ? null : DecorationSet.create(
 					// 				state.doc,
-					// 				[Decoration.inline(state.selection.from, state.selection.to, {class: 'selection'})]
+					// 				[Decoration.inline(state.selection.from, state.selection.to, {style: 'background:yellow'})]
 					// 			)
 					// 		}
 					// 	}
@@ -155,15 +160,13 @@
 	data-chapter-display={settings.chapterNumDisplay}
 >
 </div>
-<div class="tooltip" bind:this={tooltipRef}>
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<div class="tooltip" bind:this={tooltipRef} onmousedown={ev => ev.preventDefault()}>
 	{#each Object.keys(JSON.parse(settings.userHighlights)) as k}
 		<button
 			onclick={() => {
 				view?.dispatch(view.state.tr.setMeta("annotate", k));
-			}}
-			onmousedown={e => {
-				e.preventDefault();
-				view?.focus()
+				document.getSelection()?.removeAllRanges();
 			}}
 		>
 			{k}
@@ -195,7 +198,7 @@
 		display: none;
 	}
 
-	:global(p) {
+	:global(p:not(:last-child)) {
 		margin-bottom: --spacing(4);
 	}
 
@@ -248,45 +251,5 @@
 	:global(a) {
 		text-decoration: none;
 	}
-
-	/* Modified prosemirror.css */
-	:global(.ProseMirror) {
-		word-wrap: break-word;
-		white-space: pre-wrap;
-		white-space: break-spaces;
-		font-variant-ligatures: none;
-		font-feature-settings: "liga" 0;
-	}
-}
-.tooltip {
-	position: absolute;
-	background: var(--color-bg-300);
-	filter: drop-shadow(var(--drop-shadow-xl));
-	border-radius: var(--radius-md);
-
-	user-select: none;
-	display: flex;
-	gap: --spacing(1);
-	padding: --spacing(2);
-
-	/* If need to remove overflow-x hidden on body, add these + inner wrapper element: */
-	/* https://stackoverflow.com/questions/9933092/css-prevent-absolute-positioned-element-from-overflowing-body */
-	/* right: 0; */
-	/* overflow: hidden; */
-}
-/** Footnote */
-:global(editor p) {
-	counter-reset: footnote;
-}
-:global(.footnote) {
-	cursor: pointer;
-
-	&::after {
-		content: counter(footnote, lower-alpha);
-		counter-increment: footnote;
-	}
-}
-:global(.selection) {
-	background-color: yellow;
 }
 </style>
