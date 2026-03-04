@@ -1,17 +1,13 @@
 <script lang="ts">
 	import { settings } from "../../settings.svelte";
 	import type { Table } from "@uwdata/flechette";
-	import { DecorationSet, EditorView } from "prosemirror-view";
+	import { EditorView } from "prosemirror-view";
 	import { EditorState, TextSelection } from "prosemirror-state";
 	import { Node as PmNode } from 'prosemirror-model';
 	import { bible } from "./schema";
-	import annotationPlugin, { key } from "./annotations";
-	import selectionTooltipPlugin from "./tooltip";
-	import footnotePlugin from "./footnote";
-	import { gapCursor } from "prosemirror-gapcursor";
-	import "prosemirror-view/style/prosemirror.css";
-	import "prosemirror-gapcursor/style/gapcursor.css";
-	import { toggleMark } from "prosemirror-commands";
+	import * as plugins from "./plugins";
+	import "./prosemirror.css";
+	import "./schema.css";
 
 	type Word = {
 		index: number,
@@ -94,13 +90,13 @@
 		}
 		flushPara("");
 
-		const res = bible.nodes.doc.create(null, paragraphs); 
-		return res;
+		return bible.nodes.doc.create(null, paragraphs); 
 	});
 
 	let tooltipRef: HTMLElement;
 	let editorRef: HTMLElement;
 	let view: EditorView;
+
 	$effect(() => {
 		if (!tooltipRef || !editorRef) return;
 
@@ -116,20 +112,9 @@
 					// prosemirror-view.
 					// As a bonus the editor isn't dependent on Svelte and is sharable
 					// with others.
-					annotationPlugin,
-					footnotePlugin,
-					selectionTooltipPlugin(tooltipRef),
-					// gapCursor(),
-					// new Plugin({
-					// 	props: {
-					// 		decorations(state) {
-					// 			return state.selection.empty ? null : DecorationSet.create(
-					// 				state.doc,
-					// 				[Decoration.inline(state.selection.from, state.selection.to, {style: 'background:yellow'})]
-					// 			)
-					// 		}
-					// 	}
-					// })
+					plugins.annotation,
+					plugins.footnote,
+					plugins.bubbleMenu(tooltipRef),
 				],
 				selection: TextSelection.between(doc.resolve(0), doc.resolve(0)),
 			}),
@@ -138,17 +123,12 @@
 		return () => view.destroy();
 	});
 </script>
-<svelte:element this={"style"}>
-	{#each Object.entries(JSON.parse(settings.userHighlights)) as [k, v]}
-		{`.${k}{${v}}`}
-	{/each}
-</svelte:element>
 <div>
 	not editor
 	<button>not editor</button>
 </div>
 <div
-	class="editor"
+	class="nb-bible"
 	{dir}
 	bind:this={editorRef}
 	class:hide-verse-num={settings.showVerseNum !== "true"}
@@ -180,79 +160,3 @@
 	not editor
 	<button>not editor</button>
 </div>
-<style>
-.editor {
-	/* Offset allows room for verse and inline chapter numbers */
-	line-height: calc(var(--font-size) + var(--line-height-offset));
-
-	&.hide-verse-num :global(.verseNum),
-	&.hide-footnotes :global(.footnote),
-	&[data-chapter-display=float] :global(h2 + p > sup:first-child) {
-		display: none;
-	}
-
-	:global(p:not(:last-child)) {
-		margin-bottom: --spacing(4);
-	}
-
-	:global(h2) {
-		font-size: 3em;
-		text-align: center;
-		user-select: none;
-	}
-	&[data-chapter-display=normal] :global(h2) {
-		line-height: normal;
-		margin-bottom: --spacing(1);
-
-		&:first-child {
-			margin-top: 0;
-		}
-	}
-	&[data-chapter-display=float] :global(h2) {
-		/* TODO: make work in older browsers */
-		float: inline-start;
-		margin-inline-start: --spacing(-1);
-		margin-inline-end: --spacing(5);
-		/* eyeballed to be about two lines tall for inline */
-		/* must keep in sync with font-size */
-		padding-top: calc((var(--font-size) + var(--line-height-offset)) / 2);
-	}
-	&[data-chapter-display=float] :global(h2 + p) {
-		/* make space for chapter number */
-		min-height: calc((var(--font-size) + var(--line-height-offset)) * 2);
-	}
-	&[data-chapter-display=none] :global(h2) {
-		display: none;
-	}
-	&[data-chapter-display=small] :global(h2) {
-		opacity: 0.5;
-		font-size: 0.5em;
-		position: relative;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: --spacing(4);
-
-		&::before, &::after {
-			content: "";
-			flex-grow: 1;
-			/* width: --spacing(12); */
-			border-bottom: 1px solid;
-		}
-	}
-
-	:global(a) {
-		text-decoration: none;
-	}
-
-	:global(p) {
-		/* follow dir instead of being all smart */
-		unicode-bidi: bidi-override;
-	}
-
-	:global(.verseNum) {
-		opacity: 0.75;
-		padding-inline-end: --spacing(1);
-	}
-}
-</style>

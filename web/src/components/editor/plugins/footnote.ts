@@ -9,7 +9,7 @@ import {
 	Transaction,
 } from "prosemirror-state";
 import type { Node } from "prosemirror-model";
-import { selToRef, updatePositionFactory } from "./tooltip";
+import { selToRef, updatePositionFactory } from "./bubbleMenu";
 import { autoUpdate } from "@floating-ui/dom";
 import "./footnote.css";
 

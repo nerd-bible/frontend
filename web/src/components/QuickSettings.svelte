@@ -80,7 +80,7 @@ form {
 		align-items: center;
 	}
 
-	& > a:hover {
+	& > *:hover {
 		background: var(--color-bg-100);
 	}
 

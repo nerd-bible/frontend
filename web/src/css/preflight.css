@@ -24,9 +24,6 @@
 		@apply box-focus;
 	}
 }
-.ProseMirror-selectednode {
-	@apply box-focus;
-}
 
 /**
  * 1. Use a consistent sensible line-height in all browsers.
@@ -301,14 +298,15 @@ input[type="checkbox"] {
 	background: var(--color-secondary);
 	cursor: pointer;
 
-	width: 1.5rem;
-	height: 1.5rem;
+	line-height: 0.3;
 	font-size: 2.5rem;
 
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	&:checked::before {
+	&::before {
 		content: "✓";
+		visibility: hidden;
+	}
+
+	&:checked::before {
+		visibility: visible;
 	}
 }

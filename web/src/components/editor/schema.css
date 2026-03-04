@@ -1,0 +1,77 @@
+.nb-bible {
+	/* Offset allows room for verse and inline chapter numbers */
+	line-height: calc(var(--font-size) + var(--line-height-offset));
+
+	/* h2 = chapter numbers */
+	/* h3 = heading */
+
+	&.hide-verse-num .verse-num,
+	&.hide-footnotes .footnote,
+	&[data-chapter-display=float] h2 + p > sup:first-child {
+		display: none;
+	}
+
+	p {
+		margin-bottom: --spacing(4);
+	}
+
+	h2 {
+		font-size: 3em;
+		text-align: center;
+		user-select: none;
+	}
+	&[data-chapter-display=normal] h2 {
+		line-height: normal;
+		margin-bottom: --spacing(1);
+
+		&:first-child {
+			margin-top: 0;
+		}
+	}
+	&[data-chapter-display=float] h2 {
+		/* TODO: make work in older browsers */
+		float: inline-start;
+		margin-inline-start: --spacing(-1);
+		margin-inline-end: --spacing(5);
+		/* eyeballed to be about two lines tall for inline */
+		/* must keep in sync with font-size */
+		padding-top: calc((var(--font-size) + var(--line-height-offset)) / 2);
+	}
+	&[data-chapter-display=float] h2 + p {
+		/* make space for chapter number */
+		min-height: calc((var(--font-size) + var(--line-height-offset)) * 2);
+	}
+	&[data-chapter-display=none] h2 {
+		display: none;
+	}
+	&[data-chapter-display=small] h2 {
+		opacity: 0.5;
+		font-size: 0.5em;
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: --spacing(4);
+
+		&::before, &::after {
+			content: "";
+			flex-grow: 1;
+			/* width: --spacing(12); */
+			border-bottom: 1px solid;
+		}
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	p {
+		/* follow dir instead of being all smart */
+		unicode-bidi: bidi-override;
+	}
+
+	.verse-num {
+		opacity: 0.75;
+		padding-inline-end: --spacing(1);
+	}
+}

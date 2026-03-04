@@ -17,7 +17,7 @@ import {
 	Selection as PmSelection,
 } from "prosemirror-state";
 import type { PluginView } from "prosemirror-state";
-import "./tooltip.css";
+import "./bubbleMenu.css";
 
 export function selToRef(
 	view: EditorView,

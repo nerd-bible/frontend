@@ -44,7 +44,7 @@ export const bible = new Schema({
 			group: "inline",
 			content: "text*",
 			inline: true,
-			toDOM: (node) => ["sup", { class: "verseNum", dir: "ltr" }, node.textContent],
+			toDOM: (node) => ["sup", { class: "verse-num", dir: "ltr" }, node.textContent],
 		},
 		// Footnotes are semantically `inline+ block+` where the `inline+` is the
 		// content and `block+` is its footnote.
