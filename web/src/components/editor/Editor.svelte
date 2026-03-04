@@ -96,6 +96,7 @@
 	let tooltipRef: HTMLElement;
 	let editorRef: HTMLElement;
 	let view: EditorView;
+	let editable = $state(false);
 
 	$effect(() => {
 		if (!tooltipRef || !editorRef) return;
@@ -118,15 +119,15 @@
 				],
 				selection: TextSelection.between(doc.resolve(0), doc.resolve(0)),
 			}),
-			editable: () => false,
+			editable: () => editable,
 		});
 		return () => view.destroy();
 	});
 </script>
-<div>
-	not editor
-	<button>not editor</button>
-</div>
+<label>
+	editable
+	<input type="checkbox" bind:checked={editable}>
+</label>
 <div
 	class="nb-bible"
 	{dir}
@@ -155,8 +156,4 @@
 			{k}
 		</button>
 	{/each}
-</div>
-<div>
-	not editor
-	<button>not editor</button>
 </div>

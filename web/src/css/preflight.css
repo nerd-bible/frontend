@@ -265,6 +265,7 @@ input[type="range"] {
 	appearance: none;
 	background: transparent;
 	cursor: pointer;
+	padding: --spacing(2) 0;
 
 	&:focus {
 		/* outline: none; */
@@ -298,15 +299,23 @@ input[type="checkbox"] {
 	background: var(--color-secondary);
 	cursor: pointer;
 
-	line-height: 0.3;
-	font-size: 2.5rem;
-
-	&::before {
-		content: "✓";
-		visibility: hidden;
-	}
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: --spacing(1);
+	padding-bottom: --spacing(2);
+	width: 2rem;
+	height: 2rem;
 
 	&:checked::before {
-		visibility: visible;
+		content: "";
+		width: 45%;
+		aspect-ratio: 1 / 2;
+		transform: rotate(35deg);
+
+		--width: 0.3rem;
+		--color: var(--color-fg);
+		border-bottom: var(--width) solid var(--color);
+		border-right: var(--width) solid var(--color);
 	}
 }

@@ -89,10 +89,6 @@ form {
 		padding: --spacing(2);
 		background: var(--color-bg-300);
 	}
-
-	input {
-		padding: --spacing(2) 0;
-	}
 }
 :global(#popover) {
 	position: absolute;
