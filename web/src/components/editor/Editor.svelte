@@ -86,7 +86,7 @@
 			if (i && i % 100 == 0) {
 				flushText();
 				const note = bible.nodes.paragraph.create(null, bible.text("hello there the angel from my nightmare it's funny how i meet you here tonight i love pie and filling that's cherry it's so yummy in ym tummy"));
-				paragraph.push(bible.nodes.footnote.create({}, note));
+				paragraph.push(bible.nodes.footnote.create(null, note));
 			}
 
 			text += w.form;
@@ -116,10 +116,10 @@
 					// prosemirror-view.
 					// As a bonus the editor isn't dependent on Svelte and is sharable
 					// with others.
-					selectionTooltipPlugin(tooltipRef),
 					annotationPlugin,
 					footnotePlugin,
-					gapCursor(),
+					selectionTooltipPlugin(tooltipRef),
+					// gapCursor(),
 					// new Plugin({
 					// 	props: {
 					// 		decorations(state) {
@@ -138,6 +138,11 @@
 		return () => view.destroy();
 	});
 </script>
+<svelte:element this={"style"}>
+	{#each Object.entries(JSON.parse(settings.userHighlights)) as [k, v]}
+		{`.${k}{${v}}`}
+	{/each}
+</svelte:element>
 <div>
 	not editor
 	<button>not editor</button>
@@ -212,7 +217,8 @@
 		/* must keep in sync with font-size */
 		padding-top: calc((var(--font-size) + var(--line-height-offset)) / 2);
 	}
-	&[data-chapter-display=float] :global(p) {
+	&[data-chapter-display=float] :global(h2 + p) {
+		/* make space for chapter number */
 		min-height: calc((var(--font-size) + var(--line-height-offset)) * 2);
 	}
 	&[data-chapter-display=none] :global(h2) {
@@ -242,10 +248,6 @@
 	:global(p) {
 		/* follow dir instead of being all smart */
 		unicode-bidi: bidi-override;
-	}
-	:global(sup) {
-		/* except here, be smart here! */
-		unicode-bidi: isolate;
 	}
 
 	:global(.verseNum) {

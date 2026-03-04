@@ -108,29 +108,33 @@ class SelectionTooltipPlugin implements PluginView {
 		this.view = view;
 		this.target = target;
 
-		this.selectionchange = () => {
-			// Workaround Chrome issue:
-			// https://github.com/ProseMirror/prosemirror/issues/1563
-			if (!this.selectionInView()) {
-				const { doc } = this.view.state;
-				const atStart = TextSelection.between(doc.resolve(0), doc.resolve(0));
-				const tr = this.view.state.tr.setSelection(atStart);
-				this.view.dispatch(tr);
-			}
-		};
-		this.contextMenu = (ev) => {
-			if (this.view.dom.contains(ev.target as any)) ev.preventDefault();
-		};
-		document.addEventListener("selectionchange", this.selectionchange);
+		document.addEventListener(
+			"selectionchange",
+			(this.selectionchange = () => {
+				// Workaround clicking inside selection causes DOM to deselect, but not
+				// prosemirror when editable is false on Chrome
+				// https://github.com/ProseMirror/prosemirror/issues/1563
+				const s = document.getSelection();
+				if (
+					this.view.state.selection instanceof TextSelection &&
+					!this.view.dom.contains(s?.anchorNode ?? null)
+				) {
+					const { doc } = this.view.state;
+					const atStart = TextSelection.between(doc.resolve(0), doc.resolve(0));
+					const tr = this.view.state.tr.setSelection(atStart);
+					this.view.dispatch(tr);
+				}
+			}),
+		);
 		// Replace android's context menu with our own.
-		document.addEventListener("contextmenu", this.contextMenu);
+		document.addEventListener(
+			"contextmenu",
+			(this.contextMenu = (ev) => {
+				if (this.view.dom.contains(ev.target as any)) ev.preventDefault();
+			}),
+		);
 
 		this.close();
-	}
-
-	selectionInView() {
-		const s = document.getSelection();
-		return this.view.dom.contains(s?.anchorNode ?? null);
 	}
 
 	update(view = this.view) {
@@ -156,7 +160,12 @@ class SelectionTooltipPlugin implements PluginView {
 			? sel?.getRangeAt(0)
 			: selToRef(this.view, state.selection);
 
-		const update = updatePositionFactory(reference, this.target, undefined, true);
+		const update = updatePositionFactory(
+			reference,
+			this.target,
+			undefined,
+			true,
+		);
 		this.cleanup();
 		this.cleanup = autoUpdate(reference, this.target, update);
 

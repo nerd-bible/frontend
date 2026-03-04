@@ -1,5 +1,4 @@
 import { Schema } from "prosemirror-model";
-import { ref } from "@nerd-bible/core";
 
 export const bible = new Schema({
 	nodes: {
@@ -45,7 +44,7 @@ export const bible = new Schema({
 			group: "inline",
 			content: "text*",
 			inline: true,
-			toDOM: (node) => ["sup", { class: "verseNum" }, node.textContent],
+			toDOM: (node) => ["sup", { class: "verseNum", dir: "ltr" }, node.textContent],
 		},
 		// Footnotes are semantically `inline+ block+` where the `inline+` is the
 		// content and `block+` is its footnote.
@@ -60,7 +59,7 @@ export const bible = new Schema({
 			// This makes the view treat the node as a leaf, even though it
 			// technically has content
 			atom: true,
-			toDOM: () => ["sup", { class: "footnote" }, 0],
+			toDOM: () => ["sup", { class: "footnote", dir: "ltr" }, 0],
 			parseDOM: [{ tag: "sup.footnote" }],
 		},
 	},

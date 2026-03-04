@@ -10,7 +10,8 @@
 	width: max-content;
 	/* keep in sync with body left + right padding */
 	max-width: calc(100vw - --spacing(8));
-	z-index: 10;
+	/* above other editor content but below header */
+	z-index: 2;
 
 	/* If need to remove overflow-x hidden on body, add these + inner wrapper element: */
 	/* https://stackoverflow.com/questions/9933092/css-prevent-absolute-positioned-element-from-overflowing-body */

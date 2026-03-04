@@ -55,17 +55,15 @@ export default new Plugin({
 				const existingClass = existing
 					.filter((d) => d.spec.class === annotation.class)
 					.sort((d) => d.from);
-
 				const shouldAdd =
 					existingClass.length === 0 ||
 					from < existingClass[0].from ||
 					to > existingClass[existingClass.length - 1].to;
+
 				if (shouldAdd) {
-					console.log("add", existingClass);
 					decorations = decorations.add(tr.doc, [makeDeco(from, to)]);
 					decorations = decorations.remove(existingClass);
 				} else {
-					console.log("remove", [...existingClass]);
 					// find ranges to delete
 					decorations = decorations.add(tr.doc, [
 						makeDeco(existingClass[0].from, from),
@@ -103,7 +101,6 @@ export default new Plugin({
 				.join("\n");
 			const toGradient = (color: string) =>
 				`linear-gradient(to left, ${color}, ${color})`;
-			console.log(state.overlaps);
 			css += "\n";
 			css += state.overlaps
 				.keys()

@@ -2,7 +2,12 @@ import { StepMap } from "prosemirror-transform";
 // import { keymap } from "prosemirror-keymap";
 // import { undo, redo } from "prosemirror-history";
 import { EditorView, type NodeView } from "prosemirror-view";
-import { EditorState, PluginKey, Plugin, Transaction } from "prosemirror-state";
+import {
+	EditorState,
+	PluginKey,
+	Plugin,
+	Transaction,
+} from "prosemirror-state";
 import type { Node } from "prosemirror-model";
 import { selToRef, updatePositionFactory } from "./tooltip";
 import { autoUpdate } from "@floating-ui/dom";
@@ -24,6 +29,7 @@ class FootnoteView implements NodeView {
 		this.getPos = getPos;
 		this.dom = document.createElement("sup");
 		this.dom.classList.add("footnote");
+		this.dom.dir = "ltr";
 		this.innerView = null;
 	}
 
@@ -42,9 +48,10 @@ class FootnoteView implements NodeView {
 		this.tooltip.classList.add("tooltip");
 		this.tooltip.role = "note";
 		this.tooltip.dir = "auto";
+		const doc = this.node;
 		this.innerView = new EditorView(this.tooltip, {
 			state: EditorState.create({
-				doc: this.node,
+				doc,
 				// plugins: [
 				// 	keymap({
 				// 		"Mod-z": () => undo(this.outerView.state, this.outerView.dispatch),
@@ -53,11 +60,11 @@ class FootnoteView implements NodeView {
 				// ],
 			}),
 			dispatchTransaction: this.dispatchInner.bind(this),
-			// handleDOMEvents: {
-			// 	mousedown: () => {
-			// 		if (this.outerView.hasFocus()) this.innerView?.focus();
-			// 	},
-			// },
+			handleDOMEvents: {
+				mousedown: () => {
+					if (this.outerView.hasFocus()) this.innerView?.focus();
+				},
+			},
 			editable: () => this.outerView.editable,
 		});
 
@@ -65,6 +72,10 @@ class FootnoteView implements NodeView {
 		const update = updatePositionFactory(reference, this.tooltip, "top", false);
 		this.cleanup();
 		this.cleanup = autoUpdate(reference, this.tooltip, update);
+
+		// Prosemirror selects everything inside this node by default and then
+		// hides it with CSS. Stop that!
+		document.getSelection()?.removeAllRanges();
 	}
 
 	destroy() {

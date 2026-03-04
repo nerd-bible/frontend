@@ -13,6 +13,7 @@ function onScroll() {
 }
 </script>
 <svelte:document onscroll={onScroll} />
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <header
 	bind:this={headerRef}
 	class:hidden={isHidden}
