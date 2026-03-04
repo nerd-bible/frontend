@@ -72,7 +72,6 @@ header {
 
 		& > input {
 			background: var(--color-bg-100);
-			border-radius: var(--radius-md);
 			width: 100%;
 			padding: --spacing(2);
 		}

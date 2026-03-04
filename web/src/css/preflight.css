@@ -205,7 +205,7 @@ textarea,
 	font-variation-settings: inherit; /* 1 */
 	letter-spacing: inherit; /* 1 */
 	color: inherit; /* 1 */
-	border-radius: 0; /* 2 */
+	border-radius: var(--radius-md); /* 2 */
 	background-color: transparent; /* 3 */
 	opacity: 1; /* 4 */
 }
@@ -252,14 +252,14 @@ button {
 @utility track {
 	background: var(--color-secondary);
 	border-radius: var(--radius-md);
-	height: 0.5rem;
+	height: 0.5em;
 }
 @utility thumb {
 	background: var(--color-fg);
 	border: --spacing(3);
 	border-radius: var(--radius-lg);
-	height: 1rem;
-	width: 1rem;
+	height: 1em;
+	width: 1em;
 }
 input[type="range"] {
 	appearance: none;
@@ -286,7 +286,7 @@ input[type="range"] {
 
 	&::-webkit-slider-thumb {
 		appearance: none;
-		margin-top: -0.25rem;
+		margin-top: -0.25em;
 		@apply thumb;
 	}
 	&::-moz-range-thumb {
@@ -294,28 +294,37 @@ input[type="range"] {
 		@apply thumb;
 	}
 }
+/* https://moderncss.dev/pure-css-custom-checkbox-style/ */
 input[type="checkbox"] {
 	appearance: none;
-	background: var(--color-secondary);
 	cursor: pointer;
 
-	display: flex;
+	width: 2em;
+	height: 2em;
+	border: 0.1em solid currentColor;
+	transform: translateY(-0.075em);
+
+	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	padding: --spacing(1);
-	padding-bottom: --spacing(2);
-	width: 2rem;
-	height: 2rem;
 
-	&:checked::before {
+	&::before {
 		content: "";
-		width: 45%;
-		aspect-ratio: 1 / 2;
-		transform: rotate(35deg);
 
-		--width: 0.3rem;
-		--color: var(--color-fg);
-		border-bottom: var(--width) solid var(--color);
-		border-right: var(--width) solid var(--color);
+		height: 70%;
+		aspect-ratio: 1 / 1.75;
+		border: 0.2em solid var(--color-fg);
+		border-top: none;
+		border-left: none;
+
+		visibility: hidden;
+		transform: translateY(-0.1em) rotate(35deg);
+	}
+	&:checked::before {
+		visibility: visible;
+	}
+
+	&:checked {
+		background-color: var(--color-secondary);
 	}
 }
