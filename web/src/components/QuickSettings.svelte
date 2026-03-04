@@ -80,6 +80,10 @@ form {
 		align-items: center;
 	}
 
+	& > label > input[type="checkbox"] {
+		width: 2em;
+	}
+
 	& > *:hover {
 		background: var(--color-bg-100);
 	}

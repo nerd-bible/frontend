@@ -299,8 +299,8 @@ input[type="checkbox"] {
 	appearance: none;
 	cursor: pointer;
 
-	width: 2em;
-	height: 2em;
+	width: 1.2em;
+	aspect-ratio: 1 / 1;
 	border: 0.1em solid currentColor;
 	transform: translateY(-0.075em);
 
@@ -313,7 +313,7 @@ input[type="checkbox"] {
 
 		height: 70%;
 		aspect-ratio: 1 / 1.75;
-		border: 0.2em solid var(--color-fg);
+		border: 0.2rem solid var(--color-fg);
 		border-top: none;
 		border-left: none;
 
