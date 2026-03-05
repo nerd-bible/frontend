@@ -8,33 +8,35 @@ export type Annotation = {
 	class: string;
 };
 
-type State = {
+export type Rules = Record<string, string>;
+
+export type State = {
 	decorations: DecorationSet;
 	overlaps: Set<string>;
-	classes: Record<string, Record<string, string>>;
+	classes: Record<string, Rules>;
 };
 
-export default new Plugin({
+export default new Plugin<State>({
 	key,
 	state: {
 		init() {
 			return {
 				decorations: DecorationSet.empty,
 				overlaps: new Set(),
-				classes: {
-					red: {
-						"background-color": "rgb(155, 0, 0)",
-						outline: "2px dashed gray",
-					},
-					green: { "background-color": "rgb(0, 155, 0)" },
-					blue: { "background-color": "rgb(0, 0, 155)" },
-				},
-			} as State;
+				classes: {},
+			};
 		},
 		apply(tr, oldState) {
 			let { decorations } = oldState;
 			decorations = decorations.map(tr.mapping, tr.doc);
 			const overlaps = structuredClone(oldState.overlaps);
+			let classes = oldState.classes;
+
+			const newClasses: Record<string, Rules> = tr.getMeta("annotationClasses");
+			if (newClasses) {
+				// console.log("apply", newClasses);
+				classes = newClasses;
+			}
 
 			const annotation: Annotation = tr.getMeta("annotate");
 			if (annotation) {
@@ -82,7 +84,7 @@ export default new Plugin({
 				}
 			}
 
-			return { overlaps, decorations, classes: oldState.classes };
+			return { overlaps, decorations, classes };
 		},
 	},
 	view(v) {

@@ -103,7 +103,7 @@
 
 		view = new EditorView(editorRef, {
 			state: EditorState.create({
-				doc,
+				schema: bible,
 				plugins: [
 					// There are ways to use Svelte in plugins via
 					// `@prosemirror-adapter/svelte`. I gave up after a day because 
@@ -117,12 +117,29 @@
 					plugins.footnote,
 					plugins.bubbleMenu(tooltipRef),
 				],
-				selection: TextSelection.between(doc.resolve(0), doc.resolve(0)),
 			}),
 			editable: () => editable,
 		});
+
 		return () => view.destroy();
 	});
+
+	$effect(() => {
+		if (!view) return;
+
+		const newState = EditorState.create({ doc, plugins: view.state.plugins });
+    view.updateState(newState);
+				// selection: TextSelection.between(doc.resolve(0), doc.resolve(0)),
+	});
+
+	$effect(() => {
+		if (!view) return;
+		void doc;
+
+		const addClasses = view.state.tr.setMeta("annotationClasses", $state.snapshot(settings.userHighlights));
+		view.dispatch(addClasses);
+	});
+
 </script>
 <label>
 	editable
@@ -139,7 +156,7 @@
 </div>
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div class="tooltip" bind:this={tooltipRef} onmousedown={ev => ev.preventDefault()}>
-	{#each ["red", "green", "blue"] as k}
+	{#each Object.keys(settings.userHighlights) as k}
 		<button
 			onclick={() => {
 				if (!view) return;
@@ -156,4 +173,9 @@
 			{k}
 		</button>
 	{/each}
+	<button
+		onclick={() => {
+			settings.userHighlights["pink"] = { "background-color": "rgb(255,192,203)" };
+		}}
+	>add</button>
 </div>

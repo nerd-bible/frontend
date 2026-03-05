@@ -1,5 +1,6 @@
 import { negotiateLanguages } from "@fluent/langneg";
 import locales from "./locales";
+import type { State as AnnotationState } from "./components/editor/plugins/annotation";
 
 export type Locale = keyof typeof locales;
 export type Theme = "system" | "dark" | "light";
@@ -20,15 +21,35 @@ const initial = {
 	showVerseNum: "false",
 	showFootnotes: "false",
 	// TODO: sync these to DB (+ make reactive) instead of localStorage
-	userHighlights: JSON.stringify({
-	}),
-} satisfies Record<string, string /** simple for localStorage */>;
+	userHighlights: {
+		red: {
+			"background-color": "rgb(155, 0, 0)",
+			outline: "2px dashed gray",
+		},
+		green: {
+			"background-color": "rgb(0, 155, 0)",
+		},
+		blue: {
+			"background-color": "rgb(0, 0, 155)",
+		},
+	} as AnnotationState["classes"],
+};
+
+function safeParse(s?: string | null): any {
+	if (!s) return;
+
+	try {
+		return JSON.parse(s);
+	} catch {
+		return;
+	}
+}
 
 // Source of truth
 export const settings = $state(
 	Object.entries(initial).reduce(
 		(acc, [k, v]) => {
-			(acc[k as keyof typeof initial] as string) = storage.getItem(k) ?? v;
+			(acc[k as keyof typeof initial] as string) = safeParse(storage.getItem(k)) ?? v;
 			return acc;
 		},
 		{} as typeof initial,
@@ -41,7 +62,7 @@ $effect.root(() => {
 		const key = k as keyof typeof initial;
 		$effect(() => {
 			if (settings[key] === initial[key]) storage.removeItem(key);
-			else storage.setItem(key, settings[key]);
+			else storage.setItem(key, JSON.stringify(settings[key]));
 		});
 	}
 	$effect(() => {
@@ -53,7 +74,7 @@ $effect.root(() => {
 window.addEventListener("storage", (ev) => {
 	if (ev.storageArea === storage && ev.key && ev.key in initial) {
 		const k = ev.key as keyof typeof initial;
-		(settings[k] as string) = ev.newValue ?? initial[k];
+		(settings[k] as string) = safeParse(ev.newValue) ?? initial[k];
 	}
 });
 
@@ -66,10 +87,5 @@ export const textBlockings = [
 	"sentence",
 ] as const;
 export type TextBlocking = (typeof textBlockings)[number];
-export const chapterNumDisplays = [
-	"float",
-	"normal",
-	"small",
-	"none",
-] as const;
+export const chapterNumDisplays = ["float", "normal", "small", "none"] as const;
 export type ChapterNumDisplay = (typeof chapterNumDisplays)[number];
