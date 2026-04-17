@@ -3,36 +3,22 @@
 	"type": "module",
 	"version": "0.0.1",
 	"dependencies": {
-		"@ducklings/browser": "1.4.4-dev.1",
 		"@floating-ui/dom": "^1.7.4",
 		"@fluent/bundle": "^0.19.1",
 		"@fluent/langneg": "^0.7.0",
-		"@huggingface/transformers": "^4.0.0-next.7",
-		"@iconify-json/lucide": "^1.2.86",
+		"@huggingface/transformers": "^4.1.0",
+		"@iconify-json/lucide": "^1.2.102",
 		"@mateothegreat/svelte5-router": "^2.16.19",
 		"@nerd-bible/fonts": "0.1.0",
-		"@nerd-bible/ref": "file:../../ref",
-		"@nerd-bible/schema": "file:../../schema",
-		"@nerd-bible/valio": "*",
-		"@tauri-apps/api": "^2.9.0",
-		"prosemirror-commands": "^1.7.1",
-		"prosemirror-example-setup": "^1.2.3",
-		"prosemirror-gapcursor": "^1.4.0",
-		"prosemirror-history": "^1.5.0",
-		"prosemirror-keymap": "^1.2.3",
-		"prosemirror-state": "^1.4.4",
-		"prosemirror-transform": "^1.11.0",
-		"prosemirror-view": "^1.41.6",
-		"svelte": "^5.53.5"
+		"@tauri-apps/api": "^2.10.1",
+		"svelte": "^5.55.4"
 	},
 	"devDependencies": {
 		"@fluent/syntax": "^0.19.0",
-		"@sveltejs/vite-plugin-svelte": "^7.0.0-next.1",
-		"prosemirror-test-builder": "^1.1.1",
+		"@sveltejs/vite-plugin-svelte": "^7.0.0",
 		"unplugin-icons": "^23.0.1",
-		"vite": "^8.0.0-beta.15",
-		"vite-bundle-analyzer": "^1.3.2",
-		"vite-plugin-wasm": "^3.5.0"
+		"vite": "^8.0.0",
+		"vite-bundle-analyzer": "^1.3.7"
 	},
 	"scripts": {
 		"start": "vite",
