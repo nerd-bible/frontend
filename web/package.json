@@ -25,5 +25,5 @@
 		"build": "vite build",
 		"preview": "vite preview"
 	},
-	"browserslist": "baseline 2016 with downstream"
+	"browserslist": "baseline 2021 with downstream"
 }
