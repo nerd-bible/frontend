@@ -2,17 +2,16 @@
 	"name": "@nerd-bible/frontend",
 	"type": "module",
 	"workspaces": [
-		"app",
+		"native",
 		"core",
 		"valio",
 		"web"
 	],
 	"scripts": {
-		"start": "npm run start --workspace='@nerd-bible/app'",
-		"start-web": "npm run start --workspace='@nerd-bible/web'",
+		"start": "npm run start --workspace='@nerd-bible/web'",
 		"build": "npm run build --workspaces",
-		"fmt": "prettier .",
-		"fmt-fix": "prettier . --fix"
+		"fmt": "prettier -l --ignore-path .gitignore .",
+		"fmt-fix": "prettier --fix --ignore-path .gitignore ."
 	},
 	"devDependencies": {
 		"prettier": "^3.8.0",

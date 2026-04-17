@@ -1,6 +1,6 @@
 - [x] navigation
 	- [ ] to chapter/verse/word
-	- [ ] to wordId
+	- [ ] to word id
 	- [ ] to book
 	- [ ] partial doc rendering
 - [x] sql console
@@ -17,25 +17,37 @@
 	- [x] footnotes
 		- [x] select inside
 	- [ ] user notes
-	- [ ] marks
+	- [x] marks
 		- [x] schema
-	- [ ] morpheme tooltip
 - [ ] loading + error messages
 	- [x] working on mobile
-	- [ ] better timeouts
-- [ ] bsb w/ proper schema
-	- [ ] source word tooltip
+	- [x] better timeouts
+- [ ] per-word tooltip
 - [ ] good duckdb-wasm
 	- [ ] persistence
 - [ ] search
 	- [x] chapter + verse anchors
 	- [ ] algos
 		- [ ] vss + bm25
-- [ ] versioning
 
-confirm works with screenreaders
-- voiceover
+# data
+- [x] settle on schema
+	- [ ] word normalization
+		- [ ] america spelling
+		- [ ] numbers
+		- [ ] contractions
+	- [x] word id
+	- [ ] bsb
+- [x] versioning
+
+confirm works with each browser + screenreaders
+- [ ] osx chrome/safari/firefox
+	- [ ] voiceover 
+- [ ] linux chrome/firefox
+	- [ ] orca
+- [ ] windows chrome/firefox
+	- [ ] nvda
 
 confirm works on older browsers
-- [ ] investigate free browserstack
+- [ ] get free browserstack
 - [ ] remove svelte :where selectors

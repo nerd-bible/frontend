@@ -90,9 +90,13 @@ export default new Plugin<State>({
 	view(v) {
 		const ele = document.createElement("style");
 		v.dom.parentElement?.prepend(ele);
+		let lastClasses = {};
 
 		function genCss(view: EditorView) {
 			const state = key.getState(view.state) as State;
+			if (lastClasses === state.classes) return;
+			lastClasses = state.classes;
+
 			let css = Object.entries(state.classes)
 				.map(
 					([k, v]) =>

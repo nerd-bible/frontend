@@ -18,7 +18,7 @@ worker.addEventListener("message", (ev) => {
 
 async function ready(): Promise<boolean> {
 	if (isReady) return true;
-	
+
 	return new Promise((res) => {
 		worker.addEventListener("message", (ev) => ev.data.id === -1 && res(true));
 	});

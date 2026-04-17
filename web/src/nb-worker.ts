@@ -8,7 +8,8 @@ import {
 	tableToIPC,
 } from "@uwdata/flechette";
 import { init, DuckDB } from "@ducklings/browser";
-import { conllu, ref } from "@nerd-bible/core";
+import { conllu } from "@nerd-bible/schema";
+import { parseBcvStrict } from "@nerd-bible/ref";
 
 console.log("Worker starting");
 const string = () => utf8();
@@ -68,7 +69,7 @@ function parseConlluDoc(
 		deps: [] as [number, string][][],
 		misc: [] as [string, string][][],
 		chapter: [] as (number | undefined)[],
-		verse: [] as (string | undefined)[],
+		verse: [] as (number | undefined)[],
 		position: [] as number[],
 	} satisfies Record<keyof typeof wordSchema, any[]>;
 
@@ -82,7 +83,7 @@ function parseConlluDoc(
 
 	console.time("transform conllu");
 	let chapter: number | undefined;
-	let verse: string | undefined;
+	let verse: number | undefined;
 	let nextParaClass: string | undefined;
 	for (let i = 0; i < parsed.output.length; i++) {
 		const sent = parsed.output[i];
@@ -126,7 +127,7 @@ function parseConlluDoc(
 			if (morphemesUntil === w.id.toString()) morphemesUntil = "";
 			if (w.misc["Ref"]) {
 				try {
-					const parsed = ref.parseBcvPartOrWord(w.misc["Ref"]);
+					const parsed = parseBcvStrict(w.misc["Ref"]);
 					if (parsed) {
 						if ("chapter" in parsed) chapter = parsed.chapter;
 						if ("verse" in parsed) verse = parsed.verse;
@@ -139,7 +140,7 @@ function parseConlluDoc(
 				delete w.misc["Ref[Chapter]"];
 			}
 			if (w.misc["Ref[Verse]"]) {
-				verse = w.misc["Ref[Verse]"];
+				verse = parseInt(w.misc["Ref[Verse]"]);
 				delete w.misc["Ref[Verse]"];
 			}
 			if (i === 0 && j === 0) w.misc["newpar"] ??= "normal";

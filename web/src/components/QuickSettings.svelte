@@ -117,7 +117,6 @@ settings = Settings
 textBlocking = Text blocking
 paragraph = Paragraph
 chapter = Chapter
-verse = Verse
 sentence = Sentence
 showVerse = Show verse numbers
 showFootnote = Show footnotes
@@ -139,6 +138,5 @@ settings = Ajustes
 textBlocking = Bloqueo de texto
 paragraph = Párrafo
 chapter = Capítulo
-verse = Versículo
 sentence = Oración
 </l10n>
