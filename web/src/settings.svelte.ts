@@ -49,7 +49,8 @@ function safeParse(s?: string | null): any {
 export const settings = $state(
 	Object.entries(initial).reduce(
 		(acc, [k, v]) => {
-			(acc[k as keyof typeof initial] as string) = safeParse(storage.getItem(k)) ?? v;
+			(acc[k as keyof typeof initial] as string) =
+				safeParse(storage.getItem(k)) ?? v;
 			return acc;
 		},
 		{} as typeof initial,
@@ -80,10 +81,7 @@ window.addEventListener("storage", (ev) => {
 
 // Misc constants
 export { locales };
-export const textBlockings = [
-	"publisher",
-	"chapter",
-] as const;
+export const textBlockings = ["publisher", "chapter"] as const;
 export type TextBlocking = (typeof textBlockings)[number];
 export const chapterNumDisplays = ["float", "normal", "small", "none"] as const;
 export type ChapterNumDisplay = (typeof chapterNumDisplays)[number];

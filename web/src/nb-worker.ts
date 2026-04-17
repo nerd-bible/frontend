@@ -195,55 +195,57 @@ function parseConlluDoc(
 }
 
 export async function getUrlSentences(url: string) {
-// 		const text = `# newdoc id = gen_en_1
-// # sourcedoc id = gen_source_1
-// # sent_id = s1
-// # text = In the beginning, God created the heavens and the earth.
-// 1	In	in	ADP	_	_	3	case	_	Ref[Chapter]=1|Ref[Verse]=1|Source=s1#1
-// 2	the	the	DET	DEF	Definite=Def|PronType=Art	3	det	_	Source=s1#1
-// 3	beginning	begin	NOUN	SG-NOM	Number=Sing	6	obl	_	SpaceAfter=No|Source=s1#2
-// 4	,	,	PUNCT	Comma	_	3	punct	_	_
-// 5	God	God	PROPN	SG-NOM	Number=Sing	6	nsubj	_	Source=s1#4
-// 6	created	create	VERB	PAST	Mood=Ind|Tense=Past|VerbForm=Fin	0	root	_	Source=s1#3
-// 7	the	the	DET	DEF	Definite=Def|PronType=Art	8	det	_	Source=s1#6
-// 8	heavens	heaven	NOUN	PL-NOM	Number=Plur	6	obj	_	Source=s1#7
-// 9	and	and	CCONJ	_	_	11	cc	_	Source=s1#8
-// 10	the	the	DET	DEF	Definite=Def|PronType=Art	11	det	_	Source=s1#10
-// 11	earth	earth	NOUN	SG-NOM	Number=Sing	8	conj	_	SpaceAfter=No|Source=s1#11
-// 12	.	.	PUNCT	Period	_	6	punct	_	Source=s1#12
-//
-// # sent_id = s2
-// # text = Now the earth was formless and void, and darkness was hovering over the surface of the deep.
-// 1	Now	now	ADV	RB	_	5	advmod	_	_
-// 2	the	the	DET	DT	Definite=Def|PronType=Art	3	det	_	_
-// 3	earth	earth	NOUN	NN	Number=Sing	5	nsubj	_	_
-// 4	was	be	AUX	VBD	Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin	5	cop	_	_
-// 5	formless	formless	ADJ	JJ	Degree=Pos	0	root	_	_
-// 6	and	and	CCONJ	CC	_	7	cc	_	_
-// 7	void	void	ADJ	JJ	Degree=Pos	5	conj	_	SpaceAfter=No
-// 8	,	,	PUNCT	,	_	12	punct	_	_
-// 9	and	and	CCONJ	CC	_	12	cc	_	_
-// 10	darkness	darkness	NOUN	NN	Number=Sing	12	nsubj	_	_
-// 11	was	be	AUX	VBD	Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin	12	aux	_	_
-// 12	hovering	hover	VERB	VBG	Tense=Pres|VerbForm=Part	5	conj	_	_
-// 13	over	over	ADP	IN	_	15	case	_	_
-// 14	the	the	DET	DT	Definite=Def|PronType=Art	15	det	_	_
-// 15	surface	surface	NOUN	NN	Number=Sing	12	obl	_	_
-// 16	of	of	ADP	IN	_	18	case	_	_
-// 17	the	the	DET	DT	Definite=Def|PronType=Art	18	det	_	_
-// 18	deep	deep	ADJ	JJ	Degree=Pos	15	nmod	_	SpaceAfter=No
-// 19	.	.	PUNCT	.	_	5	punct	_	SpaceAfter=No`;
+	// 		const text = `# newdoc id = gen_en_1
+	// # sourcedoc id = gen_source_1
+	// # sent_id = s1
+	// # text = In the beginning, God created the heavens and the earth.
+	// 1	In	in	ADP	_	_	3	case	_	Ref[Chapter]=1|Ref[Verse]=1|Source=s1#1
+	// 2	the	the	DET	DEF	Definite=Def|PronType=Art	3	det	_	Source=s1#1
+	// 3	beginning	begin	NOUN	SG-NOM	Number=Sing	6	obl	_	SpaceAfter=No|Source=s1#2
+	// 4	,	,	PUNCT	Comma	_	3	punct	_	_
+	// 5	God	God	PROPN	SG-NOM	Number=Sing	6	nsubj	_	Source=s1#4
+	// 6	created	create	VERB	PAST	Mood=Ind|Tense=Past|VerbForm=Fin	0	root	_	Source=s1#3
+	// 7	the	the	DET	DEF	Definite=Def|PronType=Art	8	det	_	Source=s1#6
+	// 8	heavens	heaven	NOUN	PL-NOM	Number=Plur	6	obj	_	Source=s1#7
+	// 9	and	and	CCONJ	_	_	11	cc	_	Source=s1#8
+	// 10	the	the	DET	DEF	Definite=Def|PronType=Art	11	det	_	Source=s1#10
+	// 11	earth	earth	NOUN	SG-NOM	Number=Sing	8	conj	_	SpaceAfter=No|Source=s1#11
+	// 12	.	.	PUNCT	Period	_	6	punct	_	Source=s1#12
+	//
+	// # sent_id = s2
+	// # text = Now the earth was formless and void, and darkness was hovering over the surface of the deep.
+	// 1	Now	now	ADV	RB	_	5	advmod	_	_
+	// 2	the	the	DET	DT	Definite=Def|PronType=Art	3	det	_	_
+	// 3	earth	earth	NOUN	NN	Number=Sing	5	nsubj	_	_
+	// 4	was	be	AUX	VBD	Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin	5	cop	_	_
+	// 5	formless	formless	ADJ	JJ	Degree=Pos	0	root	_	_
+	// 6	and	and	CCONJ	CC	_	7	cc	_	_
+	// 7	void	void	ADJ	JJ	Degree=Pos	5	conj	_	SpaceAfter=No
+	// 8	,	,	PUNCT	,	_	12	punct	_	_
+	// 9	and	and	CCONJ	CC	_	12	cc	_	_
+	// 10	darkness	darkness	NOUN	NN	Number=Sing	12	nsubj	_	_
+	// 11	was	be	AUX	VBD	Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin	12	aux	_	_
+	// 12	hovering	hover	VERB	VBG	Tense=Pres|VerbForm=Part	5	conj	_	_
+	// 13	over	over	ADP	IN	_	15	case	_	_
+	// 14	the	the	DET	DT	Definite=Def|PronType=Art	15	det	_	_
+	// 15	surface	surface	NOUN	NN	Number=Sing	12	obl	_	_
+	// 16	of	of	ADP	IN	_	18	case	_	_
+	// 17	the	the	DET	DT	Definite=Def|PronType=Art	18	det	_	_
+	// 18	deep	deep	ADJ	JJ	Degree=Pos	15	nmod	_	SpaceAfter=No
+	// 19	.	.	PUNCT	.	_	5	punct	_	SpaceAfter=No`;
 	const text = await fetch(url).then((r) => r.text());
 	return parseConlluDoc("gen", text);
 }
 
-export type Message = {
-	type: "ingestUrl",
-	data: { url: string }
-} | {
-	type: "query",
-	data: { query: string }
-};
+export type Message =
+	| {
+			type: "ingestUrl";
+			data: { url: string };
+	  }
+	| {
+			type: "query";
+			data: { query: string };
+	  };
 
 export type Request = Message & { id: number };
 
@@ -269,10 +271,7 @@ addEventListener("message", async (ev) => {
 			const table = await conn.queryArrow(data.query);
 			console.timeEnd(`queryArrow ${id}`);
 			const tableIpc = tableToIPC(table, { format: "stream" })!;
-			postMessage(
-				{ id, data: tableIpc },
-				{ transfer: [tableIpc.buffer] },
-			);
+			postMessage({ id, data: tableIpc }, { transfer: [tableIpc.buffer] });
 			break;
 		default:
 			throw Error(`unknown message type ${type}`);

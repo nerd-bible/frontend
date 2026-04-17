@@ -2,12 +2,7 @@ import { StepMap } from "prosemirror-transform";
 // import { keymap } from "prosemirror-keymap";
 // import { undo, redo } from "prosemirror-history";
 import { EditorView, type NodeView } from "prosemirror-view";
-import {
-	EditorState,
-	PluginKey,
-	Plugin,
-	Transaction,
-} from "prosemirror-state";
+import { EditorState, PluginKey, Plugin, Transaction } from "prosemirror-state";
 import type { Node } from "prosemirror-model";
 import { selToRef, updatePositionFactory } from "./bubbleMenu";
 import { autoUpdate } from "@floating-ui/dom";

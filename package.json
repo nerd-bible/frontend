@@ -1,7 +1,10 @@
 {
 	"name": "@nerd-bible/frontend",
 	"type": "module",
-	"workspaces": ["native", "web"],
+	"workspaces": [
+		"native",
+		"web"
+	],
 	"scripts": {
 		"start": "npm run start --workspace='@nerd-bible/web'",
 		"build": "npm run build --workspaces",

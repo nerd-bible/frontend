@@ -18,9 +18,7 @@ function parseFn(s: string) {
 }
 
 // Needs a lot of work to be spec-compliant
-export default function plugin(opts: {
-	globalPaths?: string[],
-}): Plugin {
+export default function plugin(opts: { globalPaths?: string[] }): Plugin {
 	const functions: Record<string, CssFunction> = {};
 
 	function saveFunction(atRule: AtRule, helper: Helpers) {

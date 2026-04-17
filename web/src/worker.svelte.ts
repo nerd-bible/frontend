@@ -1,12 +1,14 @@
 import type { Message, Request } from "./nb-worker.ts";
 import { Table, tableFromIPC } from "@uwdata/flechette";
 
-export const worker = new Worker(new URL("./nb-worker.ts", import.meta.url), { type: "module" });
+export const worker = new Worker(new URL("./nb-worker.ts", import.meta.url), {
+	type: "module",
+});
 let isReady = false;
 let requestId = 0;
 
 const pending = new Map<number, (data: any) => void>();
-pending.set(-1, () => isReady = true);
+pending.set(-1, () => (isReady = true));
 worker.addEventListener("message", (ev) => {
 	const { id, data } = ev.data;
 
@@ -35,7 +37,8 @@ export async function request(msg: Message): Promise<any> {
 	});
 }
 
-const url = "https://cdn.jsdelivr.net/gh/mr-martian/hbo-UD@master/data/checked/genesis.conllu";
+const url =
+	"https://cdn.jsdelivr.net/gh/mr-martian/hbo-UD@master/data/checked/genesis.conllu";
 export const firstIngestRequest = request({ type: "ingestUrl", data: { url } });
 
 export async function query(query: string): Promise<Table> {
@@ -47,4 +50,3 @@ export async function query(query: string): Promise<Table> {
 		worker.postMessage(req);
 	});
 }
-

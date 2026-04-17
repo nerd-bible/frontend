@@ -5,7 +5,6 @@ import { analyzer } from "vite-bundle-analyzer";
 import pkg from "./package.json";
 import l10n from "./plugins/vite/l10n.ts";
 import locales from "./src/locales.ts";
-import wasm from "vite-plugin-wasm";
 
 export default defineConfig({
 	resolve: {
@@ -24,7 +23,7 @@ export default defineConfig({
 		modulePreload: {
 			polyfill: false,
 		},
-		target: "es2016",
+		target: "es" + pkg.browserslist.match(/\d+/)![0],
 		// minify: false,
 		// cssMinify: false,
 		rolldownOptions: {
@@ -35,9 +34,7 @@ export default defineConfig({
 				codeSplitting: {
 					groups: Object.keys(locales).map((l) => ({
 						name: l,
-						test(id) {
-							return id.endsWith(`?l10n&lang=${l}`);
-						},
+						test: (id) => id.endsWith(`?l10n&lang=${l}`),
 					})),
 				},
 			},
@@ -47,9 +44,7 @@ export default defineConfig({
 		APP_VERSION: JSON.stringify(pkg.version),
 	},
 	plugins: [
-		Icons({
-			compiler: "svelte",
-		}),
+		Icons({ compiler: "svelte" }),
 		svelte(),
 		l10n({
 			runtimePath: import.meta
@@ -57,10 +52,7 @@ export default defineConfig({
 				.replace("file://", ""),
 			defaultLocale: "en-US",
 		}),
-		process.env["analyze"] && analyzer({
-			analyzerMode: "static",
-			fileName: "stats.html",
-		}),
-		wasm(),
+		process.env["analyze"] &&
+			analyzer({ analyzerMode: "static", fileName: "stats.html" }),
 	],
 });

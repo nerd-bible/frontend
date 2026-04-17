@@ -10,6 +10,7 @@
 		"@iconify-json/lucide": "^1.2.102",
 		"@mateothegreat/svelte5-router": "^2.16.19",
 		"@nerd-bible/fonts": "0.1.0",
+		"@nerd-bible/schema": "file:../../schema",
 		"@tauri-apps/api": "^2.10.1",
 		"svelte": "^5.55.4"
 	},

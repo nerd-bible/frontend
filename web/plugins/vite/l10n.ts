@@ -17,8 +17,8 @@ function normalizeId(id: string) {
 }
 
 export default function l10nPlugin(opts: {
-	runtimePath: string,
-	defaultLocale: string
+	runtimePath: string;
+	defaultLocale: string;
 }): Plugin {
 	type Importee = string;
 	type Lang = string;

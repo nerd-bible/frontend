@@ -1,11 +1,17 @@
 import * as core from "@nerd-bible/core";
-import { init, version, getDB, type DuckDB, type Connection, type Table } from '@ducklings/browser';
+import {
+	init,
+	version,
+	getDB,
+	type DuckDB,
+	type Connection,
+	type Table,
+} from "@ducklings/browser";
 
 export class DuckDb {
 	static db: duckdb.AsyncDuckDB;
 
-	static async init() {
-	}
+	static async init() {}
 
 	async insert(conllu: string) {
 		const c = await DuckDb.db.connect();

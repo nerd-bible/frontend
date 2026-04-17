@@ -1,6 +1,7 @@
 # app
 
 Native and signed x86_64 and ARM apps for the following platforms:
+
 - Desktop
   - Windows (.msi)
   - Linux (.deb -> apt + aur, .snap -> snapcraft, .rpm -> ?)

@@ -1,11 +1,5 @@
 <script lang="ts">
 	import { settings } from "../../settings.svelte";
-	import { EditorView } from "prosemirror-view";
-	import { EditorState } from "prosemirror-state";
-	import { Node as PmNode } from 'prosemirror-model';
-	import { prosemirror } from "@nerd-bible/schema";
-	import * as plugins from "./plugins";
-	import "./prosemirror.css";
 	import "./schema.css";
 
 	type Word = {
