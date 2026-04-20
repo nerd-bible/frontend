@@ -45,7 +45,7 @@ export default defineConfig({
 	},
 	plugins: [
 		Icons({ compiler: "svelte" }),
-		svelte(),
+		svelte({ compilerOptions: { experimental: { async: true } } }),
 		l10n({
 			runtimePath: import.meta
 				.resolve("./src/l10n.svelte.ts")

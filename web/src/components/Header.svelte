@@ -40,6 +40,9 @@ function onScroll() {
 	</nb-dropdown>
 </header>
 <style>
+.options > button {
+	display: flex;
+}
 header {
 	display: flex;
 	gap: --spacing(4);

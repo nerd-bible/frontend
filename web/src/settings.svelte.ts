@@ -1,13 +1,12 @@
 import { negotiateLanguages } from "@fluent/langneg";
 import locales from "./locales";
-import type { State as AnnotationState } from "./components/editor/plugins/annotation";
 
 export type Locale = keyof typeof locales;
 export type Theme = "system" | "dark" | "light";
 const storage = localStorage;
 
 // Add settings with their defaults here
-const initial = {
+export const initial = {
 	locale: negotiateLanguages(navigator.languages, Object.keys(locales), {
 		strategy: "lookup",
 		defaultLocale: "en-US",
@@ -20,19 +19,6 @@ const initial = {
 	chapterNumDisplay: "float" as ChapterNumDisplay,
 	showVerseNum: "false",
 	showFootnotes: "false",
-	// TODO: sync these to DB (+ make reactive) instead of localStorage
-	userHighlights: {
-		red: {
-			"background-color": "rgb(155, 0, 0)",
-			outline: "2px dashed gray",
-		},
-		green: {
-			"background-color": "rgb(0, 155, 0)",
-		},
-		blue: {
-			"background-color": "rgb(0, 0, 155)",
-		},
-	} as AnnotationState["classes"],
 };
 
 function safeParse(s?: string | null): any {
@@ -71,11 +57,20 @@ $effect.root(() => {
 	});
 });
 
+export function reset() {
+	for (const k in initial) {
+		// @ts-ignore
+		settings[k] = initial[k];
+	}
+}
+
 // Watch storage to react to other tabs changing
 window.addEventListener("storage", (ev) => {
-	if (ev.storageArea === storage && ev.key && ev.key in initial) {
-		const k = ev.key as keyof typeof initial;
-		(settings[k] as string) = safeParse(ev.newValue) ?? initial[k];
+	if (ev.storageArea === storage) {
+		if (ev.key && ev.key in initial) {
+			const k = ev.key as keyof typeof initial;
+			(settings[k] as string) = safeParse(ev.newValue) ?? initial[k];
+		} else reset();
 	}
 });
 

@@ -3,12 +3,16 @@
 	- [ ] to word id
 	- [ ] to book
 	- [ ] partial doc rendering
+	- [ ] lazy load routes
+		- [ ] sql to query string
 - [x] sql console
 	- [x] form
 	- [x] tabs
-	- [ ] tree view
+	- [x] tree view
 	- [ ] import/export/delete
+	- [ ] codemirror
 	- [ ] mobile
+	- [ ] tree view + opfs view refresh
 - [x] hide header on scroll down
 - [ ] good editor
 	- [x] tooltip menu
@@ -28,7 +32,7 @@
 - [ ] search
 	- [x] chapter + verse anchors
 	- [ ] algos
-		- [ ] vss + bm25
+		- [ ] BLAST
 
 # data
 - [x] settle on schema

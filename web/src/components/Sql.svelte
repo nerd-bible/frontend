@@ -1,9 +1,23 @@
 <script lang="ts">
-// TODO: codemirror
 import { db } from "../workers/dispatcher.svelte";
 
-let input = $state("select * from sqlite_master");
-let outputPromise = $state<ReturnType<typeof db.run>>(new Promise((res) => res([])));
+let input = $state("SELECT * FROM scripture");
+let schema = db.run("SELECT type, name, tbl_name, sql FROM sqlite_master").then(res => res.reduce((acc, cur) => {
+	acc[cur.tbl_name] ??= { create: "", indices: [], triggers: [] };
+	switch (cur.type) {
+		case "table":
+			acc[cur.tbl_name].create = cur.sql;
+			break;
+		case "index":
+			acc[cur.tbl_name].indices.push(cur.sql);
+			break;
+		case "trigger":
+			acc[cur.tbl_name].triggers.push(cur.sql);
+			break;
+	}
+	return acc;
+}, {} as Record<string, { create: string, indices: string[], triggers: string[] }>));
+let output = $state<ReturnType<typeof db.run>>(new Promise((res) => res([])));
 let elapsed = $state(0);
 
 function onSubmit(ev: SubmitEvent) {
@@ -17,7 +31,7 @@ function onSubmit(ev: SubmitEvent) {
 		last_time = time;
 	});
 
-	outputPromise = db.run(input).then(res => {
+	output = db.run(input).then(res => {
 		cancelAnimationFrame(frame);
 		return res;
 	});
@@ -39,20 +53,44 @@ function toString(v: any) {
 	}
 }
 </script>
-<form onsubmit={onSubmit}>
-	<textarea name="query" placeholder="SELECT ..." bind:value={input}></textarea>
-	<div class="submit">
-		<input type="submit" />
-{#await outputPromise}
-	{#if elapsed > 1000}
-		<p>{(elapsed / 1000).toFixed(1)}s</p>
-	{/if}
-{:then value}
-	{value.length} rows
-{/await}
+<div class="vert">
+	<div>
+		{#await schema then value}
+			{#each Object.entries(value) as [tname, dets]}
+				<details>
+					<summary>{tname}</summary>
+					<pre>{dets.create}</pre>
+					<!-- <ul> -->
+					<!-- 	{#each dets.indices as i} -->
+					<!-- 		<li><pre>{i}</pre></li> -->
+					<!-- 	{/each} -->
+					<!-- </ul> -->
+					<!-- <ul> -->
+					<!-- 	{#each dets.triggers as t} -->
+					<!-- 		<li><pre>{t}</pre></li> -->
+					<!-- 	{/each} -->
+					<!-- </ul> -->
+				</details>
+			{:else}
+				no tables
+			{/each}
+		{/await}
 	</div>
-</form>
-{#await outputPromise then value}
+	<form onsubmit={onSubmit}>
+		<textarea name="query" placeholder="SELECT ..." bind:value={input}></textarea>
+		<div class="submit">
+			<input type="submit" />
+	{#await output}
+		{#if elapsed > 1000}
+			<p>{(elapsed / 1000).toFixed(1)}s</p>
+		{/if}
+	{:then value}
+		{value.length} rows
+	{/await}
+		</div>
+	</form>
+</div>
+{#await output then value}
 {@const cols = Object.keys(value[0] ?? [])}
 <output>
 	<table>
@@ -89,10 +127,31 @@ table {
 .submit {
 	display: flex;
 	justify-content: space-between;
-	margin-bottom: --spacing(4);
 }
 output {
 	display: block;
+}
+.vert {
+	> div {
+		width: 200px;
+
+		/* https://developer.chrome.com/blog/styling-details */
+		details > pre {
+			overflow-x: auto;
+		}
+	}
+	display: flex;
+	gap: --spacing(4);
+	margin-bottom: --spacing(4);
+
+	> form {
+		flex-grow: 1;
+		display: flex;
+		flex-direction: column;
+		> textarea {
+			flex-grow: 1;
+		}
+	}
 }
 </style>
 <l10n lang="en-US">
