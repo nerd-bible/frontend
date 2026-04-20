@@ -22,7 +22,6 @@ const routes = [
 </div>
 <style>
 .settings {
-	flex-grow: 1;
 	display: flex;
 	gap: --spacing(8);
 	padding: --spacing(4);
@@ -31,9 +30,9 @@ const routes = [
 		flex-grow: 1;
 	}
 
-	> nav {
+	> nav > ul {
 		background: var(--color-bg-100);
-		ul > li > a {
+		li > a {
 			display: block;
 			padding: --spacing(4);
 		}

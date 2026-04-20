@@ -4,9 +4,11 @@
 	- [ ] to book
 	- [ ] partial doc rendering
 - [x] sql console
-  - [x] form
+	- [x] form
 	- [x] tabs
 	- [ ] tree view
+	- [ ] import/export/delete
+	- [ ] mobile
 - [x] hide header on scroll down
 - [ ] good editor
 	- [x] tooltip menu
@@ -23,8 +25,6 @@
 	- [x] working on mobile
 	- [x] better timeouts
 - [ ] per-word tooltip
-- [ ] good duckdb-wasm
-	- [ ] persistence
 - [ ] search
 	- [x] chapter + verse anchors
 	- [ ] algos
@@ -40,7 +40,10 @@
 	- [ ] bsb
 - [x] versioning
 
-confirm works with each browser + screenreaders
+fix browsers.md
+- [ ] get free browserstack
+
+add a11y.md and fix
 - [ ] osx chrome/safari/firefox
 	- [ ] voiceover 
 - [ ] linux chrome/firefox
@@ -48,6 +51,3 @@ confirm works with each browser + screenreaders
 - [ ] windows chrome/firefox
 	- [ ] nvda
 
-confirm works on older browsers
-- [ ] get free browserstack
-- [ ] remove svelte :where selectors

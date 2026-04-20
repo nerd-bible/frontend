@@ -2,21 +2,10 @@
 import Loading from "../components/Loading.svelte";
 import Editor from "../components/editor/Editor.svelte";
 import { settings } from "../settings.svelte";
-// import { firstIngestRequest, query } from "../worker.svelte";
-import { tableFromArrays } from '@uwdata/flechette';
 
-const arrays = {
-	sentId: [1, 1, 1, 2, 2, 3, 4],
-	id: [0, 1, 2, 3, 4, 5, 6],
-	form: ["In", "the", "beginning", "God", "created", "Now", "the"],
-	chapter: [1, 1, 1, 1, 1, 2, 2],
-	verse: ["1", "1", "1", "2", "2", "1", "1"],
-	newpar: ['normal', null, null, null, null, 'normal', null],
-	noSpaceAfter: [null, null, null, null, true, null, null],
-};
 let dir = $state<"ltr" | "rtl">("ltr");
 let id = $state("gen");
-let words = $state(tableFromArrays(arrays));
+let words = $state([]);
 // firstIngestRequest.then(
 // 	() => query(`select
 // 		sentId,

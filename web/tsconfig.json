@@ -1,6 +1,11 @@
 {
 	"extends": "../tsconfig.base.json",
 	"compilerOptions": {
+		"target": "es2023", // should match package.json browserslist
+		"lib": ["esnext", "dom"],
+		"conditions": ["nbsource"],
+		"verbatimModuleSyntax": true,
+		"isolatedModules": true,
 		"types": [
 			"vite/client",
 			"unplugin-icons/types/svelte",

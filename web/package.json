@@ -12,7 +12,9 @@
 		"@nerd-bible/fonts": "0.1.0",
 		"@nerd-bible/schema": "file:../../schema",
 		"@tauri-apps/api": "^2.10.1",
-		"svelte": "^5.55.4"
+		"comlink": "^4.4.2",
+		"svelte": "^5.55.4",
+		"wa-sqlite": "git://github.com/rhashimoto/wa-sqlite#v1.1.0"
 	},
 	"devDependencies": {
 		"@fluent/syntax": "^0.19.0",
@@ -26,5 +28,5 @@
 		"build": "vite build",
 		"preview": "vite preview"
 	},
-	"browserslist": "baseline 2021 with downstream"
+	"browserslist": "baseline 2023 with downstream"
 }

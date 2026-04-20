@@ -24,7 +24,6 @@ function onScroll() {
 	<form class="search">
 		<!-- svelte-ignore a11y_autofocus -->
 		<input
-			autofocus
 			autocomplete="off"
 			aria-label={t("search")}
 			placeholder={t("search")}

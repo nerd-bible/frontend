@@ -1,55 +1,83 @@
 <script lang="ts">
-// TODO: evaluate codemirror
-// TODO: loading state
-import { Table, tableFromIPC } from "@uwdata/flechette";
-import { request } from "../worker.svelte";
+// TODO: codemirror
+import { db } from "../workers/dispatcher.svelte";
 
-let queryString = $state("select * from word");
-let nBytes = $state(0);
-let queryResults = $state(new Table({ fields: [] }, [], false));
-
-// Fun queries
-// Most popular words:
-// select lemma, count(*) as c, any_value(misc['Gloss']), any_value(misc['Translit']) from word group by lemma order by c desc
+let input = $state("select * from sqlite_master");
+let outputPromise = $state<ReturnType<typeof db.run>>(new Promise((res) => res([])));
+let elapsed = $state(0);
 
 function onSubmit(ev: SubmitEvent) {
 	ev.preventDefault();
+	elapsed = 0;
+	let last_time = performance.now();
+	let frame = requestAnimationFrame(function update(time) {
+		frame = requestAnimationFrame(update);
 
-	request({ type: "query", data: { query: queryString } }).then(res => {
-		nBytes = res.length;
-		queryResults = tableFromIPC(res);
+		elapsed += time - last_time;
+		last_time = time;
+	});
+
+	outputPromise = db.run(input).then(res => {
+		cancelAnimationFrame(frame);
+		return res;
 	});
 }
+function toString(v: any) {
+	switch (typeof v) {
+		case "string":
+		case "boolean":
+		case "number":
+		case "bigint":
+			return v.toString();
+		case "undefined":
+			return "UNDF";
+		case "object": 
+			if (v === null) return "NULL";
+		case "symbol":
+		case "function":
+			return "????";
+	}
+}
 </script>
-<a href="https://duckdb.org/docs/1.3/sql/introduction">{t("reference")}</a>
 <form onsubmit={onSubmit}>
-	<textarea name="query" placeholder="query" bind:value={queryString}></textarea>
+	<textarea name="query" placeholder="SELECT ..." bind:value={input}></textarea>
 	<div class="submit">
 		<input type="submit" />
-		{queryResults.numRows} rows, {nBytes} bytes
+{#await outputPromise}
+	{#if elapsed > 1000}
+		<p>{(elapsed / 1000).toFixed(1)}s</p>
+	{/if}
+{:then value}
+	{value.length} rows
+{/await}
 	</div>
 </form>
+{#await outputPromise then value}
+{@const cols = Object.keys(value[0] ?? [])}
 <output>
 	<table>
 		<thead>
 			<tr>
-				{#each queryResults.names as n}
+				{#each cols as n}
 					<td>{n}</td>
 				{/each}
 			</tr>
 		</thead>
 		<tbody>
 			<!-- TODO: virtual scroll -->
-			{#each { length: queryResults.numRows }, i}
+			{#each { length: value.length }, i}
 				<tr>
-					{#each queryResults.names as n}
-						<td>{queryResults.at(i)[n]}</td>
+					{#each cols as n}
+						<td>{toString(value[i]![n])}</td>
 					{/each}
 				</tr>
 			{/each}
 		</tbody>
 	</table>
 </output>
+{:catch error}
+	<p>{error.message}</p>
+{/await}
 <style>
 textarea {
 	width: 100%;
@@ -61,10 +89,10 @@ table {
 .submit {
 	display: flex;
 	justify-content: space-between;
+	margin-bottom: --spacing(4);
 }
 output {
 	display: block;
-	margin-top: --spacing(4);
 }
 </style>
 <l10n lang="en-US">
