@@ -78,5 +78,5 @@ window.addEventListener("storage", (ev) => {
 export { locales };
 export const textBlockings = ["publisher", "chapter"] as const;
 export type TextBlocking = (typeof textBlockings)[number];
-export const chapterNumDisplays = ["float", "normal", "small", "none"] as const;
+export const chapterNumDisplays = ["Float", "Normal", "Small", "None"] as const;
 export type ChapterNumDisplay = (typeof chapterNumDisplays)[number];

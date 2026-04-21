@@ -6,10 +6,6 @@
 		"conditions": ["nbsource"],
 		"verbatimModuleSyntax": true,
 		"isolatedModules": true,
-		"types": [
-			"vite/client",
-			"unplugin-icons/types/svelte",
-			"./plugins/vite/l10n.d.ts"
-		]
+		"types": ["vite/client", "unplugin-icons/types/svelte", "./vite.d.ts"]
 	}
 }

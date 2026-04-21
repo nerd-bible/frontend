@@ -2,11 +2,12 @@
 import { Router, type RouteConfig, route } from "@mateothegreat/svelte5-router";
 import Sql from "./Sql.svelte";
 import Storage from "./Storage.svelte";
+import { t } from "../../l10n.svelte.ts";
 
 const routes = [
-	{ component: Sql, path: "sql" },
-	{ component: Storage, path: "storage" },
-] satisfies RouteConfig[];
+	{ component: Sql, title: "SQL" },
+	{ component: Storage, title: "Storage" },
+].map((r) => ({ ...r, path: r.title.toLowerCase() })) satisfies RouteConfig[];
 </script>
 
 <div class="settings">
@@ -14,7 +15,7 @@ const routes = [
 		<ul>
 			{#each routes as r}
 				{#if r.path}
-					<li><a href={`/settings/${r.path}`} use:route>{t(r.path)}</a></li>
+					<li><a href={`/settings/${r.path}`} use:route>{t(r.title)}</a></li>
 				{/if}
 			{/each}
 		</ul>
@@ -23,7 +24,6 @@ const routes = [
 		<Router basePath="/settings" {routes} />
 	</main>
 </div>
-<l10n lang="en-US"> sql = SQL storage = Storage </l10n>
 
 <style>
 .settings {

@@ -3,7 +3,7 @@ import { minify } from "./l10n.minifier.ts";
 
 // Save having to use a proper HTML parser + generating source map
 // If we did have to, I'd use parse5 + @jridgewell/gen-mapping
-const tagRegex = /<l10n lang="([^"]+)">([\s\S]*?)<\/l10n>/g;
+const tagRegex = /\bt\([^)]+\)/;
 const pathRegex = /^l10n\?lang=([\w-]+)/;
 // For loader that has no knowledge of importee
 const fullPathRegex = /^([_/\\\w.-]*)\?l10n(?:\&lang=([\w-]+))?$/;
@@ -108,13 +108,13 @@ export const l10n = {
 			// https://bjornlu.com/blog/hot-module-replacement-is-easy
 			// https://github.com/sveltejs/vite-plugin-svelte/blob/main/packages/vite-plugin-svelte/src/plugins/hot-update.js
 			const invalidatedModules = new Set<any>();
-			const invalidateL10n = (m?: EnvironmentModuleNode): boolean => {
-				if (!m) return false;
+			const seen = new Set<any>();
+			const invalidateL10n = (m?: EnvironmentModuleNode) => {
+				if (!m || seen.has(m.id)) return;
+				seen.add(m.id);
 
 				if (fullPathRegex.test(m?.id ?? "")) invalidatedModules.add(m);
 				for (const m2 of m.importedModules) invalidateL10n(m2);
-
-				return invalidatedModules.size > 0;
 			};
 
 			const untouched: EnvironmentModuleNode[] = [];

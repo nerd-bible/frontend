@@ -12,6 +12,7 @@ Goal: 99% of global audience (since 2017)
 | [Service worker](https://caniuse.com/serviceworkers)             | 2018           | no                                                                        |
 | [Floating UI](https://floating-ui.com/docs/misc#browser-support) | ?              | ?                                                                         |
 | [Intl.Segmenter](https://caniuse.com/wf-intl-segmenter)          | 2021 (FF 2025) | [yes (2.5MB)](https://github.com/toeverything/intl-segmenter-polyfill-rs) |
+| [Intl.DisplayNames](https://caniuse.com/wf-intl-display-names)   | 2021           | ?                                                                         |
 
 ### Sqlite persistence
 

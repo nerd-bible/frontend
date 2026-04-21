@@ -2,24 +2,19 @@
 import Dir from "./Dir.svelte";
 let { dir }: { dir?: FileSystemDirectoryHandle } = $props();
 
-$inspect(dir);
-
-type Dir = FileSystemFileHandle | FileSystemDirectoryHandle;
-let entries = $state<Dir[]>([]);
-
-async function walk(dir: FileSystemDirectoryHandle) {
-	const res: Dir[] = [];
-	for await (const [key, value] of dir.entries()) {
-		res.push(value);
+async function walk(dir?: FileSystemDirectoryHandle) {
+	type Handle = FileSystemFileHandle | FileSystemDirectoryHandle;
+	const res: Handle[] = [];
+	if (dir) {
+		for await (const [key, value] of dir.entries()) {
+			res.push(value);
+		}
 	}
 
-	console.log("uhhh", res);
 	return res;
 }
 
-$effect(() => {
-	if (dir) entries = walk(dir);
-});
+let entries = $derived(walk(dir));
 </script>
 
 {#await entries then e}

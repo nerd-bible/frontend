@@ -1,5 +1,6 @@
 <script>
 import Menu from "virtual:icons/lucide/menu";
+import { t } from "../l10n.svelte.ts";
 </script>
 
 <div class="loading">
@@ -9,10 +10,8 @@ import Menu from "virtual:icons/lucide/menu";
 		<figure class="page"><Menu /></figure>
 		<figure class="page"><Menu /></figure>
 	</div>
-	<div>{t("loading")}</div>
+	<div>{t("Loading")}</div>
 </div>
-<l10n lang="en-US"> loading = Loading </l10n>
-<l10n lang="es"> loading = Cargando </l10n>
 
 <style>
 .loading {

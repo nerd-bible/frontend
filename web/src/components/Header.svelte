@@ -3,6 +3,7 @@ import Menu from "virtual:icons/lucide/menu";
 import QuickSettings from "./QuickSettings.svelte";
 import { route } from "@mateothegreat/svelte5-router";
 import { state as dbState } from "../workers/dispatcher.svelte.ts";
+import { t } from "../l10n.svelte.ts";
 
 let headerRef: HTMLElement;
 let lastScrollY = window.scrollY;
@@ -29,20 +30,20 @@ function onScroll() {
 		href="/"
 		use:route
 		class="logo"
-		title={t("home")}
+		title={t("Home")}
 		class:connected={dbState.opened}
 	></a>
 	<form class="search">
 		<!-- svelte-ignore a11y_autofocus -->
 		<input
 			autocomplete="off"
-			aria-label={t("search")}
-			placeholder={t("search")}
+			aria-label={t("Search")}
+			placeholder={t("Search")}
 			id="search"
 		/>
 	</form>
 	<nb-dropdown class="options">
-		<button aria-label={t("menu")}>
+		<button aria-label={t("Menu")}>
 			<Menu />
 		</button>
 		<div class="content">
@@ -50,8 +51,6 @@ function onScroll() {
 		</div>
 	</nb-dropdown>
 </header>
-<l10n lang="en-US"> search = Search menu = Settings menu home = Home </l10n>
-<l10n lang="es"> search = Busca menu = Menú de configuración home = Casa </l10n>
 
 <style>
 .options > button {

@@ -6,19 +6,20 @@ import {
 	textBlockings,
 	chapterNumDisplays,
 } from "../settings.svelte";
+import { t } from "../l10n.svelte.ts";
 </script>
 
 <form class="popover">
 	<label>
-		<span>{t("theme")}</span>
+		<span>{t("Theme")}</span>
 		<select id="theme" bind:value={settings.theme}>
-			<option value="system">{t("system")}</option>
-			<option value="dark">{t("dark")}</option>
-			<option value="light">{t("light")}</option>
+			<option value="system">{t("System")}</option>
+			<option value="dark">{t("Dark")}</option>
+			<option value="light">{t("Light")}</option>
 		</select>
 	</label>
 	<label>
-		<span>{t("fontSize")}</span>
+		<span>{t("Font size")}</span>
 		<input
 			id="fontSize"
 			type="range"
@@ -29,7 +30,7 @@ import {
 		/>
 	</label>
 	<label>
-		<span>{t("columnWidth")}</span>
+		<span>{t("Column width")}</span>
 		<input
 			id="columnWidth"
 			type="range"
@@ -40,7 +41,7 @@ import {
 		/>
 	</label>
 	<label>
-		<span>{t("textBlocking")}</span>
+		<span>{t("Text blocking")}</span>
 		<select id="textBlocking" bind:value={settings.textBlocking}>
 			{#each textBlockings as textBlocking}
 				<option value={textBlocking}>{t(textBlocking)}</option>
@@ -48,7 +49,7 @@ import {
 		</select>
 	</label>
 	<label>
-		<span>{t("chapterDisplay")}</span>
+		<span>{t("Chapter display")}</span>
 		<select id="chapterDisplay" bind:value={settings.chapterNumDisplay}>
 			{#each chapterNumDisplays as numDisplay}
 				<option value={numDisplay}>{t(numDisplay)}</option>
@@ -56,7 +57,7 @@ import {
 		</select>
 	</label>
 	<label>
-		<span>{t("showVerse")}</span>
+		<span>{t("Show verse")}</span>
 		<input
 			type="checkbox"
 			id="showVerse"
@@ -66,7 +67,7 @@ import {
 		/>
 	</label>
 	<label>
-		<span>{t("showFootnote")}</span>
+		<span>{t("Show footnote")}</span>
 		<input
 			type="checkbox"
 			id="showFootnote"
@@ -76,32 +77,20 @@ import {
 		/>
 	</label>
 	<label>
-		<span>{t("language")}</span>
+		<span>{t("Language")}</span>
 		<select id="locale" bind:value={settings.locale}>
-			{#each Object.entries(locales) as [k, v]}
-				<option value={k}>{v.name}</option>
+			{#each locales as k}
+				<option value={k}>
+					{new Intl.DisplayNames([k], { type: "language" }).of(k)}
+				</option>
 			{/each}
 		</select>
 	</label>
 	<a href="/settings" use:route>
-		<span>{t("settings")}</span>
-		<span>v{APP_VERSION}</span>
+		<span>{t("Settings")}</span>
+		<span>{APP_VERSION}</span>
 	</a>
 </form>
-<l10n lang="en-US">
-	theme = Theme system = System dark = Dark light = Light fontSize = Font size
-	columnWidth = Column width language = Language settings = Settings
-	textBlocking = Text blocking paragraph = Paragraph chapter = Chapter sentence
-	= Sentence showVerse = Show verse numbers showFootnote = Show footnotes
-	chapterDisplay = Chapter display float = Float normal = Normal small = Small
-	none = None
-</l10n>
-<l10n lang="es">
-	theme = Tema system = Sistema dark = Oscura light = Ligera fontSize = Tamaño
-	de fuente columnWidth = Ancho de columna language = Idioma settings = Ajustes
-	textBlocking = Bloqueo de texto paragraph = Párrafo chapter = Capítulo
-	sentence = Oración
-</l10n>
 
 <style>
 form {
