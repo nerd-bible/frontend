@@ -33,26 +33,26 @@ not supporting browsers between 2022 and 2023.
 
 If we want to support older browsers, we could in theory asyncify
 
-| feature                                                          | 100% year      | polyfill                                                                  |
-| ---------------------------------------------------------------- | -------------- | ------------------------------------------------------------------------- |
-| [IndexedDb](https://caniuse.com/indexeddb) | 2015      | no |
-| [Wasm](https://caniuse.com/wasm) | 2018      | no |
-| [Web lock](https://caniuse.com/mdn-api_navigator_locks) | 2022 | no |
-| [Atomics](https://caniuse.com/mdn-javascript_builtins_atomics) | 2022 | no |
-| [OPFS](https://caniuse.com/wf-origin-private-file-system) | 2023      | no |
-| [Shared worker](https://caniuse.com/mdn-api_sharedworker) | 2023      | no |
-| [SharedArrayBuffer (needs COEP+COOP headers)](https://caniuse.com/mdn-javascript_builtins_sharedarraybuffer) | 2026 | no |
-| [JSPI](https://caniuse.com/wf-wasm-jspi) |  | no |
+| feature                                                                                                      | 100% year | polyfill |
+| ------------------------------------------------------------------------------------------------------------ | --------- | -------- |
+| [IndexedDb](https://caniuse.com/indexeddb)                                                                   | 2015      | no       |
+| [Wasm](https://caniuse.com/wasm)                                                                             | 2018      | no       |
+| [Web lock](https://caniuse.com/mdn-api_navigator_locks)                                                      | 2022      | no       |
+| [Atomics](https://caniuse.com/mdn-javascript_builtins_atomics)                                               | 2022      | no       |
+| [OPFS](https://caniuse.com/wf-origin-private-file-system)                                                    | 2023      | no       |
+| [Shared worker](https://caniuse.com/mdn-api_sharedworker)                                                    | 2023      | no       |
+| [SharedArrayBuffer (needs COEP+COOP headers)](https://caniuse.com/mdn-javascript_builtins_sharedarraybuffer) | 2026      | no       |
+| [JSPI](https://caniuse.com/wf-wasm-jspi)                                                                     |           | no       |
 
 ## CSS
 
-| feature                                                   | 100% year | polyfill                                                                                           |
-| --------------------------------------------------------- | --------- | -------------------------------------------------------------------------------------------------- |
-| [Variables](https://caniuse.com/css-variables)            | 2017      | no                                                                                                 |
-| [Grid](https://caniuse.com/css-grid)                      | 2017      | no                                                                                                 |
-| [Woff2](https://caniuse.com/woff2)                        | 2017      | no                                                                                                 |
-| [Logical props](https://caniuse.com/css-logical-props)    | 2019      | lang selectors                                                                                     |
-| [Focus-within](https://caniuse.com/css-focus-within)      | 2019      | more js                                                                                                 |
+| feature                                                | 100% year | polyfill       |
+| ------------------------------------------------------ | --------- | -------------- |
+| [Variables](https://caniuse.com/css-variables)         | 2017      | no             |
+| [Grid](https://caniuse.com/css-grid)                   | 2017      | no             |
+| [Woff2](https://caniuse.com/woff2)                     | 2017      | no             |
+| [Logical props](https://caniuse.com/css-logical-props) | 2019      | lang selectors |
+| [Focus-within](https://caniuse.com/css-focus-within)   | 2019      | more js        |
 
 ## Browserstack
 

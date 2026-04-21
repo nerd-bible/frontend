@@ -7,13 +7,12 @@ import type { db } from "../../workers/dispatcher.svelte";
 
 let input = $state("SELECT * FROM scripture");
 let output = $state<ReturnType<typeof db.run>>(new Promise((res) => res([])));
-
 </script>
 
 <DbGuard>
 	<div class="vert">
 		<div><Schema /></div>
-		<Editor bind:value={input} onResults={res => output = res} {output} />
+		<Editor bind:value={input} onResults={(res) => (output = res)} {output} />
 	</div>
 	{#await output then value}
 		<output>
@@ -23,6 +22,8 @@ let output = $state<ReturnType<typeof db.run>>(new Promise((res) => res([])));
 		<p>{error.message}</p>
 	{/await}
 </DbGuard>
+<l10n lang="en-US"> reference = Reference manual </l10n>
+<l10n lang="es"> reference = Manual de referencia </l10n>
 
 <style>
 output {
@@ -37,9 +38,3 @@ output {
 	margin-bottom: --spacing(4);
 }
 </style>
-<l10n lang="en-US">
-reference = Reference manual
-</l10n>
-<l10n lang="es">
-reference = Manual de referencia
-</l10n>

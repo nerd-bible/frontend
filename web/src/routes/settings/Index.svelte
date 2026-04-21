@@ -8,6 +8,7 @@ const routes = [
 	{ component: Storage, path: "storage" },
 ] satisfies RouteConfig[];
 </script>
+
 <div class="settings">
 	<nav>
 		<ul>
@@ -22,6 +23,8 @@ const routes = [
 		<Router basePath="/settings" {routes} />
 	</main>
 </div>
+<l10n lang="en-US"> sql = SQL storage = Storage </l10n>
+
 <style>
 .settings {
 	display: flex;
@@ -41,7 +44,3 @@ const routes = [
 	}
 }
 </style>
-<l10n lang="en-US">
-sql = SQL
-storage = Storage
-</l10n>

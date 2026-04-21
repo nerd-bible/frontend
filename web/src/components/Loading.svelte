@@ -1,6 +1,7 @@
 <script>
-import Menu from 'virtual:icons/lucide/menu';
+import Menu from "virtual:icons/lucide/menu";
 </script>
+
 <div class="loading">
 	<div class="book">
 		<figure class="page"><Menu /></figure>
@@ -10,6 +11,9 @@ import Menu from 'virtual:icons/lucide/menu';
 	</div>
 	<div>{t("loading")}</div>
 </div>
+<l10n lang="en-US"> loading = Loading </l10n>
+<l10n lang="es"> loading = Cargando </l10n>
+
 <style>
 .loading {
 	text-align: center;
@@ -52,10 +56,18 @@ import Menu from 'virtual:icons/lucide/menu';
 			transform-style: preserve-3d;
 			transform-origin: left center;
 			animation: pageTurn 1s cubic-bezier(0, 0.39, 1, 0.68) infinite;
-			&:nth-child(1) { animation: none; }
-			&:nth-child(2) { animation-delay: 0.6s; }
-			&:nth-child(3) { animation-delay: 0.45s; }
-			&:nth-child(4) { animation-delay: 0.2s; }
+			&:nth-child(1) {
+				animation: none;
+			}
+			&:nth-child(2) {
+				animation-delay: 0.6s;
+			}
+			&:nth-child(3) {
+				animation-delay: 0.45s;
+			}
+			&:nth-child(4) {
+				animation-delay: 0.2s;
+			}
 		}
 	}
 }
@@ -81,9 +93,3 @@ import Menu from 'virtual:icons/lucide/menu';
 	}
 }
 </style>
-<l10n lang="en-US">
-loading = Loading
-</l10n>
-<l10n lang="es">
-loading = Cargando
-</l10n>

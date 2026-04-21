@@ -12,7 +12,7 @@ function toString(v: any) {
 			return v.toString();
 		case "undefined":
 			return "UNDF";
-		case "object": 
+		case "object":
 			if (v === null) return "NULL";
 		case "symbol":
 		case "function":

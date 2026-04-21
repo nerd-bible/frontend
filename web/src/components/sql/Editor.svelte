@@ -15,7 +15,7 @@ function onSubmit(ev: SubmitEvent) {
 		last_time = time;
 	});
 
-	db.run(value).then(res => {
+	db.run(value).then((res) => {
 		cancelAnimationFrame(frame);
 		onResults(res);
 	});
@@ -23,7 +23,7 @@ function onSubmit(ev: SubmitEvent) {
 </script>
 
 <form onsubmit={onSubmit}>
-	<textarea name="query" placeholder="SELECT ..." bind:value={value}></textarea>
+	<textarea name="query" placeholder="SELECT ..." bind:value></textarea>
 	<div class="submit">
 		<input type="submit" />
 		{#await output}

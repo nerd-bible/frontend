@@ -1,7 +1,7 @@
 <script lang="ts">
-import Menu from 'virtual:icons/lucide/menu';
-import QuickSettings from './QuickSettings.svelte';
-import { route } from '@mateothegreat/svelte5-router';
+import Menu from "virtual:icons/lucide/menu";
+import QuickSettings from "./QuickSettings.svelte";
+import { route } from "@mateothegreat/svelte5-router";
 import { state as dbState } from "../workers/dispatcher.svelte.ts";
 
 let headerRef: HTMLElement;
@@ -9,19 +9,29 @@ let lastScrollY = window.scrollY;
 let isHidden = $state(false);
 let pointerOver = $state(false);
 function onScroll() {
-	isHidden = !pointerOver && window.scrollY > lastScrollY && !headerRef.contains(document.activeElement);
+	isHidden =
+		!pointerOver &&
+		window.scrollY > lastScrollY &&
+		!headerRef.contains(document.activeElement);
 	lastScrollY = window.scrollY;
 }
 </script>
+
 <svelte:document onscroll={onScroll} />
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <header
 	bind:this={headerRef}
 	class:hidden={isHidden}
-	onpointerenter={() => pointerOver = true}
-	onpointerleave={() => pointerOver = false}
+	onpointerenter={() => (pointerOver = true)}
+	onpointerleave={() => (pointerOver = false)}
 >
-	<a href="/" use:route class="logo" title={t("home")} class:connected={dbState.opened}></a>
+	<a
+		href="/"
+		use:route
+		class="logo"
+		title={t("home")}
+		class:connected={dbState.opened}
+	></a>
 	<form class="search">
 		<!-- svelte-ignore a11y_autofocus -->
 		<input
@@ -29,7 +39,7 @@ function onScroll() {
 			aria-label={t("search")}
 			placeholder={t("search")}
 			id="search"
-		>
+		/>
 	</form>
 	<nb-dropdown class="options">
 		<button aria-label={t("menu")}>
@@ -40,6 +50,9 @@ function onScroll() {
 		</div>
 	</nb-dropdown>
 </header>
+<l10n lang="en-US"> search = Search menu = Settings menu home = Home </l10n>
+<l10n lang="es"> search = Busca menu = Menú de configuración home = Casa </l10n>
+
 <style>
 .options > button {
 	display: flex;
@@ -67,9 +80,9 @@ header {
 		background-image: url(../../img/logo.svg), url(../../img/logo-32.png);
 		background-size: cover;
 		&.connected {
-			filter: drop-shadow(0 0 --spacing(2) var(--color-secondary)) 
-							drop-shadow(0 0 --spacing(4) var(--color-secondary))
-							drop-shadow(0 0 --spacing(8) var(--color-secondary));
+			filter: drop-shadow(0 0 --spacing(2) var(--color-secondary))
+				drop-shadow(0 0 --spacing(4) var(--color-secondary))
+				drop-shadow(0 0 --spacing(8) var(--color-secondary));
 		}
 	}
 
@@ -92,13 +105,3 @@ header {
 	}
 }
 </style>
-<l10n lang="en-US">
-search = Search
-menu = Settings menu
-home = Home
-</l10n>
-<l10n lang="es">
-search = Busca
-menu = Menú de configuración
-home = Casa
-</l10n>

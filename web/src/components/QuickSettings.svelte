@@ -1,7 +1,13 @@
 <script lang="ts">
 import { route } from "@mateothegreat/svelte5-router";
-import { settings, locales, textBlockings, chapterNumDisplays } from "../settings.svelte";
+import {
+	settings,
+	locales,
+	textBlockings,
+	chapterNumDisplays,
+} from "../settings.svelte";
 </script>
+
 <form class="popover">
 	<label>
 		<span>{t("theme")}</span>
@@ -13,11 +19,25 @@ import { settings, locales, textBlockings, chapterNumDisplays } from "../setting
 	</label>
 	<label>
 		<span>{t("fontSize")}</span>
-		<input id="fontSize" type="range" min="8" max="48" step="2" bind:value={settings.fontSize}>
+		<input
+			id="fontSize"
+			type="range"
+			min="8"
+			max="48"
+			step="2"
+			bind:value={settings.fontSize}
+		/>
 	</label>
 	<label>
 		<span>{t("columnWidth")}</span>
-		<input id="columnWidth" type="range" min="100" max="2000" step="20" bind:value={settings.columnWidth}>
+		<input
+			id="columnWidth"
+			type="range"
+			min="100"
+			max="2000"
+			step="20"
+			bind:value={settings.columnWidth}
+		/>
 	</label>
 	<label>
 		<span>{t("textBlocking")}</span>
@@ -41,8 +61,9 @@ import { settings, locales, textBlockings, chapterNumDisplays } from "../setting
 			type="checkbox"
 			id="showVerse"
 			checked={settings.showVerseNum === "true"}
-			onchange={(ev) => settings.showVerseNum = ev.currentTarget.checked ? "true" : "false"}
-		>
+			onchange={(ev) =>
+				(settings.showVerseNum = ev.currentTarget.checked ? "true" : "false")}
+		/>
 	</label>
 	<label>
 		<span>{t("showFootnote")}</span>
@@ -50,8 +71,9 @@ import { settings, locales, textBlockings, chapterNumDisplays } from "../setting
 			type="checkbox"
 			id="showFootnote"
 			checked={settings.showFootnotes === "true"}
-			onchange={(ev) => settings.showFootnotes = ev.currentTarget.checked ? "true" : "false"}
-		>
+			onchange={(ev) =>
+				(settings.showFootnotes = ev.currentTarget.checked ? "true" : "false")}
+		/>
 	</label>
 	<label>
 		<span>{t("language")}</span>
@@ -66,6 +88,21 @@ import { settings, locales, textBlockings, chapterNumDisplays } from "../setting
 		<span>v{APP_VERSION}</span>
 	</a>
 </form>
+<l10n lang="en-US">
+	theme = Theme system = System dark = Dark light = Light fontSize = Font size
+	columnWidth = Column width language = Language settings = Settings
+	textBlocking = Text blocking paragraph = Paragraph chapter = Chapter sentence
+	= Sentence showVerse = Show verse numbers showFootnote = Show footnotes
+	chapterDisplay = Chapter display float = Float normal = Normal small = Small
+	none = None
+</l10n>
+<l10n lang="es">
+	theme = Tema system = Sistema dark = Oscura light = Ligera fontSize = Tamaño
+	de fuente columnWidth = Ancho de columna language = Idioma settings = Ajustes
+	textBlocking = Bloqueo de texto paragraph = Párrafo chapter = Capítulo
+	sentence = Oración
+</l10n>
+
 <style>
 form {
 	padding: --spacing(2) 0;
@@ -105,38 +142,3 @@ form {
 	display: none;
 }
 </style>
-<l10n lang="en-US">
-theme = Theme
-system = System
-dark = Dark
-light = Light
-fontSize = Font size
-columnWidth = Column width
-language = Language
-settings = Settings
-textBlocking = Text blocking
-paragraph = Paragraph
-chapter = Chapter
-sentence = Sentence
-showVerse = Show verse numbers
-showFootnote = Show footnotes
-chapterDisplay = Chapter display
-float = Float
-normal = Normal
-small = Small
-none = None
-</l10n>
-<l10n lang="es">
-theme = Tema
-system = Sistema
-dark = Oscura
-light = Ligera
-fontSize = Tamaño de fuente
-columnWidth = Ancho de columna
-language = Idioma
-settings = Ajustes
-textBlocking = Bloqueo de texto
-paragraph = Párrafo
-chapter = Capítulo
-sentence = Oración
-</l10n>

@@ -6,7 +6,6 @@ import Settings from "./routes/settings/Index.svelte";
 </script>
 
 <Header />
-<Router routes={[
-	{ component: Reader },
-	{ path: "settings", component: Settings },
-]} />
+<Router
+	routes={[{ component: Reader }, { path: "settings", component: Settings }]}
+/>

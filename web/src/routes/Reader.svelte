@@ -25,19 +25,19 @@ let words = $state([]);
 // 		})
 // );
 </script>
+
 <main
 	style:width={`${settings.columnWidth}px`}
 	style:--font-size={`${settings.fontSize}px`}
 	style:--line-height-offset={settings.lineHeightOffset}
 >
 	{#if words}
-		<DbGuard>
-			Editor!!
-		</DbGuard>
+		<DbGuard>Editor!!</DbGuard>
 	{:else}
 		<Loading />
 	{/if}
 </main>
+
 <style>
 main {
 	padding: --spacing(4) 0;

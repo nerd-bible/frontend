@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { Snippet } from 'svelte';
+import type { Snippet } from "svelte";
 import { db } from "../workers/dispatcher.svelte.ts";
 import Loading from "./Loading.svelte";
 
