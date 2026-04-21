@@ -5,17 +5,25 @@ import { OPFSCoopSyncVFS as MyVFS } from "wa-sqlite/src/examples/OPFSCoopSyncVFS
 import { sqlite as utils, gen, exo } from "@nerd-bible/schema";
 
 let sqlite3: SQLiteAPI;
-let db: number;
+let db = -1;
+const fname = "sample.sqlite3";
 
 const api = {
+	async init(): Promise<void> {
+		if (!sqlite3) {
+			const mod = await SQLiteESMFactory();
+			sqlite3 = SQLite.Factory(mod);
+			console.log("sqlite", sqlite3.libversion());
+			const vfs = await MyVFS.create("vfs", mod);
+			sqlite3.vfs_register(vfs, true);
+		}
+	},
 	async open(): Promise<void> {
-		const mod = await SQLiteESMFactory();
-		sqlite3 = SQLite.Factory(mod);
-		console.log("sqlite", sqlite3.libversion());
-		const vfs = await MyVFS.create("hello", mod);
-		sqlite3.vfs_register(vfs, true);
-		db = await sqlite3.open_v2("/foo/bar/sample.sqlite3");
-		console.log("opened");
+		db = await sqlite3.open_v2(fname);
+	},
+	async close(): Promise<void> {
+		await sqlite3.close(db);
+		db = -1;
 	},
 	async ingest(): Promise<void> {
 		await utils.ingest.schema(api);
@@ -29,9 +37,11 @@ const api = {
 		}
 	},
 	async exec(sql: string) {
+		if (db == -1) await this.open();
 		await sqlite3.exec(db, sql);
 	},
 	async run(sql: string) {
+		if (db == -1) await this.open();
 		let rows: Record<string, any>[] = [];
 		await sqlite3.exec(db, sql, (r, c) => {
 			const row: Record<string, any> = {};

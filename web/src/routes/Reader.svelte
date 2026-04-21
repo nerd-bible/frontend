@@ -1,6 +1,6 @@
 <script lang="ts">
 import Loading from "../components/Loading.svelte";
-import Editor from "../components/editor/Editor.svelte";
+import DbGuard from "../components/DbGuard.svelte";
 import { settings } from "../settings.svelte";
 
 let dir = $state<"ltr" | "rtl">("ltr");
@@ -31,7 +31,9 @@ let words = $state([]);
 	style:--line-height-offset={settings.lineHeightOffset}
 >
 	{#if words}
-		<Editor {id} {dir} {words} />
+		<DbGuard>
+			Editor!!
+		</DbGuard>
 	{:else}
 		<Loading />
 	{/if}

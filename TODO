@@ -9,7 +9,8 @@
 	- [x] form
 	- [x] tabs
 	- [x] tree view
-	- [ ] import/export/delete
+	- [ ] import
+	- [x] export/delete
 	- [ ] codemirror
 	- [ ] mobile
 	- [ ] tree view + opfs view refresh

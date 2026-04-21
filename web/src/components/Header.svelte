@@ -2,6 +2,7 @@
 import Menu from 'virtual:icons/lucide/menu';
 import QuickSettings from './QuickSettings.svelte';
 import { route } from '@mateothegreat/svelte5-router';
+import { state as dbState } from "../workers/dispatcher.svelte.ts";
 
 let headerRef: HTMLElement;
 let lastScrollY = window.scrollY;
@@ -20,7 +21,7 @@ function onScroll() {
 	onpointerenter={() => pointerOver = true}
 	onpointerleave={() => pointerOver = false}
 >
-	<a href="/" use:route class="logo" title={t("home")}></a>
+	<a href="/" use:route class="logo" title={t("home")} class:connected={dbState.opened}></a>
 	<form class="search">
 		<!-- svelte-ignore a11y_autofocus -->
 		<input
@@ -65,6 +66,11 @@ header {
 		aspect-ratio: 1;
 		background-image: url(../../img/logo.svg), url(../../img/logo-32.png);
 		background-size: cover;
+		&.connected {
+			filter: drop-shadow(0 0 --spacing(2) var(--color-secondary)) 
+							drop-shadow(0 0 --spacing(4) var(--color-secondary))
+							drop-shadow(0 0 --spacing(8) var(--color-secondary));
+		}
 	}
 
 	& > .search {

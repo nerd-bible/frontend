@@ -1,6 +1,6 @@
 <script lang="ts">
-import Dir from "./Dir.svelte";
-import { reset } from "../settings.svelte.ts";
+import Dir from "../../components/Dir.svelte";
+import { reset } from "../../settings.svelte.ts";
 
 let dir = $state<FileSystemDirectoryHandle>();
 navigator.storage.getDirectory().then(res => dir = res);
