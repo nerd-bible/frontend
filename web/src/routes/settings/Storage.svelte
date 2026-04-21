@@ -12,6 +12,6 @@ navigator.storage.getDirectory().then((res) => (dir = res));
 </div>
 <div>
 	<button onclick={reset}>
-		<span>{t("Reset <strong>all</strong> settings")}</span>
+		<span>{@html t("Reset <strong>all</strong> settings")}</span>
 	</button>
 </div>

@@ -8,6 +8,7 @@
 import { FluentBundle, FluentResource } from "@fluent/bundle";
 import type { FluentVariable } from "@fluent/bundle";
 import { settings } from "./settings.svelte";
+import { createRawSnippet } from "svelte";
 
 // Fluent file
 type Ftl = string;

@@ -1,13 +1,14 @@
 <script lang="ts">
 import Dir from "./Dir.svelte";
 let { dir }: { dir?: FileSystemDirectoryHandle } = $props();
+import { db } from "../workers/dispatcher.svelte.ts";
 
+type Handle = FileSystemFileHandle | FileSystemDirectoryHandle;
 async function walk(dir?: FileSystemDirectoryHandle) {
-	type Handle = FileSystemFileHandle | FileSystemDirectoryHandle;
 	const res: Handle[] = [];
 	if (dir) {
-		for await (const [key, value] of dir.entries()) {
-			res.push(value);
+		for await (const handle of dir.values()) {
+			res.push(handle);
 		}
 	}
 
@@ -28,8 +29,10 @@ let entries = $derived(walk(dir));
 					{/await}
 				{/if}
 				<button
-					onclick={() => {
-						f.remove({ recursive: true });
+					onclick={async () => {
+						await db.close();
+						await dir!.removeEntry(f.name, { recursive: true });
+						entries = walk(dir);
 					}}
 				>
 					delete

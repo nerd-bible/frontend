@@ -22,8 +22,10 @@ const api = {
 		db = await sqlite3.open_v2(fname);
 	},
 	async close(): Promise<void> {
-		await sqlite3.close(db);
-		db = -1;
+		if (sqlite3) {
+			await sqlite3.close(db);
+			db = -1;
+		}
 	},
 	async ingest(): Promise<void> {
 		await utils.ingest.schema(api);
