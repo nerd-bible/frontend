@@ -1,125 +1,124 @@
 <script lang="ts">
+import { t } from "../../l10n.svelte";
 import { settings } from "../../settings.svelte";
+import { db } from "../../workers/dispatcher.svelte";
+import Loading from "../Loading.svelte";
 import "./schema.css";
 
-type Word = {
-	index: number;
-	sentId: number;
-	id: number;
-	form: string;
-	chapter: number | null;
-	verse: string | null;
-	newpar: string | null;
-	noSpaceAfter: boolean | null;
-};
 interface Props {
-	id: string;
-	dir: "ltr" | "rtl";
+	book: string;
 }
 
-const { dir }: Props = $props();
+const { book }: Props = $props();
+let dir = $state<"ltr" | "rtl">("ltr");
 
-const doc = $derived.by(() => {
-	return prosemirror.sample as PmNode;
-});
+type Word = {
+	id: bigint;
+	text: string;
+};
+type Doc = {
+	id: bigint;
+	lang: string;
+	title: string;
 
-let tooltipRef: HTMLElement;
-let editorRef: HTMLElement;
-let view: EditorView;
-let editable = $state(false);
+	words: Word[];
+};
 
-$effect(() => {
-	if (!tooltipRef || !editorRef) return;
+let meta = $state<Doc | string>();
+let tree = $state([
+	{ c: 1 },
+	{ h2: "The Creation" },
+	{
+		p: [
+			{ id: 12, v: 1 },
+			{ id: 13, text: "In " },
+			{ id: 15, text: "the " },
+			{ id: 16, pn: 123 },
+		],
+	},
+]);
+let outlineDoc = $state<bigint>();
+let paraDoc = $state<bigint>();
 
-	view = new EditorView(editorRef, {
-		state: EditorState.create({
-			schema: doc.type.schema,
-			plugins: [
-				// There are ways to use Svelte in plugins via
-				// `@prosemirror-adapter/svelte`. I gave up after a day because
-				// overriding methods like `update` and `stopEvent` that need
-				// component state is too difficult. The reactive model of svelte
-				// is mostly incompatible with the stateful class model of
-				// prosemirror-view.
-				// As a bonus the editor isn't dependent on Svelte and is sharable
-				// with others.
-				plugins.annotation,
-				plugins.footnote,
-				plugins.bubbleMenu(tooltipRef),
-			],
-		}),
-		editable: () => editable,
-	});
-
-	return () => view.destroy();
-});
-
-$effect(() => {
-	if (!view) return;
-
-	doc.check();
-	console.time("render");
-	const newState = EditorState.create({ doc, plugins: view.state.plugins });
-	view.updateState(newState);
-
-	requestAnimationFrame(() => console.timeEnd("render"));
-	// selection: TextSelection.between(doc.resolve(0), doc.resolve(0)),
-});
-
-$effect(() => {
-	if (!view) return;
-	void doc;
-
-	const addClasses = view.state.tr.setMeta(
-		"annotationClasses",
-		$state.snapshot(settings.userHighlights),
-	);
-	view.dispatch(addClasses);
-});
+// $effect(() => {
+// 	async function foo() {
+// 		const base = await db.run(`
+// 			SELECT id, lang, name FROM scripture
+// 			JOIN doc d ON d.id = doc
+// 			WHERE book='${book}' AND lang='${settings.locale}';
+// 		`);
+// 		if (!base.length) {
+// 			doc = t("Cannot find {book} in {locale}", {
+// 				book,
+// 				locale: settings.locale,
+// 			});
+// 			return;
+// 		}
+// 		doc = {
+// 			id: base[0].id,
+// 			lang: base[0].lang,
+// 			title: base[0].name,
+// 			words: [],
+// 		};
+// 		db.run(
+// 			`
+// 			SELECT id, text FROM word
+// 			WHERE doc=${doc.id}
+// 		`,
+// 		).then((res) => {
+// 			(doc as Doc).words = res as Word[];
+// 		});
+// 	}
+// 	foo();
+// });
 </script>
 
-<label>
-	editable
-	<input type="checkbox" bind:checked={editable} />
-</label>
 <div
 	class="nb-bible"
 	{dir}
-	bind:this={editorRef}
 	class:hide-verse-num={settings.showVerseNum !== "true"}
 	class:hide-footnotes={settings.showFootnotes !== "true"}
 	data-chapter-display={settings.chapterNumDisplay}
-></div>
-<!-- svelte-ignore a11y_no_static_element_interactions -->
-<div
-	class="tooltip"
-	bind:this={tooltipRef}
-	onmousedown={(ev) => ev.preventDefault()}
 >
-	{#each Object.keys(settings.userHighlights) as k}
-		<button
-			onclick={() => {
-				if (!view) return;
-
-				const { from, to } = view.state.selection;
-				view?.dispatch(
-					view.state.tr.setMeta("annotate", { from, to, class: k }),
-				);
-				document.getSelection()?.removeAllRanges();
-
-				// const decoSet: DecorationSet = key.getState(view.state);
-				// const decos = decoSet.find(from, to);
-				// console.log(decos);
-			}}
-		>
-			{k}
-		</button>
-	{/each}
-	<button
-		onclick={() => {
-			settings.userHighlights["pink"] = {
-				"background-color": "rgb(255,192,203)",
-			};
-		}}>add</button
-	>
+	{#if typeof doc === "object"}
+		{doc.words.map((w) => w.text).join("")}
+	{:else if typeof doc === "string"}
+		{doc}
+		<!-- TODO: go to collection view -->
+	{:else}
+		<Loading />
+	{/if}
 </div>
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<!-- <div -->
+<!-- 	class="tooltip" -->
+<!-- 	bind:this={tooltipRef} -->
+<!-- 	onmousedown={(ev) => ev.preventDefault()} -->
+<!-- > -->
+<!-- 	{#each Object.keys(settings.userHighlights) as k} -->
+<!-- 		<button -->
+<!-- 			onclick={() => { -->
+<!-- 				if (!view) return; -->
+<!---->
+<!-- 				const { from, to } = view.state.selection; -->
+<!-- 				view?.dispatch( -->
+<!-- 					view.state.tr.setMeta("annotate", { from, to, class: k }), -->
+<!-- 				); -->
+<!-- 				document.getSelection()?.removeAllRanges(); -->
+<!---->
+<!-- 				// const decoSet: DecorationSet = key.getState(view.state); -->
+<!-- 				// const decos = decoSet.find(from, to); -->
+<!-- 				// console.log(decos); -->
+<!-- 			}} -->
+<!-- 		> -->
+<!-- 			{k} -->
+<!-- 		</button> -->
+<!-- 	{/each} -->
+<!-- 	<button -->
+<!-- 		onclick={() => { -->
+<!-- 			settings.userHighlights["pink"] = { -->
+<!-- 				"background-color": "rgb(255,192,203)", -->
+<!-- 			}; -->
+<!-- 		}}>add</button -->
+<!-- 	> -->
+<!-- </div> -->

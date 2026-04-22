@@ -1,9 +1,9 @@
 <script lang="ts">
 import Menu from "virtual:icons/lucide/menu";
 import QuickSettings from "./QuickSettings.svelte";
-import { route } from "@mateothegreat/svelte5-router";
 import { state as dbState } from "../workers/dispatcher.svelte.ts";
 import { t } from "../l10n.svelte.ts";
+import { p } from "../routes.ts";
 
 let headerRef: HTMLElement;
 let lastScrollY = window.scrollY;
@@ -27,8 +27,7 @@ function onScroll() {
 	onpointerleave={() => (pointerOver = false)}
 >
 	<a
-		href="/"
-		use:route
+		href={p("/")}
 		class="logo"
 		title={t("Home")}
 		class:connected={dbState.opened}

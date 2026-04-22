@@ -9,17 +9,18 @@ const storage = localStorage;
 export const initial = {
 	locale: negotiateLanguages(navigator.languages, Object.keys(locales), {
 		strategy: "lookup",
-		defaultLocale: "en-US",
+		defaultLocale: locales[0],
 	})[0]!,
-	theme: "system",
+	theme: "System",
+	// Reader settings
 	columnWidth: "600",
 	fontSize: parseFloat(getComputedStyle(document.body).fontSize).toString(),
 	lineHeightOffset: "1.2rem",
-	textBlocking: "paragraph" as TextBlocking,
-	chapterNumDisplay: "float" as ChapterNumDisplay,
+	chapterNumDisplay: "Float",
 	showVerseNum: "false",
 	showFootnotes: "false",
 };
+export const length = $state({ n: storage.length });
 
 function safeParse(s?: string | null): any {
 	if (!s) return;
@@ -50,10 +51,11 @@ $effect.root(() => {
 		$effect(() => {
 			if (settings[key] === initial[key]) storage.removeItem(key);
 			else storage.setItem(key, JSON.stringify(settings[key]));
+			length.n = storage.length;
 		});
 	}
 	$effect(() => {
-		document.documentElement.className = settings.theme;
+		document.documentElement.className = settings.theme.toLowerCase();
 	});
 });
 
@@ -62,6 +64,8 @@ export function reset() {
 		// @ts-ignore
 		settings[k] = initial[k];
 	}
+	storage.clear();
+	length.n = storage.length;
 }
 
 // Watch storage to react to other tabs changing
@@ -71,12 +75,12 @@ window.addEventListener("storage", (ev) => {
 			const k = ev.key as keyof typeof initial;
 			(settings[k] as string) = safeParse(ev.newValue) ?? initial[k];
 		} else reset();
+		length.n = storage.length;
 	}
 });
 
 // Misc constants
 export { locales };
-export const textBlockings = ["publisher", "chapter"] as const;
-export type TextBlocking = (typeof textBlockings)[number];
+export const themes = ["System", "Dark", "Light"] as const;
 export const chapterNumDisplays = ["Float", "Normal", "Small", "None"] as const;
 export type ChapterNumDisplay = (typeof chapterNumDisplays)[number];

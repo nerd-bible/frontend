@@ -29,4 +29,7 @@ export const db = {
 	async run(sql: string) {
 		return wrapped.run(sql);
 	},
+	async write(path: string, data: Uint8Array) {
+		return wrapped.write(path, Comlink.transfer(data, [data.buffer]));
+	},
 };

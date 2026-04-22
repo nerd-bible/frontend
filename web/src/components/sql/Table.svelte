@@ -16,6 +16,7 @@ function toString(v: any) {
 			if (v === null) return "NULL";
 		case "symbol":
 		case "function":
+			if (ArrayBuffer.isView(v)) return `BLOB (${v.byteLength})`;
 			return "????";
 	}
 }

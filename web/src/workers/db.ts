@@ -22,7 +22,7 @@ const api = {
 		db = await sqlite3.open_v2(fname);
 	},
 	async close(): Promise<void> {
-		if (sqlite3) {
+		if (sqlite3 && db !== -1) {
 			await sqlite3.close(db);
 			db = -1;
 		}
@@ -51,6 +51,21 @@ const api = {
 			rows.push(row);
 		});
 		return rows;
+	},
+	async write(path: string, data: Uint8Array): Promise<void> {
+		let dir = await navigator.storage.getDirectory();
+		const split = path.split("/").filter(Boolean);
+		console.log("write", path, split);
+		for (const p of split.slice(0, split.length - 1)) {
+			console.log("open", p);
+			dir = await dir.getDirectoryHandle(p, { create: true });
+		}
+
+		const fileHandle = await dir.getFileHandle(split.pop()!, { create: true });
+		const sync = await fileHandle.createSyncAccessHandle();
+		sync.truncate(0);
+		sync.write(data);
+		sync.close();
 	},
 };
 export type Db = typeof api;

@@ -1,92 +1,80 @@
 <script lang="ts">
-import { route } from "@mateothegreat/svelte5-router";
-import {
-	settings,
-	locales,
-	textBlockings,
-	chapterNumDisplays,
-} from "../settings.svelte";
+import { settings, chapterNumDisplays, themes } from "../settings.svelte";
 import { t } from "../l10n.svelte.ts";
+import { p, route } from "../routes.ts";
 </script>
 
 <form class="popover">
+	<!-- <label> -->
+	<!-- 	<span>{t("Language")}</span> -->
+	<!-- 	<select name="locale" bind:value={settings.locale}> -->
+	<!-- 		{#each locales as k} -->
+	<!-- 			<option value={k}> -->
+	<!-- 				{new Intl.DisplayNames([k], { type: "language" }).of(k)} -->
+	<!-- 			</option> -->
+	<!-- 		{/each} -->
+	<!-- 	</select> -->
+	<!-- </label> -->
 	<label>
 		<span>{t("Theme")}</span>
-		<select id="theme" bind:value={settings.theme}>
-			<option value="system">{t("System")}</option>
-			<option value="dark">{t("Dark")}</option>
-			<option value="light">{t("Light")}</option>
-		</select>
-	</label>
-	<label>
-		<span>{t("Font size")}</span>
-		<input
-			id="fontSize"
-			type="range"
-			min="8"
-			max="48"
-			step="2"
-			bind:value={settings.fontSize}
-		/>
-	</label>
-	<label>
-		<span>{t("Column width")}</span>
-		<input
-			id="columnWidth"
-			type="range"
-			min="100"
-			max="2000"
-			step="20"
-			bind:value={settings.columnWidth}
-		/>
-	</label>
-	<label>
-		<span>{t("Text blocking")}</span>
-		<select id="textBlocking" bind:value={settings.textBlocking}>
-			{#each textBlockings as textBlocking}
-				<option value={textBlocking}>{t(textBlocking)}</option>
+		<select name="theme" bind:value={settings.theme}>
+			{#each themes as theme}
+				<option value={theme}>{t(theme)}</option>
 			{/each}
 		</select>
 	</label>
-	<label>
-		<span>{t("Chapter display")}</span>
-		<select id="chapterDisplay" bind:value={settings.chapterNumDisplay}>
-			{#each chapterNumDisplays as numDisplay}
-				<option value={numDisplay}>{t(numDisplay)}</option>
-			{/each}
-		</select>
-	</label>
-	<label>
-		<span>{t("Show verse")}</span>
-		<input
-			type="checkbox"
-			id="showVerse"
-			checked={settings.showVerseNum === "true"}
-			onchange={(ev) =>
-				(settings.showVerseNum = ev.currentTarget.checked ? "true" : "false")}
-		/>
-	</label>
-	<label>
-		<span>{t("Show footnote")}</span>
-		<input
-			type="checkbox"
-			id="showFootnote"
-			checked={settings.showFootnotes === "true"}
-			onchange={(ev) =>
-				(settings.showFootnotes = ev.currentTarget.checked ? "true" : "false")}
-		/>
-	</label>
-	<label>
-		<span>{t("Language")}</span>
-		<select id="locale" bind:value={settings.locale}>
-			{#each locales as k}
-				<option value={k}>
-					{new Intl.DisplayNames([k], { type: "language" }).of(k)}
-				</option>
-			{/each}
-		</select>
-	</label>
-	<a href="/settings" use:route>
+
+	{#if route.pathname.match(/^\/[^/]+$/)}
+		<label>
+			<span>{t("Font size")}</span>
+			<input
+				type="range"
+				min="8"
+				max="48"
+				step="2"
+				bind:value={settings.fontSize}
+			/>
+		</label>
+		<label>
+			<span>{t("Column width")}</span>
+			<input
+				type="range"
+				min="100"
+				max="2000"
+				step="20"
+				bind:value={settings.columnWidth}
+			/>
+		</label>
+		<label>
+			<span>{t("Chapter style")}</span>
+			<select name="chapterStyle" bind:value={settings.chapterNumDisplay}>
+				{#each chapterNumDisplays as numDisplay}
+					<option value={numDisplay}>{t(numDisplay)}</option>
+				{/each}
+			</select>
+		</label>
+		<label>
+			<span>{t("Show verse numbers")}</span>
+			<input
+				type="checkbox"
+				checked={settings.showVerseNum === "true"}
+				onchange={(ev) =>
+					(settings.showVerseNum = ev.currentTarget.checked ? "true" : "false")}
+			/>
+		</label>
+		<label>
+			<span>{t("Show footnotes")}</span>
+			<input
+				type="checkbox"
+				checked={settings.showFootnotes === "true"}
+				onchange={(ev) =>
+					(settings.showFootnotes = ev.currentTarget.checked
+						? "true"
+						: "false")}
+			/>
+		</label>
+	{/if}
+	<a href={p("/settings")}>
 		<span>{t("Settings")}</span>
 		<span>{APP_VERSION}</span>
 	</a>

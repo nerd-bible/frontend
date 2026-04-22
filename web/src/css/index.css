@@ -1,6 +1,6 @@
 @import "./pallette.css";
 @import "./theme.css";
-@import "./preflight.css";
+@import "./reset.css";
 
 :root {
 	font-family: var(--font-sans);
