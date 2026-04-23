@@ -1,12 +1,8 @@
-import type { Doc as DocMeta, Word, Mark } from "@nerd-bible/schema";
+import type { Doc as DocMeta } from "@nerd-bible/schema";
 import { db, sql } from "../../workers/dispatcher.svelte";
 import { t } from "../../l10n.svelte";
 
-type Rename<T, K extends keyof T, N extends string> = Pick<
-	T,
-	Exclude<keyof T, K>
-> & { [P in N]: T[K] };
-
+type Word = { tag: "w"; pos: bigint; text?: string; lang?: string };
 export type Child =
 	| { pos: bigint; tag: "c"; data: number }
 	| { pos: bigint; tag: "v"; data: number }
@@ -26,7 +22,8 @@ export type Child =
 			verse?: number;
 			children: Child[];
 	  }
-	| { tag: "w"; pos: bigint; text?: string; lang?: string };
+	| Word
+	| { tag: "words"; children: Word[] };
 
 export type Doc = DocMeta & { tag: "doc"; children: Child[] };
 
@@ -48,6 +45,29 @@ function sortChild(a: Child, b: Child): number {
 	return a.tag.localeCompare(b.tag, "eng");
 }
 
+// Makes rendering to DOM much faster and may help screenreaders.
+function groupAdjacentWords(c: Doc | Child) {
+	if ("children" in c) {
+		const newChildren: Child[] = [];
+		let group: { tag: "words"; children: Word[] } | undefined;
+		for (let i = 0; i < c.children.length; i++) {
+			const c2 = c.children[i];
+			if (c2.tag === "w" && (i == 0 || c2.tag === "w")) {
+				if (!group?.children.length) {
+					group = { tag: "words", children: [] as Word[] };
+					newChildren.push(group);
+				}
+				group.children.push(c2);
+			} else {
+				groupAdjacentWords(c2);
+				newChildren.push(c2);
+				group = undefined;
+			}
+		}
+		c.children = newChildren;
+	}
+}
+
 export async function fromDoc(id: bigint): Promise<Doc> {
 	const docMeta = await db.run<Omit<DocMeta, "id"> & { createdAt: number }>(sql`
 		SELECT lang, createdAt, title
@@ -66,14 +86,17 @@ export async function fromDoc(id: bigint): Promise<Doc> {
 		children: [],
 	};
 
-	const words = await db.run<
-		Rename<Omit<Word, "doc">, "id", "pos"> & { tag: "w" }
-	>(sql`
+	const words = await db.run<{
+		tag: "w";
+		pos: bigint;
+		lang: string;
+		text: string;
+	}>(sql`
 		SELECT
 			'w' AS tag,
 			id AS pos,
 			lang,
-			TEXT
+			text
 		FROM word
 		WHERE doc = ${id};
 	`);
@@ -101,36 +124,41 @@ export async function fromDoc(id: bigint): Promise<Doc> {
 		});
 	}
 
-	const outline = await db.run<{ pos: bigint; level: string; text: string }>(
-		sql`
-			WITH
-				cv(doc, pos, c, v) AS (
-					SELECT
-						doc,
-						start,
-						(
-							SELECT
-								data
-							FROM mark
-							WHERE doc = m.doc AND tag = 'c' AND start <= m.start
-							ORDER BY start DESC
-						) AS c,
-						data AS v
-					FROM mark AS m
-					WHERE tag = 'v' AND doc = ${id}
-				)
-			SELECT
-				'h' AS tag,
-				(SELECT pos FROM cv WHERE c = chapter AND v = verse) AS pos,
-				level,
-				TEXT
-			FROM outline
-			WHERE doc = (SELECT doc FROM cv LIMIT 1);
-		`,
-	);
+	const outline = await db.run<{
+		tag: "h";
+		pos: bigint;
+		level: number;
+		text: string;
+	}>(sql`
+		WITH
+			cv(doc, pos, c, v) AS (
+				SELECT
+					doc,
+					start,
+					(
+						SELECT
+							data
+						FROM mark
+						WHERE doc = m.doc AND tag = 'c' AND start <= m.start
+						ORDER BY start DESC
+					) AS c,
+					data AS v
+				FROM mark AS m
+				WHERE tag = 'v' AND doc = ${id}
+			)
+		SELECT
+			'h' AS tag,
+			(SELECT pos FROM cv WHERE c = chapter AND v = verse) AS pos,
+			level,
+			TEXT
+		FROM outline
+		WHERE doc = (SELECT doc FROM cv LIMIT 1);
+	`);
 	res.children.push(...outline);
 
 	res.children.sort(sortChild);
+
+	groupAdjacentWords(res);
 
 	console.log(res);
 	return res;

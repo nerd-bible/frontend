@@ -2,12 +2,12 @@
 	/* Offset allows room for verse and inline chapter numbers */
 	line-height: calc(var(--font-size) + var(--line-height-offset));
 
-	/* h2 = chapter numbers */
-	/* h3 = heading */
+	/* h2 = chapter number */
+	/* h3-h6 = outline heading */
 
 	&.hide-verse-num .verse-num,
 	&.hide-footnotes .footnote,
-	&[data-chapter-display="float"] h2 + p > sup:first-child {
+	&[data-chapter-display="Float"] h2 + p > .verse-num {
 		display: none;
 	}
 
@@ -15,12 +15,13 @@
 		margin-bottom: --spacing(4);
 	}
 
-	h2 {
-		font-size: 3em;
+	h1, h2, h3, h4, h5, h6 {
 		text-align: center;
 		user-select: none;
+		line-height: normal;
 	}
-	&[data-chapter-display="normal"] h2 {
+
+	&[data-chapter-display="Normal"] h2 {
 		line-height: normal;
 		margin-bottom: --spacing(1);
 
@@ -28,25 +29,28 @@
 			margin-top: 0;
 		}
 	}
-	&[data-chapter-display="float"] h2 {
-		/* TODO: make work in older browsers */
+	&[data-chapter-display="Float"] h2 {
 		float: inline-start;
 		margin-inline-start: --spacing(-1);
 		margin-inline-end: --spacing(5);
 		/* eyeballed to be about two lines tall for inline */
 		/* must keep in sync with font-size */
 		padding-top: calc((var(--font-size) + var(--line-height-offset)) / 2);
+
+		& .t {
+			display: none;
+		}
 	}
-	&[data-chapter-display="float"] h2 + p {
+	&[data-chapter-display="Float"] h2 + p {
 		/* make space for chapter number */
 		min-height: calc((var(--font-size) + var(--line-height-offset)) * 2);
 	}
-	&[data-chapter-display="none"] h2 {
+	&[data-chapter-display="None"] h2 {
 		display: none;
 	}
-	&[data-chapter-display="small"] h2 {
+	&[data-chapter-display="Small"] h2 {
 		opacity: 0.5;
-		font-size: 0.5em;
+		font-size: 0.75em;
 		position: relative;
 		display: flex;
 		align-items: center;
@@ -68,7 +72,13 @@
 	}
 
 	.verse-num {
+		&::before { 
+			content: " ";
+		}
 		opacity: 0.75;
-		padding-inline-end: --spacing(1);
+		margin-inline-end: 2px;
+		& ~ * {
+			margin-inline-end: -2px;
+		}
 	}
 }

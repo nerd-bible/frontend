@@ -23,7 +23,9 @@
 - [ ] good editor
 	- [ ] tree structure
 	- [ ] reactive database
-	- [ ] arbitrary CSS
+	- [ ] PRETTY
+		- [ ] arbitrary CSS
+		- [ ] text-align justify
 	- [ ] user notes
 	- [ ] word tooltip
 

@@ -16,7 +16,7 @@ export const initial = {
 	columnWidth: "600",
 	fontSize: parseFloat(getComputedStyle(document.body).fontSize).toString(),
 	lineHeightOffset: "1.2rem",
-	chapterNumDisplay: "Float",
+	chapterNumDisplay: "Normal",
 	showVerseNum: "false",
 	showFootnotes: "false",
 };
@@ -82,5 +82,5 @@ window.addEventListener("storage", (ev) => {
 // Misc constants
 export { locales };
 export const themes = ["System", "Dark", "Light"] as const;
-export const chapterNumDisplays = ["Float", "Normal", "Small", "None"] as const;
+export const chapterNumDisplays = ["Normal", "Float", "Small", "None"] as const;
 export type ChapterNumDisplay = (typeof chapterNumDisplays)[number];

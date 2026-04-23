@@ -4,6 +4,7 @@ import { fromBookLang, findPos } from "./tree.svelte.ts";
 import type { Child, Doc } from "./tree.svelte.ts";
 import Loading from "../Loading.svelte";
 import "./schema.css";
+import { t } from "../../l10n.svelte.ts";
 
 interface Props {
 	book: string;
@@ -11,21 +12,22 @@ interface Props {
 
 const { book }: Props = $props();
 let dir = $state<"ltr" | "rtl">("ltr");
-
 let doc = $derived(fromBookLang(book, settings.locale));
 </script>
 
 {#snippet ele(c: Child | Doc)}
 	{#if c.tag === "c"}
-		<h1>{c.data}</h1>
+		<h2><span><span class="t">{t("Chapter ")}</span>{c.data}</span></h2>
 	{:else if c.tag === "h"}
-		<svelte:element this={`h${c.level + 1}`}>
+		<svelte:element this={`h${c.level + 2}`}>
 			{c.text}
 		</svelte:element>
 	{:else if c.tag === "v"}
-		<sup class="verse">{c.data}</sup>
+		<sup class="verse-num">{c.data}</sup>
 	{:else if c.tag === "w"}
 		{c.text}
+	{:else if c.tag === "words"}
+		{c.children.map(c => c.text).join("")}
 	{:else if "children" in c}
 		{#each c.children as c2}
 			{@render ele(c2)}
@@ -43,6 +45,7 @@ let doc = $derived(fromBookLang(book, settings.locale));
 	{#await doc}
 		<Loading />
 	{:then d}
+		<h1>{d.title}</h1>
 		{@render ele(d)}
 	{:catch error}
 		<pre>{error.message}</pre>
