@@ -1,7 +1,10 @@
-import type { CompileOptions } from "svelte/compiler";
+import type { SvelteConfig } from "@sveltejs/vite-plugin-svelte";
 
-const opts: CompileOptions = {
-	// This way every component update doesn't affect the CSS.
-	css: "injected",
+const config: SvelteConfig = {
+	compilerOptions: {
+		experimental: {
+			async: true,
+		},
+	},
 };
-export default opts;
+export default config;

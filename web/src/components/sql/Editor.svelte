@@ -1,7 +1,12 @@
 <script lang="ts">
 import { db } from "../../workers/dispatcher.svelte";
 
-let { value = $bindable(), onResults, output } = $props();
+type Props = {
+	value: string;
+	onResults: (val: ReturnType<typeof db.run>) => void;
+	output: ReturnType<typeof db.run>;
+};
+let { value = $bindable(), onResults, output }: Props = $props();
 let elapsed = $state(0);
 
 function onSubmit(ev: SubmitEvent) {
@@ -15,10 +20,7 @@ function onSubmit(ev: SubmitEvent) {
 		last_time = time;
 	});
 
-	db.run(value).then((res) => {
-		cancelAnimationFrame(frame);
-		onResults(res);
-	});
+	onResults(db.run(value).finally(() => cancelAnimationFrame(frame)));
 }
 </script>
 

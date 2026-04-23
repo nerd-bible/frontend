@@ -2,9 +2,9 @@
 import Editor from "../components/editor/Editor.svelte";
 import DbGuard from "../components/DbGuard.svelte";
 import { settings } from "../settings.svelte";
+import { route } from '../routes.ts';
 
-let { route } = $props();
-const book = $derived(route.result.path.params.book);
+const book = $derived(route.getParams("/:id").id);
 </script>
 
 <main

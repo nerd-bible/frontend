@@ -6,8 +6,8 @@ import Download from "virtual:icons/lucide/download";
 import Upload from "virtual:icons/lucide/upload";
 import { t } from "../l10n.svelte.ts";
 
-let { dir, path = "" }: { dir?: FileSystemDirectoryHandle; path: string } =
-	$props();
+type Props = { dir?: FileSystemDirectoryHandle; path?: string };
+let { dir, path = "" }: Props = $props();
 
 type Handle = FileSystemFileHandle | FileSystemDirectoryHandle;
 async function walk(dir?: FileSystemDirectoryHandle) {

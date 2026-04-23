@@ -12,7 +12,11 @@ let output = $state<ReturnType<typeof db.run>>(new Promise((res) => res([])));
 <DbGuard>
 	<div class="vert">
 		<div><Schema /></div>
-		<Editor bind:value={input} onResults={(res) => (output = res)} {output} />
+		<Editor
+			bind:value={input}
+			onResults={(res: ReturnType<typeof db.run>) => (output = res)}
+			{output}
+		/>
 	</div>
 	{#await output then value}
 		<output>

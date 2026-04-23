@@ -23,13 +23,24 @@ export const db = {
 	async ingest(): Promise<void> {
 		return wrapped.ingest();
 	},
-	async exec(sql: string) {
-		return wrapped.exec(sql);
+	async exec(sql: string): Promise<void> {
+		return wrapped.exec(sql).catch(e => {
+			throw Error(`${sql}\n\n${e}`);
+		});
 	},
-	async run(sql: string) {
-		return wrapped.run(sql);
+	async run<T>(sql: string): Promise<T[]> {
+		return wrapped.run<T>(sql).catch(e => {
+			throw Error(`${sql}\n\n${e}`);
+		});
 	},
-	async write(path: string, data: Uint8Array) {
+	async write(path: string, data: Uint8Array): Promise<void> {
 		return wrapped.write(path, Comlink.transfer(data, [data.buffer]));
 	},
 };
+
+export function sql(strings: TemplateStringsArray, ...values: any[]) {
+	let result = "";
+	for (let i = 0; i < strings.length; i++)
+		result += strings[i] + String(values[i] ?? "");
+	return result;
+}

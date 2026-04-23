@@ -1,9 +1,11 @@
 - [x] navigation
-	- [ ] to book + anchor (chapter, chapter+verse, word)
-	- [ ] partial doc rendering
-	- [ ] lazy load routes
-		- [ ] sql to query string
+	- [x] to book
+		- [ ] to chapter
+		- [ ] to chapter+verse
+		- [ ] to word id
+	- [ ] sql to query string
 	- [ ] search
+		- [ ] partial doc rendering
 - [x] sql console
 	- [x] form
 	- [x] tabs
@@ -12,25 +14,18 @@
 	- [x] export/delete
 	- [ ] codemirror
 		- [ ] saved queries
+		- [ ] lazy load + preload settings
 	- [ ] mobile
 	- [x] tree view + opfs view refresh
 - [x] hide header on scroll down
+- [ ] github issues repo + link
 
 - [ ] good editor
-	- [x] tooltip menu
-	- [x] highlighting
-		- [x] blending
-		- [ ] customization (borders, etc)
-		- [x] editing
-	- [x] footnotes
-		- [x] select inside
+	- [ ] tree structure
+	- [ ] reactive database
+	- [ ] arbitrary CSS
 	- [ ] user notes
-	- [x] marks
-		- [x] schema
-- [ ] loading + error messages
-	- [x] working on mobile
-	- [x] better timeouts
-- [ ] per-word tooltip
+	- [ ] word tooltip
 
 # data
 - [x] settle on schema

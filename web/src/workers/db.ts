@@ -38,11 +38,11 @@ const api = {
 			await api.exec("end;analyze;");
 		}
 	},
-	async exec(sql: string) {
+	async exec(sql: string): Promise<void> {
 		if (db == -1) await this.open();
 		await sqlite3.exec(db, sql);
 	},
-	async run(sql: string) {
+	async run<T>(sql: string): Promise<T[]> {
 		if (db == -1) await this.open();
 		let rows: Record<string, any>[] = [];
 		await sqlite3.exec(db, sql, (r, c) => {
@@ -50,7 +50,7 @@ const api = {
 			for (let i = 0; i < c.length; i++) row[c[i]] = r[i];
 			rows.push(row);
 		});
-		return rows;
+		return rows as T[];
 	},
 	async write(path: string, data: Uint8Array): Promise<void> {
 		let dir = await navigator.storage.getDirectory();

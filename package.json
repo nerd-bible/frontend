@@ -8,11 +8,13 @@
 	"scripts": {
 		"start": "npm run start --workspace='@nerd-bible/web'",
 		"build": "npm run build --workspaces",
-		"fmt": "prettier --check --ignore-path .gitignore .",
+		"fmt": "prettier --check --ignore-path .gitignore --ignore-path .prettierignore .",
 		"fmt-fix": "npm run fmt -- --write"
 	},
 	"devDependencies": {
 		"@nerd-bible/config": "^0.1.9",
+		"prettier-plugin-embed": "^0.5.1",
+		"prettier-plugin-sql-cst": "^0.19.3",
 		"prettier-plugin-svelte": "^3.5.1"
 	}
 }
