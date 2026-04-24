@@ -28,8 +28,8 @@ export const db = {
 			throw Error(`${sql}\n\n${e}`);
 		});
 	},
-	async run<T>(sql: string): Promise<T[]> {
-		return wrapped.run<T>(sql).catch(e => {
+	async run<T>(sql: string, forceBigInt = true): Promise<T[]> {
+		return wrapped.run<T>(sql, forceBigInt).catch(e => {
 			throw Error(`${sql}\n\n${e}`);
 		});
 	},

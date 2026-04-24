@@ -1,13 +1,10 @@
 import type { Doc as DocMeta } from "@nerd-bible/schema";
 import { db, sql } from "../../workers/dispatcher.svelte";
 import { t } from "../../l10n.svelte";
+import { bsearch } from "../../bsearch";
 
 type Word = { tag: "w"; pos: bigint; text?: string; lang?: string };
-export type Child =
-	| { pos: bigint; tag: "c"; data: number }
-	| { pos: bigint; tag: "v"; data: number }
-	| { pos: bigint; tag: "h"; level: number; text?: string }
-	| { pos: bigint; tag: "pn"; doc: bigint }
+type Container =
 	| { tag: "p"; class: string; children: Child[] }
 	| { tag: "em"; children: Child[] }
 	| { tag: "ol"; children: Child[] }
@@ -22,9 +19,15 @@ export type Child =
 			verse?: number;
 			children: Child[];
 	  }
-	| Word
 	| { tag: "words"; children: Word[] };
-
+type Leaf =
+	| { pos: bigint; tag: "c"; data: number }
+	| { pos: bigint; tag: "v"; data: number }
+	| { pos: bigint; tag: "h"; level: number; text?: string }
+	| { pos: bigint; tag: "pn"; data: bigint }
+	| { pos: bigint; tag: "n"; data: bigint }
+	| Word;
+export type Child = Container | Leaf;
 export type Doc = DocMeta & { tag: "doc"; children: Child[] };
 
 export function findPos(c?: Child): bigint {
@@ -68,6 +71,25 @@ function groupAdjacentWords(c: Doc | Child) {
 	}
 }
 
+type Mark = {
+	start: bigint;
+	end: bigint;
+	tag: "p" | "ol" | "ul" | "li" | "q" | "em" | "strong" | "ref";
+	isBlob: boolean;
+	data: any;
+};
+
+function groupMarks(d: Doc, marks: Mark[]) {
+	console.log(d, marks);
+
+	// TODO: faster way than slicing per-mark?
+	for (const m of marks) {
+		const startIndex = bsearch(d.children as Leaf[], m.start, (l) => l.pos, "end");
+		const endIndex = bsearch(d.children as Leaf[], m.end, (l) => l.pos, "end");
+		console.log(m, startIndex, endIndex);
+	}
+}
+
 export async function fromDoc(id: bigint): Promise<Doc> {
 	const docMeta = await db.run<Omit<DocMeta, "id"> & { createdAt: number }>(sql`
 		SELECT lang, createdAt, title
@@ -104,7 +126,7 @@ export async function fromDoc(id: bigint): Promise<Doc> {
 
 	const voidMarks = await db.run<{
 		pos: bigint;
-		tag: string;
+		tag: "c" | "v" | "h";
 		isBlob: boolean;
 		data: any;
 	}>(sql`
@@ -114,13 +136,14 @@ export async function fromDoc(id: bigint): Promise<Doc> {
 			typeof(data) = 'blob' AS isBlob,
 			iif(typeof(data) = 'blob', json(data), data) AS data
 		FROM mark
-		WHERE doc = ${id} AND tag IN ('c', 'v', 'h');
+		WHERE doc = ${id} AND tag IN ('c', 'v', 'h')
+		ORDER BY tag;
 	`);
-	for (const v of voidMarks) {
+	for (const m of voidMarks) {
 		res.children.push({
-			pos: v.pos,
-			tag: v.tag as any,
-			data: v.isBlob ? JSON.parse(v.data) : v.data,
+			pos: m.pos,
+			tag: m.tag as any,
+			data: m.isBlob ? JSON.parse(m.data) : m.data,
 		});
 	}
 
@@ -156,11 +179,33 @@ export async function fromDoc(id: bigint): Promise<Doc> {
 	`);
 	res.children.push(...outline);
 
+	const marks = await db.run<Mark>(sql`
+		SELECT
+			start,
+			end,
+			tag,
+			json(data) AS data
+		FROM mark
+		WHERE doc = ${id} AND tag IN ('p', 'ol', 'ul', 'li', 'q', 'em', 'strong', 'ref')
+		ORDER BY end - start, tag;
+	`);
+	const lastClose: Record<string, Mark> = {};
+	for (const m of marks) {
+		m.data = JSON.parse(m.data);
+		if (m.tag === "p" || m.tag === "li") {
+			const last = lastClose[m.tag];
+			if (last) last.end = m.start - 2n;
+			lastClose[m.tag] = m;
+		}
+	}
+
 	res.children.sort(sortChild);
+	for (const t in lastClose) {
+		lastClose[t].end = (res.children[res.children.length - 1] as Leaf).pos + 1n;
+	}
+	groupMarks(res, marks);
+	// groupAdjacentWords(res);
 
-	groupAdjacentWords(res);
-
-	console.log(res);
 	return res;
 }
 
