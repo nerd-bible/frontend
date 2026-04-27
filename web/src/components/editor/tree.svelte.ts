@@ -1,97 +1,13 @@
-import type { Doc as DocMeta } from "@nerd-bible/schema";
 import { db, sql } from "../../workers/dispatcher.svelte";
 import { t } from "../../l10n.svelte";
-import { bsearch } from "../../bsearch";
+import * as T from "./tree.ts";
 
-type Word = { tag: "w"; pos: bigint; text?: string; lang?: string };
-type Container =
-	| { tag: "p"; class: string; children: Child[] }
-	| { tag: "em"; children: Child[] }
-	| { tag: "ol"; children: Child[] }
-	| { tag: "ul"; children: Child[] }
-	| { tag: "li"; children: Child[] }
-	| { tag: "q"; children: Child[] }
-	| { tag: "strong"; children: Child[] }
-	| {
-			tag: "ref";
-			book: string;
-			chapter?: number;
-			verse?: number;
-			children: Child[];
-	  }
-	| { tag: "words"; children: Word[] };
-type Leaf =
-	| { pos: bigint; tag: "c"; data: number }
-	| { pos: bigint; tag: "v"; data: number }
-	| { pos: bigint; tag: "h"; level: number; text?: string }
-	| { pos: bigint; tag: "pn"; data: bigint }
-	| { pos: bigint; tag: "n"; data: bigint }
-	| Word;
-export type Child = Container | Leaf;
-export type Doc = DocMeta & { tag: "doc"; children: Child[] };
-
-export function findPos(c?: Child): bigint {
-	if (c && "pos" in c) return c.pos;
-	if (c && "children" in c) return findPos(c.children[0]);
-
-	return 0n;
-}
-
-function sortChild(a: Child, b: Child): number {
-	const aPos = findPos(a);
-	const bPos = findPos(b);
-
-	const diff = aPos - bPos;
-	if (diff < 0n) return -1;
-	else if (diff > 0n) return 1;
-
-	return a.tag.localeCompare(b.tag, "eng");
-}
-
-// Makes rendering to DOM much faster and may help screenreaders.
-function groupAdjacentWords(c: Doc | Child) {
-	if ("children" in c) {
-		const newChildren: Child[] = [];
-		let group: { tag: "words"; children: Word[] } | undefined;
-		for (let i = 0; i < c.children.length; i++) {
-			const c2 = c.children[i];
-			if (c2.tag === "w" && (i == 0 || c2.tag === "w")) {
-				if (!group?.children.length) {
-					group = { tag: "words", children: [] as Word[] };
-					newChildren.push(group);
-				}
-				group.children.push(c2);
-			} else {
-				groupAdjacentWords(c2);
-				newChildren.push(c2);
-				group = undefined;
-			}
-		}
-		c.children = newChildren;
-	}
-}
-
-type Mark = {
-	start: bigint;
-	end: bigint;
-	tag: "p" | "ol" | "ul" | "li" | "q" | "em" | "strong" | "ref";
-	isBlob: boolean;
-	data: any;
-};
-
-function groupMarks(d: Doc, marks: Mark[]) {
-	console.log(d, marks);
-
-	// TODO: faster way than slicing per-mark?
-	for (const m of marks) {
-		const startIndex = bsearch(d.children as Leaf[], m.start, (l) => l.pos, "end");
-		const endIndex = bsearch(d.children as Leaf[], m.end, (l) => l.pos, "end");
-		console.log(m, startIndex, endIndex);
-	}
-}
-
-export async function fromDoc(id: bigint): Promise<Doc> {
-	const docMeta = await db.run<Omit<DocMeta, "id"> & { createdAt: number }>(sql`
+export async function docFromId(id: bigint) {
+	const docMeta = await db.run<{
+		lang: string;
+		createdAt: number;
+		title: string;
+	}>(sql`
 		SELECT lang, createdAt, title
 		FROM doc
 		WHERE id = ${id};
@@ -99,56 +15,49 @@ export async function fromDoc(id: bigint): Promise<Doc> {
 	if (!docMeta.length) throw Error(t("No doc with id {}", { id }));
 
 	const { lang, title, createdAt } = docMeta[0];
-	const res: Doc = {
-		tag: "doc",
+	const res = new T.Doc({
 		id,
 		lang,
 		title,
 		createdAt: createdAt ? new Date(createdAt * 1000) : undefined,
-		children: [],
-	};
+	});
 
 	const words = await db.run<{
-		tag: "w";
 		pos: bigint;
 		lang: string;
 		text: string;
 	}>(sql`
 		SELECT
-			'w' AS tag,
 			id AS pos,
 			lang,
 			text
 		FROM word
 		WHERE doc = ${id};
 	`);
-	res.children = words;
+	res.children.push(...words.map((w) => new T.Word(w.pos, w.text, w.lang)));
 
 	const voidMarks = await db.run<{
 		pos: bigint;
-		tag: "c" | "v" | "h";
-		isBlob: boolean;
-		data: any;
+		tag: "c" | "v";
+		number: number;
 	}>(sql`
 		SELECT
 			start AS pos,
 			tag,
-			typeof(data) = 'blob' AS isBlob,
-			iif(typeof(data) = 'blob', json(data), data) AS data
+			data AS number
 		FROM mark
-		WHERE doc = ${id} AND tag IN ('c', 'v', 'h')
+		WHERE doc = ${id} AND tag IN ('c', 'v')
 		ORDER BY tag;
 	`);
 	for (const m of voidMarks) {
-		res.children.push({
-			pos: m.pos,
-			tag: m.tag as any,
-			data: m.isBlob ? JSON.parse(m.data) : m.data,
-		});
+		res.children.push(
+			m.tag === "c"
+				? new T.Chapter(m.pos, m.number)
+				: new T.Verse(m.pos, m.number),
+		);
 	}
 
 	const outline = await db.run<{
-		tag: "h";
 		pos: bigint;
 		level: number;
 		text: string;
@@ -170,15 +79,20 @@ export async function fromDoc(id: bigint): Promise<Doc> {
 				WHERE tag = 'v' AND doc = ${id}
 			)
 		SELECT
-			'h' AS tag,
 			(SELECT pos FROM cv WHERE c = chapter AND v = verse) AS pos,
 			level,
-			TEXT
+			text
 		FROM outline
 		WHERE doc = (SELECT doc FROM cv LIMIT 1);
 	`);
-	res.children.push(...outline);
+	res.children.push(...outline.map(o => new T.Outline(o.pos, o.level, o.text)));
 
+	type Mark = {
+		start: bigint;
+		end: bigint;
+		tag: "p" | "q" | "em" | "strong" | "ref";
+		data: string;
+	};
 	const marks = await db.run<Mark>(sql`
 		SELECT
 			start,
@@ -186,30 +100,31 @@ export async function fromDoc(id: bigint): Promise<Doc> {
 			tag,
 			json(data) AS data
 		FROM mark
-		WHERE doc = ${id} AND tag IN ('p', 'ol', 'ul', 'li', 'q', 'em', 'strong', 'ref')
+		WHERE doc = ${id} AND tag IN ('p', 'q', 'em', 'strong', 'ref')
 		ORDER BY end - start, tag;
 	`);
 	const lastClose: Record<string, Mark> = {};
 	for (const m of marks) {
 		m.data = JSON.parse(m.data);
-		if (m.tag === "p" || m.tag === "li") {
+		if (m.tag === "p") {
 			const last = lastClose[m.tag];
 			if (last) last.end = m.start - 2n;
 			lastClose[m.tag] = m;
 		}
 	}
 
-	res.children.sort(sortChild);
+	res.sort();
 	for (const t in lastClose) {
-		lastClose[t].end = (res.children[res.children.length - 1] as Leaf).pos + 1n;
+		lastClose[t].end = res.children[res.children.length - 1].pos + 1n;
 	}
-	groupMarks(res, marks);
+	// groupMarks(res, marks);
 	// groupAdjacentWords(res);
 
+	console.log(res);
 	return res;
 }
 
-export async function fromBookLang(book: string, lang: string): Promise<Doc> {
+export async function docFromBookLang(book: string, lang: string) {
 	const docIds = await db.run<{ id: bigint }>(sql`
 		SELECT
 			id
@@ -227,5 +142,5 @@ export async function fromBookLang(book: string, lang: string): Promise<Doc> {
 			}),
 		);
 
-	return fromDoc(docIds[0].id);
+	return docFromId(docIds[0].id);
 }

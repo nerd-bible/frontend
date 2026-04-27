@@ -28,10 +28,12 @@ export const db = {
 			throw Error(`${sql}\n\n${e}`);
 		});
 	},
-	async run<T>(sql: string, forceBigInt = true): Promise<T[]> {
-		return wrapped.run<T>(sql, forceBigInt).catch(e => {
-			throw Error(`${sql}\n\n${e}`);
-		});
+	async run<T>(sql: string, opts?: Parameters<typeof wrapped.run>[1] ): Promise<T[]> {
+		// @ts-ignore generic is lost on wrapper
+		return wrapped.run(sql, opts)
+			.catch(e => {
+				throw Error(`${sql}\n\n${e}`);
+			});
 	},
 	async write(path: string, data: Uint8Array): Promise<void> {
 		return wrapped.write(path, Comlink.transfer(data, [data.buffer]));

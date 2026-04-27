@@ -5,6 +5,7 @@ import Sql from "./routes/settings/Sql.svelte";
 import Storage from "./routes/settings/Storage.svelte";
 import { t } from "./l10n.svelte";
 import { createRouter, type Routes } from "sv-router";
+import * as r from "@nerd-bible/ref";
 
 export const routes: Routes = {
 	"/:id": Reader,
@@ -30,3 +31,13 @@ export const routes: Routes = {
 	},
 };
 export const { p, navigate, isActive, route } = createRouter(routes);
+
+export function toUrl(ref: r.B & ({ pos: bigint } | { chapter: number, verse?: number })) {
+	let res = `/${r.book}`;
+	if ("pos" in ref) return `${res}?pos=${ref.pos}`;
+
+	res += `?c=${ref.chapter}`;
+	if ("verse" in ref) res += `&v=${ref.verse}`;
+
+	return res;
+}

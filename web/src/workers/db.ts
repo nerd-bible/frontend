@@ -42,14 +42,34 @@ const api = {
 		if (db == -1) await this.open();
 		await sqlite3.exec(db, sql);
 	},
-	async run<T>(sql: string, forceBigInt = true): Promise<T[]> {
+	async run<T>(
+		sql: string,
+		forceBigInt: string[] = [
+			"pos",
+			"start",
+			"end",
+			"doc",
+			"scripture",
+			"ref",
+			"refStart",
+			"src",
+			"srcStart",
+			"srcEnd",
+			"dest",
+			"destStart",
+			"destEnd",
+			"id",
+			"word",
+		],
+	): Promise<T[]> {
 		if (db == -1) await this.open();
 		let rows: Record<string, any>[] = [];
 		await sqlite3.exec(db, sql, (r, c) => {
 			const row: Record<string, any> = {};
 			for (let i = 0; i < c.length; i++) {
-				if (forceBigInt && typeof r[i] === "number") r[i] = BigInt(r[i]);
-				row[c[i]] = r[i];
+				if (typeof r[i] === "number" && forceBigInt.includes(c[i]))
+					row[c[i]] = BigInt(r[i]);
+				else row[c[i]] = r[i];
 			}
 			rows.push(row);
 		});

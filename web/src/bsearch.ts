@@ -19,10 +19,9 @@ export function bsearch<T, U extends bigint | number>(
 	}
 
 	if (seek === "start") {
-		while (low > 0 && getN(arr[low]) === target) low--;
-	}
-	else if (seek === "end") {
-		while (low < arr.length && getN(arr[low]) === target) low++;
+		while (low - 1 > 0 && getN(arr[low - 1]) === target) low--;
+	} else if (seek === "end") {
+		while (low + 1 < high && getN(arr[low + 1]) === target) low++;
 	}
 
 	return low;

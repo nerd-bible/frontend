@@ -9,6 +9,7 @@
 		"@huggingface/transformers": "^4.1.0",
 		"@iconify-json/lucide": "^1.2.102",
 		"@nerd-bible/fonts": "0.1.0",
+		"@nerd-bible/ref": "^0.1.4",
 		"@nerd-bible/schema": "file:../../schema",
 		"@tauri-apps/api": "^2.10.1",
 		"comlink": "^4.4.2",
