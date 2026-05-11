@@ -1,83 +1,33 @@
 <script lang="ts">
 import { settings } from "../../settings.svelte";
-import { docFromBookLang } from "./tree.svelte.ts";
-import Loading from "../Loading.svelte";
-import * as T from "./tree.ts";
-import { toUrl } from "../../routes.ts";
-import { t } from "../../l10n.svelte.ts";
-
+import sample from "../../genesis.html?raw";
+// import { docFromBookLang } from "./tree.svelte.ts";
+// https://jsfiddle.net/4o73hgwu/7/
 interface Props {
 	book: string;
 }
 
 const { book }: Props = $props();
 let dir = $state<"ltr" | "rtl">("ltr");
-let doc = $derived(docFromBookLang(book, settings.locale));
+// let doc = $derived(docFromBookLang(book, settings.locale));
 </script>
 
 <div
-	class="nb-bible"
+	class="editor"
 	{dir}
 	class:hide-verse={settings.showVerseNum !== "true"}
 	class:hide-footnotes={settings.showFootnotes !== "true"}
+	class:drop-caps={settings.showDropCaps === "true"}
 	data-chapter-display={settings.chapterNumDisplay}
+	style:--column-width={`${settings.columnWidth}px`}
+	style:--column-gap={`${settings.columnGap}px`}
+	style:--font-size={`${settings.fontSize}px`}
+	style:--line-height={settings.lineHeight}
 >
-	{#await doc}
-		<Loading />
-	{:then d}
-{#snippet render(n: any)}
-	{#if n instanceof T.Word}
-		<span class="word" data-pos={n.pos}>{n.text}</span>
-	{:else if n instanceof T.Chapter}
-		<h2><span><span class="t">{t("Chapter ")}</span>{n.number}</span></h2>
-	{:else if n instanceof T.Verse}
-		<sup class="verse">{n.number}</sup>
-	{:else if n instanceof T.Outline}
-		<svelte:element this={`h${n.level + 2}`}>{n.text}</svelte:element>
-	{:else if n instanceof T.Note}
-		<sup data-doc={n.doc}></sup>
-	{:else if n instanceof T.Ref}
-		<a href={toUrl(n.ref)}>{n.text}</a>
-	{:else if n instanceof T.Paragraph}
-		<div role="paragraph" {...n.props}>
-			{#each n.children as c}
-				{@render render(c)}
-			{/each}
-		</div>
-	{:else if n instanceof T.Words}
-		<span class="words" data-pos={n.pos}>
-			{n.children.map((c) => c.text).join("")}
-		</span>
-	{:else if n instanceof T.List}
-		<ul>
-			{#each n.children as c}
-				<li>{@render render(c)}</li>
-			{/each}
-		</ul>
-	{:else if n instanceof T.Mark}
-		<svelte:element this={n.tag} {...n.props}>
-			{#each n.children as c}
-				{@render render(c)}
-			{/each}
-		</svelte:element>
-	{:else if n instanceof T.Doc}
-		<article>
-			<h1>{n.meta.title}</h1>
-			{#each n.children as c}
-				{@render render(c)}
-			{/each}
-		</article>
-	{:else}
-		{@debug n}
-		cannot render
-	{/if}
-{/snippet}
-{@render render(d)}
-	{:catch error}
-		<pre>{error.message}</pre>
-		<!-- TODO: go to collection view -->
-	{/await}
+	{@html sample}
+	<div class="empty"></div>
 </div>
+
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <!-- <div -->
 <!-- 	class="tooltip" -->
@@ -113,28 +63,69 @@ let doc = $derived(docFromBookLang(book, settings.locale));
 <!-- </div> -->
 
 <style>
-.nb-bible {
-	/* Offset allows room for verse and inline chapter numbers */
-	line-height: calc(var(--font-size) + var(--line-height-offset));
+:global {
+.editor {
+	font-size: var(--font-size);
+	line-height: var(--line-height);
 
-	/* h2 = chapter number */
-	/* h3-h6 = outline heading */
+	/* Failed double column experiment */
+	/* column-width: calc((100vw + var(--spacing-inc) * 16) / 3); */
+	/* column-gap: 1rem; */
+	/* height: calc(100vh - 54px); */
+	/* column-rule: solid var(--column-gap) red; */
+	/* orphans: 1; */
+	/* widows: 1; */
+	/* overflow: auto; */
+	/* scroll-behavior: auto; */
+	/* scrollbar-width: none; */
+	/* &::-webkit-scrollbar { */
+	/* 	display: none; */
+	/* } */
+	width: var(--column-width);
 
 	&.hide-verse .verse,
 	&.hide-footnotes .footnote,
-	&[data-chapter-display="Float"] h2 + p > .verse {
+	&[data-chapter-display="None"] h2,
+	& > h1 + .chapter > h2 {
 		display: none;
 	}
 
-	p:not(:last-child) {
+	p {
+		/* follow dir instead of being all smart */
+		unicode-bidi: bidi-override;
+
+		margin-top: --spacing(1);
 		margin-bottom: --spacing(4);
 	}
 
-	h1, h2, h3, h4, h5, h6 {
-		text-align: center;
-		user-select: none;
-		line-height: normal;
+	.verse {
+		&::before {
+			content: " ";
+		}
+		opacity: 0.5;
+		margin-inline-end: 2px;
+		/* & ~ * { margin-inline-end: -2px; } */
 	}
+
+	/* h1 = title */
+	/* h2 = chapter number */
+	/* h3-h6 = outline heading */
+	h1 {
+		text-align: center;
+		font-weight: bolder;
+	}
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		opacity: 0.5;
+	}
+	h2 { font-size: 1.75em; }
+	h3 { font-size: 1.5em; }
+	h4 { font-size: 1.25em; }
+	h5 { font-size: 1em; }
+	h6 { font-size: 1em; }
 
 	&[data-chapter-display="Normal"] h2 {
 		line-height: normal;
@@ -143,25 +134,6 @@ let doc = $derived(docFromBookLang(book, settings.locale));
 		&:first-child {
 			margin-top: 0;
 		}
-	}
-	&[data-chapter-display="Float"] h2 {
-		float: inline-start;
-		margin-inline-start: --spacing(-1);
-		margin-inline-end: --spacing(5);
-		/* eyeballed to be about two lines tall for inline */
-		/* must keep in sync with font-size */
-		padding-top: calc((var(--font-size) + var(--line-height-offset)) / 2);
-
-		& .t {
-			display: none;
-		}
-	}
-	&[data-chapter-display="Float"] h2 + p {
-		/* make space for chapter number */
-		min-height: calc((var(--font-size) + var(--line-height-offset)) * 2);
-	}
-	&[data-chapter-display="None"] h2 {
-		display: none;
 	}
 	&[data-chapter-display="Small"] h2 {
 		opacity: 0.5;
@@ -179,22 +151,21 @@ let doc = $derived(docFromBookLang(book, settings.locale));
 			/* width: --spacing(12); */
 			border-bottom: 1px solid;
 		}
+		padding: --spacing(2) 0;
 	}
 
-	p {
-		/* follow dir instead of being all smart */
-		unicode-bidi: bidi-override;
-	}
-
-	.verse {
-		&::before { 
-			content: " ";
+	&.drop-caps > .chapter > p:first-of-type {
+		& > .verse:first-of-type {
+			display: none;
 		}
-		opacity: 0.75;
-		margin-inline-end: 2px;
-		& ~ * {
-			margin-inline-end: -2px;
+		&::first-letter {
+			float: inline-start;
+			font-size: 3.2em;
+			line-height: 1;
+			font-weight: bold;
+			margin-right: 0.1em;
 		}
 	}
+}
 }
 </style>

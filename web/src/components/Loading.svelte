@@ -25,7 +25,7 @@ import { t } from "../l10n.svelte.ts";
 	z-index: -10;
 
 	.book {
-		border: 4px solid var(--color-fg);
+		border: 4px solid var(--color-fg-50);
 		border-radius: var(--radius-md);
 		aspect-ratio: 14 / 9.5;
 		perspective: calc(200vw);
@@ -37,7 +37,7 @@ import { t } from "../l10n.svelte.ts";
 		& > .page {
 			width: 46%;
 			height: 96%;
-			border: 2px solid var(--color-fg);
+			border: 2px solid var(--color-fg-50);
 			border-radius: var(--radius-md);
 			margin: auto;
 

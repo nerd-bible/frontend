@@ -48,13 +48,14 @@ If we want to support older browsers, we could in theory asyncify
 
 ## CSS
 
-| feature                                                | 100% year | polyfill       |
-| ------------------------------------------------------ | --------- | -------------- |
-| [Variables](https://caniuse.com/css-variables)         | 2017      | no             |
-| [Grid](https://caniuse.com/css-grid)                   | 2017      | no             |
-| [Woff2](https://caniuse.com/woff2)                     | 2017      | no             |
-| [Logical props](https://caniuse.com/css-logical-props) | 2019      | lang selectors |
-| [Focus-within](https://caniuse.com/css-focus-within)   | 2019      | more js        |
+| feature                                                 | 100% year | polyfill       |
+| ------------------------------------------------------- | --------- | -------------- |
+| [Variables](https://caniuse.com/css-variables)          | 2017      | no             |
+| [Grid](https://caniuse.com/css-grid)                    | 2017      | no             |
+| [Woff2](https://caniuse.com/woff2)                      | 2017      | no             |
+| [Logical props](https://caniuse.com/css-logical-props)  | 2019      | lang selectors |
+| [Focus-within](https://caniuse.com/css-focus-within)    | 2019      | more js        |
+| [font-synthesis](https://caniuse.com/wf-font-synthesis) | 2022      | no             |
 
 ## Browserstack
 

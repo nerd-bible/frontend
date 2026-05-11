@@ -1,19 +1,19 @@
 <script lang="ts">
 import Menu from "virtual:icons/lucide/menu";
 import QuickSettings from "./QuickSettings.svelte";
-import { state as dbState } from "../workers/dispatcher.svelte.ts";
 import { t } from "../l10n.svelte.ts";
 import { p } from "../routes.ts";
 
 let headerRef: HTMLElement;
 let lastScrollY = window.scrollY;
-let isHidden = $state(false);
+let visible = $state(false);
 let pointerOver = $state(false);
 function onScroll() {
-	isHidden =
-		!pointerOver &&
-		window.scrollY > lastScrollY &&
-		!headerRef.contains(document.activeElement);
+	visible = Boolean(
+		pointerOver ||
+		window.scrollY <= lastScrollY ||
+		headerRef.contains(document.activeElement),
+	);
 	lastScrollY = window.scrollY;
 }
 </script>
@@ -22,17 +22,12 @@ function onScroll() {
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <header
 	bind:this={headerRef}
-	class:hidden={isHidden}
+	class:hidden={!visible}
 	onpointerenter={() => (pointerOver = true)}
 	onpointerleave={() => (pointerOver = false)}
 >
-	<a
-		href={p("/")}
-		class="logo"
-		title={t("Home")}
-		class:connected={dbState.opened}
-	></a>
-	<form class="search">
+	<a href={p("/")} class="logo" title={t("Home")}></a>
+	<search>
 		<!-- svelte-ignore a11y_autofocus -->
 		<input
 			autocomplete="off"
@@ -40,7 +35,7 @@ function onScroll() {
 			placeholder={t("Search")}
 			id="search"
 		/>
-	</form>
+	</search>
 	<nb-dropdown class="options">
 		<button aria-label={t("Menu")}>
 			<Menu />
@@ -84,7 +79,7 @@ header {
 		}
 	}
 
-	& > .search {
+	& > search {
 		flex: 1;
 		display: flex;
 		align-items: center;

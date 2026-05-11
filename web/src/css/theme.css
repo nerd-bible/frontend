@@ -16,7 +16,8 @@
 	--drop-shadow-xl: 0 9px 7px rgb(0 0 0 / 0.1);
 
 	/* light */
-	--color-fg: black;
+	--color-fg-50: var(--color-gray-950);
+	--color-fg-200: var(--color-gray-800);
 	--color-bg-50: var(--color-yellow-50);
 	--color-bg-100: var(--color-yellow-100);
 	--color-bg-200: var(--color-yellow-200);
@@ -29,11 +30,12 @@
 }
 
 .dark {
-	--color-fg: white;
-	--color-bg-50: var(--color-yellow-900);
-	--color-bg-100: var(--color-yellow-800);
-	--color-bg-200: var(--color-yellow-700);
-	--color-bg-300: var(--color-yellow-600);
+	--color-fg-50: var(--color-gray-50);
+	--color-fg-200: var(--color-gray-200);
+	--color-bg-50: var(--color-yellow-950);
+	--color-bg-100: var(--color-yellow-900);
+	--color-bg-200: var(--color-yellow-800);
+	--color-bg-300: var(--color-yellow-700);
 	--color-focus-100: var(--color-blue-400);
 	--color-focus-200: var(--color-blue-300);
 

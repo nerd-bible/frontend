@@ -13,10 +13,12 @@ export const initial = {
 	})[0]!,
 	theme: "System",
 	// Reader settings
-	columnWidth: "600",
+	columnWidth: "800",
+	columnGap: "4",
 	fontSize: parseFloat(getComputedStyle(document.body).fontSize).toString(),
-	lineHeightOffset: "1.2rem",
-	chapterNumDisplay: "Normal",
+	lineHeight: "1.5",
+	chapterNumDisplay: "None",
+	showDropCaps: "true",
 	showVerseNum: "false",
 	showFootnotes: "false",
 };
@@ -82,5 +84,5 @@ window.addEventListener("storage", (ev) => {
 // Misc constants
 export { locales };
 export const themes = ["System", "Dark", "Light"] as const;
-export const chapterNumDisplays = ["Normal", "Float", "Small", "None"] as const;
+export const chapterNumDisplays = ["Normal", "Small", "None"] as const;
 export type ChapterNumDisplay = (typeof chapterNumDisplays)[number];

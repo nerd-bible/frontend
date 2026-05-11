@@ -36,6 +36,16 @@ import { p, route } from "../routes.ts";
 			/>
 		</label>
 		<label>
+			<span>{t("Line height")}</span>
+			<input
+				type="range"
+				min="0.8"
+				max="4"
+				step="0.1"
+				bind:value={settings.lineHeight}
+			/>
+		</label>
+		<label>
 			<span>{t("Column width")}</span>
 			<input
 				type="range"
@@ -52,6 +62,15 @@ import { p, route } from "../routes.ts";
 					<option value={numDisplay}>{t(numDisplay)}</option>
 				{/each}
 			</select>
+		</label>
+		<label>
+			<span>{t("Drop caps")}</span>
+			<input
+				type="checkbox"
+				checked={settings.showDropCaps === "true"}
+				onchange={(ev) =>
+					(settings.showDropCaps = ev.currentTarget.checked ? "true" : "false")}
+			/>
 		</label>
 		<label>
 			<span>{t("Show verse numbers")}</span>
@@ -76,7 +95,7 @@ import { p, route } from "../routes.ts";
 	{/if}
 	<a href={p("/settings")}>
 		<span>{t("Settings")}</span>
-		<span>{APP_VERSION}</span>
+		<span>v{APP_VERSION}</span>
 	</a>
 </form>
 

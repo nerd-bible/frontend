@@ -1,26 +1,26 @@
 import Reader from "./routes/Reader.svelte";
 import Main from "./layouts/Main.svelte";
-import Settings from "./layouts/Settings.svelte";
-import Sql from "./routes/settings/Sql.svelte";
-import Storage from "./routes/settings/Storage.svelte";
-import { t } from "./l10n.svelte";
+// import Settings from "./layouts/Settings.svelte";
+// import Sql from "./routes/settings/Sql.svelte";
+// import Storage from "./routes/settings/Storage.svelte";
+// import { t } from "./l10n.svelte";
 import { createRouter, type Routes } from "sv-router";
 import * as r from "@nerd-bible/ref";
 
 export const routes: Routes = {
 	"/:id": Reader,
-	"/settings": {
-		"/sql": {
-			"/": Sql,
-			meta: { title: t("SQL") },
-		},
-		"/storage": {
-			"/": Storage,
-			meta: { title: t("Storage") },
-		},
-		layout: Settings,
-		meta: { title: t("Settings") },
-	},
+	// "/settings": {
+	// 	"/sql": {
+	// 		"/": Sql,
+	// 		meta: { title: t("SQL") },
+	// 	},
+	// 	"/storage": {
+	// 		"/": Storage,
+	// 		meta: { title: t("Storage") },
+	// 	},
+	// 	layout: Settings,
+	// 	meta: { title: t("Settings") },
+	// },
 	layout: Main,
 	hooks: {
 		beforeLoad(ctx) {
