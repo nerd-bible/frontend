@@ -10,8 +10,9 @@ const book = $derived(route.getParams("/:id").id);
 </main>
 <style>
 main {
-	padding: --spacing(4) 0;
 	max-width: 100%;
-	margin: 0 auto;
+	display: flex;
+	justify-content: center;
+	position: relative;
 }
 </style>

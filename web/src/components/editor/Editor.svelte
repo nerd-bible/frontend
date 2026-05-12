@@ -1,6 +1,14 @@
 <script lang="ts">
+import { onMount } from "svelte";
 import { settings } from "../../settings.svelte";
 import sample from "../../genesis.html?raw";
+import {
+	computePosition,
+	autoUpdate,
+	offset,
+	inline,
+	shift,
+} from "@floating-ui/dom";
 // import { docFromBookLang } from "./tree.svelte.ts";
 // https://jsfiddle.net/4o73hgwu/7/
 interface Props {
@@ -10,8 +18,45 @@ interface Props {
 const { book }: Props = $props();
 let dir = $state<"ltr" | "rtl">("ltr");
 // let doc = $derived(docFromBookLang(book, settings.locale));
+let svg: SVGElement;
+let div: HTMLDivElement;
+let rects: { x: number; y: number; width: number; height: number }[] = $state(
+	[],
+);
+let paths: string[] = $state([]);
+onMount(() => {
+	const parentBounds = div.getBoundingClientRect();
+	div.querySelectorAll("mark").forEach((m) => {
+		const from = m.getBoundingClientRect();
+		const fromRect = {
+			x: from.x - 8,
+			y: from.y - parentBounds.y,
+			width: from.width,
+			height: from.height,
+		};
+		const to = m.nextElementSibling!.getBoundingClientRect();
+		const toRect = {
+			x: to.x,
+			y: to.y - parentBounds.y,
+			width: to.width,
+			height: to.height,
+		};
+		rects.push(fromRect);
+		rects.push(toRect);
+		const fromBottomLeft = [fromRect.x, fromRect.y + fromRect.height];
+		const toBottomRight = [toRect.x + toRect.width, toRect.y + toRect.height];
+		const halfway = [
+			(fromBottomLeft[0] + toBottomRight[0]) / 2,
+			toRect.y + toRect.height + 8,
+		];
+		const xy = ([x, y]: number[]) => `${x},${y}`;
+		paths.push(`M${xy(fromBottomLeft)} Q${xy(halfway)} ${xy(toBottomRight)}`);
+	});
+});
 </script>
 
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
 	class="editor"
 	{dir}
@@ -23,10 +68,69 @@ let dir = $state<"ltr" | "rtl">("ltr");
 	style:--column-gap={`${settings.columnGap}px`}
 	style:--font-size={`${settings.fontSize}px`}
 	style:--line-height={settings.lineHeight}
+	onclick={(ev) => {
+		const target = ev.target as HTMLElement;
+		if (target.tagName === "BUTTON") {
+			const reference = new Range();
+			reference.setStartBefore(target);
+			reference.setEndAfter(target);
+
+			const computed = getComputedStyle(document.body);
+			const remToPx = (rem: string) =>
+				parseFloat(rem) * parseFloat(computed.fontSize);
+			const spacing = remToPx(computed.getPropertyValue("--spacing-inc"));
+
+			const middleware = [
+				offset(spacing * 2), // from `placement`
+				// flip(), // to opposite of `placement` if cannot fit
+				shift({
+					padding: {
+						left: parseFloat(computed.paddingLeft),
+						right: parseFloat(computed.paddingRight),
+						// needs to be taller than header because appears under header
+						// this is difficult to fix because of stacking contexts
+						// TODO: make stack above header and change to same as bottom
+						top: spacing * 14,
+						bottom: spacing * 2,
+					},
+				}),
+				inline({ padding: 0 }),
+			];
+
+			const tooltipRef = target.nextElementSibling as HTMLElement;
+			const update = () =>
+				computePosition(reference, tooltipRef, {
+					placement: "top",
+					middleware,
+				}).then(({ x, y }) => {
+					tooltipRef.style.left = `${x}px`;
+					tooltipRef.style.top = `${y}px`;
+					tooltipRef.style.display = "flex";
+				});
+			const cleanup = autoUpdate(reference, tooltipRef, update);
+
+			// const selection = window.getSelection();
+			// selection?.addRange(range);
+		}
+	}}
+	bind:this={div}
 >
 	{@html sample}
-	<div class="empty"></div>
 </div>
+
+<svg
+	bind:this={svg}
+	xmlns="http://www.w3.org/2000/svg"
+	stroke="red"
+	fill="none"
+>
+	{#each rects as r}
+		<rect x={r.x} y={r.y} width={r.width} height={r.height} />
+	{/each}
+	{#each paths as d}
+		<path {d} />
+	{/each}
+</svg>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <!-- <div -->
@@ -64,108 +168,190 @@ let dir = $state<"ltr" | "rtl">("ltr");
 
 <style>
 :global {
-.editor {
-	font-size: var(--font-size);
-	line-height: var(--line-height);
+	.editor {
+		font-size: var(--font-size);
+		line-height: var(--line-height);
+		z-index: 2;
 
-	/* Failed double column experiment */
-	/* column-width: calc((100vw + var(--spacing-inc) * 16) / 3); */
-	/* column-gap: 1rem; */
-	/* height: calc(100vh - 54px); */
-	/* column-rule: solid var(--column-gap) red; */
-	/* orphans: 1; */
-	/* widows: 1; */
-	/* overflow: auto; */
-	/* scroll-behavior: auto; */
-	/* scrollbar-width: none; */
-	/* &::-webkit-scrollbar { */
-	/* 	display: none; */
-	/* } */
-	width: var(--column-width);
+		/* Failed double column experiment */
+		/* column-width: calc((100vw + var(--spacing-inc) * 16) / 3); */
+		/* column-gap: 1rem; */
+		/* height: calc(100vh - 54px); */
+		/* column-rule: solid var(--column-gap) red; */
+		/* orphans: 1; */
+		/* widows: 1; */
+		/* overflow: auto; */
+		/* scroll-behavior: auto; */
+		/* scrollbar-width: none; */
+		/* &::-webkit-scrollbar { */
+		/* 	display: none; */
+		/* } */
+		width: var(--column-width);
 
-	&.hide-verse .verse,
-	&.hide-footnotes .footnote,
-	&[data-chapter-display="None"] h2,
-	& > h1 + .chapter > h2 {
-		display: none;
-	}
-
-	p {
-		/* follow dir instead of being all smart */
-		unicode-bidi: bidi-override;
-
-		margin-top: --spacing(1);
-		margin-bottom: --spacing(4);
-	}
-
-	.verse {
-		&::before {
-			content: " ";
-		}
-		opacity: 0.5;
-		margin-inline-end: 2px;
-		/* & ~ * { margin-inline-end: -2px; } */
-	}
-
-	/* h1 = title */
-	/* h2 = chapter number */
-	/* h3-h6 = outline heading */
-	h1 {
-		text-align: center;
-		font-weight: bolder;
-	}
-	h2,
-	h3,
-	h4,
-	h5,
-	h6 {
-		opacity: 0.5;
-	}
-	h2 { font-size: 1.75em; }
-	h3 { font-size: 1.5em; }
-	h4 { font-size: 1.25em; }
-	h5 { font-size: 1em; }
-	h6 { font-size: 1em; }
-
-	&[data-chapter-display="Normal"] h2 {
-		line-height: normal;
-		margin-bottom: --spacing(1);
-
-		&:first-child {
-			margin-top: 0;
-		}
-	}
-	&[data-chapter-display="Small"] h2 {
-		opacity: 0.5;
-		font-size: 0.75em;
-		position: relative;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: --spacing(4);
-
-		&::before,
-		&::after {
-			content: "";
-			flex-grow: 1;
-			/* width: --spacing(12); */
-			border-bottom: 1px solid;
-		}
-		padding: --spacing(2) 0;
-	}
-
-	&.drop-caps > .chapter > p:first-of-type {
-		& > .verse:first-of-type {
+		&.hide-verse .verse,
+		&.hide-footnotes .footnote,
+		&[data-chapter-display="None"] h2,
+		& > h1 + .chapter > h2 {
 			display: none;
 		}
-		&::first-letter {
+
+		p,
+		ol,
+		blockquote,
+		div {
+			/* follow dir instead of being all smart */
+			unicode-bidi: bidi-override;
+
+			margin-top: --spacing(1);
+			margin-bottom: --spacing(4);
+		}
+
+		.verse {
+			&::before {
+				content: " ";
+			}
+			opacity: 0.5;
+			margin-inline-end: 2px;
+			/* & ~ * { margin-inline-end: -2px; } */
+		}
+
+		/* h1 = title */
+		/* h2 = chapter number */
+		/* h3-h6 = outline heading */
+		h1 {
+			text-align: center;
+			font-weight: bolder;
+		}
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
+			opacity: 0.5;
+		}
+		h2 {
+			font-size: 1.75em;
+		}
+		h3 {
+			font-size: 1.5em;
+		}
+		h4 {
+			font-size: 1.25em;
+		}
+		h5 {
+			font-size: 1em;
+		}
+		h6 {
+			font-size: 1em;
+		}
+
+		&[data-chapter-display="Normal"] h2 {
+			line-height: normal;
+			margin-bottom: --spacing(1);
+
+			&:first-child {
+				margin-top: 0;
+			}
+		}
+		&[data-chapter-display="Small"] h2 {
+			opacity: 0.5;
+			font-size: 0.75em;
+			position: relative;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: --spacing(4);
+
+			&::before,
+			&::after {
+				content: "";
+				flex-grow: 1;
+				/* width: --spacing(12); */
+				border-bottom: 1px solid;
+			}
+			padding: --spacing(2) 0;
+		}
+
+		&.drop-caps > .chapter > p:first-of-type {
+			& > .verse:first-of-type {
+				display: none;
+			}
+			&::first-letter {
+				float: inline-start;
+				font-size: 3em;
+				line-height: 1;
+				font-weight: bold;
+				margin-right: 0.1em;
+			}
+		}
+
+		small {
+			--width: calc(
+				(100vw - var(--column-width) - var(--spacing-inc) * 24) / 2
+			);
+			font-size: inherit;
+			position: relative;
+			width: var(--width);
 			float: inline-start;
-			font-size: 3.2em;
-			line-height: 1;
-			font-weight: bold;
-			margin-right: 0.1em;
+			margin-inline-start: calc(-1 * var(--width) - var(--spacing-inc) * 8);
+			text-align: end;
+		}
+
+		button {
+			text-decoration: dotted underline;
+			padding: 0;
+			background: none;
+		}
+
+		mark {
+			background: none;
+			color: inherit;
+		}
+
+		blockquote, li {
+			margin-inline-start: --spacing(4);
+		}
+
+		.line-group > *:not(:first-child) {
+			padding-inline-start: --spacing(16);
+		}
+		.poetry > *, .line-group > * {
+			/* white-space: nowrap; */
+			/* word-break: break-word; */
+			text-indent: --spacing(-8);
+			padding-inline-start: --spacing(8);
+			margin: 0;
 		}
 	}
 }
+
+:global(.tooltip) {
+	display: none;
+	position: absolute;
+	background: var(--color-bg-300);
+	filter: drop-shadow(var(--drop-shadow-xl));
+	border-radius: var(--radius-md);
+
+	gap: --spacing(1);
+	padding: --spacing(2);
+	width: max-content;
+	/* keep in sync with body left + right padding */
+	max-width: calc(100vw - --spacing(8));
+	/* above other editor content but below header */
+	z-index: 2;
+
+	/* If need to remove overflow-x hidden on body, add these + inner wrapper element: */
+	/* https://stackoverflow.com/questions/9933092/css-prevent-absolute-positioned-element-from-overflowing-body */
+	/* right: 0; */
+	/* overflow: hidden; */
+}
+
+svg {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1;
 }
 </style>

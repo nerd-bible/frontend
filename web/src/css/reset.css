@@ -113,7 +113,7 @@ pre {
  */
 sub,
 sup {
-	font-size: 75%;
+	font-size: 66%;
 	line-height: 0;
 	position: relative;
 	vertical-align: baseline;
@@ -225,6 +225,7 @@ button,
 input:where([type="button"], [type="reset"], [type="submit"]),
 ::file-selector-button {
 	appearance: button;
+	cursor: pointer;
 }
 
 /* Correct the cursor style of increment and decrement buttons in Safari. */

@@ -6,7 +6,7 @@ import { p } from "../routes.ts";
 
 let headerRef: HTMLElement;
 let lastScrollY = window.scrollY;
-let visible = $state(false);
+let visible = $state(true);
 let pointerOver = $state(false);
 function onScroll() {
 	visible = Boolean(
