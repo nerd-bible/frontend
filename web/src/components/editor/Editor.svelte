@@ -9,7 +9,9 @@ import {
 	inline,
 	shift,
 } from "@floating-ui/dom";
+import type { Attachment } from 'svelte/attachments';
 // import { docFromBookLang } from "./tree.svelte.ts";
+
 // https://jsfiddle.net/4o73hgwu/7/
 interface Props {
 	book: string;
@@ -53,84 +55,96 @@ onMount(() => {
 		paths.push(`M${xy(fromBottomLeft)} Q${xy(halfway)} ${xy(toBottomRight)}`);
 	});
 });
+
+const myAttachment: Attachment = (element) => {
+	console.log(element.nodeName);
+
+	return () => {
+		console.log('cleaning up');
+	};
+};
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->
-<div
-	class="editor"
-	{dir}
-	class:hide-verse={settings.showVerseNum !== "true"}
-	class:hide-footnotes={settings.showFootnotes !== "true"}
-	class:drop-caps={settings.showDropCaps === "true"}
-	data-chapter-display={settings.chapterNumDisplay}
-	style:--column-width={`${settings.columnWidth}px`}
-	style:--column-gap={`${settings.columnGap}px`}
-	style:--font-size={`${settings.fontSize}px`}
-	style:--line-height={settings.lineHeight}
-	onclick={(ev) => {
-		const target = ev.target as HTMLElement;
-		if (target.tagName === "BUTTON") {
-			const reference = new Range();
-			reference.setStartBefore(target);
-			reference.setEndAfter(target);
+<div class="wrapper" {@attach myAttachment}>
+	<div class="toc">Table of contents</div>
+	<div
+		class="editor"
+		{dir}
+		class:hide-verse={settings.showVerseNum !== "true"}
+		class:hide-footnotes={settings.showFootnotes !== "true"}
+		class:drop-caps={settings.showDropCaps === "true"}
+		data-chapter-display={settings.chapterNumDisplay}
+		style:--column-width={`${settings.columnWidth}px`}
+		style:--column-gap={`${settings.columnGap}px`}
+		style:--font-size={`${settings.fontSize}px`}
+		style:--line-height={settings.lineHeight}
+		onclick={(ev) => {
+			const target = ev.target as HTMLElement;
+			if (target.tagName === "BUTTON") {
+				const reference = new Range();
+				reference.setStartBefore(target);
+				reference.setEndAfter(target);
 
-			const computed = getComputedStyle(document.body);
-			const remToPx = (rem: string) =>
-				parseFloat(rem) * parseFloat(computed.fontSize);
-			const spacing = remToPx(computed.getPropertyValue("--spacing-inc"));
+				const computed = getComputedStyle(document.body);
+				const remToPx = (rem: string) =>
+					parseFloat(rem) * parseFloat(computed.fontSize);
+				const spacing = remToPx(computed.getPropertyValue("--spacing-inc"));
 
-			const middleware = [
-				offset(spacing * 2), // from `placement`
-				// flip(), // to opposite of `placement` if cannot fit
-				shift({
-					padding: {
-						left: parseFloat(computed.paddingLeft),
-						right: parseFloat(computed.paddingRight),
-						// needs to be taller than header because appears under header
-						// this is difficult to fix because of stacking contexts
-						// TODO: make stack above header and change to same as bottom
-						top: spacing * 14,
-						bottom: spacing * 2,
-					},
-				}),
-				inline({ padding: 0 }),
-			];
+				const middleware = [
+					offset(spacing * 2), // from `placement`
+					// flip(), // to opposite of `placement` if cannot fit
+					shift({
+						padding: {
+							left: parseFloat(computed.paddingLeft),
+							right: parseFloat(computed.paddingRight),
+							// needs to be taller than header because appears under header
+							// this is difficult to fix because of stacking contexts
+							// TODO: make stack above header and change to same as bottom
+							top: spacing * 14,
+							bottom: spacing * 2,
+						},
+					}),
+					inline({ padding: 0 }),
+				];
 
-			const tooltipRef = target.nextElementSibling as HTMLElement;
-			const update = () =>
-				computePosition(reference, tooltipRef, {
-					placement: "top",
-					middleware,
-				}).then(({ x, y }) => {
-					tooltipRef.style.left = `${x}px`;
-					tooltipRef.style.top = `${y}px`;
-					tooltipRef.style.display = "flex";
-				});
-			const cleanup = autoUpdate(reference, tooltipRef, update);
+				const tooltipRef = target.nextElementSibling as HTMLElement;
+				const update = () =>
+					computePosition(reference, tooltipRef, {
+						placement: "top",
+						middleware,
+					}).then(({ x, y }) => {
+						tooltipRef.style.left = `${x}px`;
+						tooltipRef.style.top = `${y}px`;
+						tooltipRef.style.display = "flex";
+					});
+				const cleanup = autoUpdate(reference, tooltipRef, update);
 
-			// const selection = window.getSelection();
-			// selection?.addRange(range);
-		}
-	}}
-	bind:this={div}
->
-	{@html sample}
+				// const selection = window.getSelection();
+				// selection?.addRange(range);
+			}
+		}}
+		bind:this={div}
+	>
+		{@html sample}
+	</div>
+	<div class="notes"></div>
+
+	<svg
+		bind:this={svg}
+		xmlns="http://www.w3.org/2000/svg"
+		stroke="red"
+		fill="none"
+	>
+		{#each rects as r}
+			<rect x={r.x} y={r.y} width={r.width} height={r.height} />
+		{/each}
+		{#each paths as d}
+			<path {d} />
+		{/each}
+	</svg>
 </div>
-
-<svg
-	bind:this={svg}
-	xmlns="http://www.w3.org/2000/svg"
-	stroke="red"
-	fill="none"
->
-	{#each rects as r}
-		<rect x={r.x} y={r.y} width={r.width} height={r.height} />
-	{/each}
-	{#each paths as d}
-		<path {d} />
-	{/each}
-</svg>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <!-- <div -->
@@ -167,11 +181,27 @@ onMount(() => {
 <!-- </div> -->
 
 <style>
+.wrapper {
+	max-width: 100%;
+	position: relative;
+	display: flex;
+	gap: --spacing(2);
+
+	& > * {
+		z-index: 2;
+	}
+}
+.toc {
+	flex-shrink: 1;
+	padding: --spacing(4) 0;
+}
+.notes {
+	flex-grow: 1;
+}
 :global {
 	.editor {
 		font-size: var(--font-size);
 		line-height: var(--line-height);
-		z-index: 2;
 
 		/* Failed double column experiment */
 		/* column-width: calc((100vw + var(--spacing-inc) * 16) / 3); */
@@ -304,9 +334,8 @@ onMount(() => {
 			font-size: inherit;
 			position: relative;
 			width: var(--width);
-			float: inline-start;
-			margin-inline-start: calc(-1 * var(--width) - var(--spacing-inc) * 8);
-			text-align: end;
+			float: inline-end;
+			margin-inline-end: calc(-1 * var(--width) - var(--spacing-inc) * 8);
 		}
 
 		button {

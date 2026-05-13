@@ -8,12 +8,3 @@ const book = $derived(route.getParams("/:id").id);
 <main>
 	<Editor {book} />
 </main>
-
-<style>
-main {
-	max-width: 100%;
-	display: flex;
-	justify-content: center;
-	position: relative;
-}
-</style>
