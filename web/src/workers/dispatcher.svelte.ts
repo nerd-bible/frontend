@@ -19,16 +19,18 @@ export const db = {
 		return wrapped.ingest();
 	},
 	async exec(sql: string): Promise<void> {
-		return wrapped.exec(sql).catch(e => {
+		return wrapped.exec(sql).catch((e) => {
 			throw Error(`${sql}\n\n${e}`);
 		});
 	},
-	async run<T>(sql: string, opts?: Parameters<typeof wrapped.run>[1] ): Promise<T[]> {
+	async run<T>(
+		sql: string,
+		opts?: Parameters<typeof wrapped.run>[1],
+	): Promise<T[]> {
 		// @ts-ignore generic is lost on wrapper
-		return wrapped.run(sql, opts)
-			.catch(e => {
-				throw Error(`${sql}\n\n${e}`);
-			});
+		return wrapped.run(sql, opts).catch((e) => {
+			throw Error(`${sql}\n\n${e}`);
+		});
 	},
 	async write(path: string, data: Uint8Array): Promise<void> {
 		return wrapped.write(path, Comlink.transfer(data, [data.buffer]));

@@ -71,12 +71,24 @@ h5,
 h6 {
 	font-weight: inherit;
 }
-h1 { font-size: 3em; }
-h2 { font-size: 2.5em; }
-h3 { font-size: 2em; }
-h4 { font-size: 1.75em; }
-h5 { font-size: 1.5em; }
-h6 { font-size: 1.25em; }
+h1 {
+	font-size: 3em;
+}
+h2 {
+	font-size: 2.5em;
+}
+h3 {
+	font-size: 2em;
+}
+h4 {
+	font-size: 1.75em;
+}
+h5 {
+	font-size: 1.5em;
+}
+h6 {
+	font-size: 1.25em;
+}
 /* Add the correct font weight in Edge and Safari. */
 b,
 strong {

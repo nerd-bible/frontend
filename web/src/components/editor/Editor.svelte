@@ -197,6 +197,7 @@ onMount(() => {
 
 		p,
 		ol,
+		ul,
 		blockquote,
 		div {
 			/* follow dir instead of being all smart */
@@ -204,6 +205,16 @@ onMount(() => {
 
 			margin-top: --spacing(1);
 			margin-bottom: --spacing(4);
+		}
+
+		ol.inline,
+		ul.inline {
+			display: inline;
+			margin: 0;
+			& > li {
+				display: inline;
+				margin: 0;
+			}
 		}
 
 		.verse {
@@ -273,6 +284,7 @@ onMount(() => {
 		}
 
 		&.drop-caps > .chapter > p:first-of-type {
+			min-height: 2lh;
 			& > .verse:first-of-type {
 				display: none;
 			}
@@ -281,7 +293,7 @@ onMount(() => {
 				font-size: 3em;
 				line-height: 1;
 				font-weight: bold;
-				margin-right: 0.1em;
+				margin-inline-end: 0.1em;
 			}
 		}
 
@@ -308,18 +320,22 @@ onMount(() => {
 			color: inherit;
 		}
 
-		blockquote, li {
-			margin-inline-start: --spacing(4);
+		blockquote {
+			padding-inline-start: --spacing(8);
 		}
 
-		.line-group > *:not(:first-child) {
-			padding-inline-start: --spacing(16);
-		}
-		.poetry > *, .line-group > * {
+		.poetry > *,
+		.line-group > *,
+		ol:not(.inline) > li,
+		ul:not(.inline) > li {
 			/* white-space: nowrap; */
 			/* word-break: break-word; */
 			text-indent: --spacing(-8);
-			padding-inline-start: --spacing(8);
+			padding-inline-start: --spacing(16);
+		}
+
+		.poetry > *,
+		.line-group > * {
 			margin: 0;
 		}
 	}

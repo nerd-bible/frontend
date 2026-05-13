@@ -56,6 +56,7 @@ If we want to support older browsers, we could in theory asyncify
 | [Logical props](https://caniuse.com/css-logical-props)  | 2019      | lang selectors |
 | [Focus-within](https://caniuse.com/css-focus-within)    | 2019      | more js        |
 | [font-synthesis](https://caniuse.com/wf-font-synthesis) | 2022      | no             |
+| [lh](https://caniuse.com/wf-lh)                         | 2023      | maybe          |
 
 ## Browserstack
 

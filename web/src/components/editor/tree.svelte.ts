@@ -85,7 +85,9 @@ export async function docFromId(id: bigint) {
 		FROM outline
 		WHERE doc = (SELECT doc FROM cv LIMIT 1);
 	`);
-	res.children.push(...outline.map(o => new T.Outline(o.pos, o.level, o.text)));
+	res.children.push(
+		...outline.map((o) => new T.Outline(o.pos, o.level, o.text)),
+	);
 
 	type Mark = {
 		start: bigint;

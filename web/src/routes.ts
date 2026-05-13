@@ -32,7 +32,9 @@ export const routes: Routes = {
 };
 export const { p, navigate, isActive, route } = createRouter(routes);
 
-export function toUrl(ref: r.B & ({ pos: bigint } | { chapter: number, verse?: number })) {
+export function toUrl(
+	ref: r.B & ({ pos: bigint } | { chapter: number; verse?: number }),
+) {
 	let res = `/${r.book}`;
 	if ("pos" in ref) return `${res}?pos=${ref.pos}`;
 
