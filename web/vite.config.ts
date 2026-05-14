@@ -41,6 +41,7 @@ export default defineConfig({
 	},
 	define: {
 		APP_VERSION: JSON.stringify(pkg.version),
+		APP_REPO: JSON.stringify("https://github.com/nerd-bible/frontend"),
 	},
 	plugins: [
 		Icons({ compiler: "svelte" }),

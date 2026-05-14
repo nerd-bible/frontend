@@ -26,7 +26,7 @@ import { p, route } from "../routes.ts";
 
 	{#if route.pathname.match(/^\/[^/]+$/)}
 		<label>
-			<span>{t("Font size")}</span>
+			<span>{t("Font size")} {settings.fontSize}</span>
 			<input
 				type="range"
 				min="8"
@@ -36,17 +36,17 @@ import { p, route } from "../routes.ts";
 			/>
 		</label>
 		<label>
-			<span>{t("Line height")}</span>
+			<span>{t("Line height")} {settings.lineHeight}</span>
 			<input
 				type="range"
-				min="0.8"
-				max="4"
+				min="1"
+				max="2"
 				step="0.1"
 				bind:value={settings.lineHeight}
 			/>
 		</label>
 		<label>
-			<span>{t("Column width")}</span>
+			<span>{t("Column width")} {settings.columnWidth}</span>
 			<input
 				type="range"
 				min="100"

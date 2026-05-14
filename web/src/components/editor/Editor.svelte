@@ -187,7 +187,7 @@ const myAttachment: Attachment = (element) => {
 	display: flex;
 	gap: --spacing(2);
 
-	& > * {
+	& > *:not(svg) {
 		z-index: 2;
 	}
 }
@@ -320,7 +320,7 @@ const myAttachment: Attachment = (element) => {
 			}
 			&::first-letter {
 				float: inline-start;
-				font-size: 3em;
+				font-size: 2lh;
 				line-height: 1;
 				font-weight: bold;
 				margin-inline-end: 0.1em;
@@ -339,7 +339,10 @@ const myAttachment: Attachment = (element) => {
 		}
 
 		button {
-			text-decoration: dotted underline;
+			text-decoration-line: underline;
+			text-decoration-style: wavy;
+			text-decoration-skip-ink: none;
+			text-decoration-color: green;
 			padding: 0;
 			background: none;
 		}
