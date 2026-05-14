@@ -1,5 +1,5 @@
 {
-	"name": "@nerd-bible/app",
+	"name": "@nerd-bible/native",
 	"devDependencies": {
 		"@tauri-apps/cli": "^2.10.1"
 	},

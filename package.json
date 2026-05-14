@@ -7,7 +7,7 @@
 	],
 	"scripts": {
 		"start": "npm run start --workspace='@nerd-bible/web'",
-		"build": "npm run build --workspaces",
+		"build": "npm run build --workspace='@nerd-bible/web'",
 		"fmt": "prettier --check --ignore-path .gitignore --ignore-path .prettierignore .",
 		"fmt-fix": "npm run fmt -- --write"
 	},

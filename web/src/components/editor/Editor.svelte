@@ -38,7 +38,7 @@ onMount(() => {
 		};
 		const to = m.nextElementSibling!.getBoundingClientRect();
 		const toRect = {
-			x: to.x,
+			x: to.x - 8,
 			y: to.y - parentBounds.y,
 			width: to.width,
 			height: to.height,
