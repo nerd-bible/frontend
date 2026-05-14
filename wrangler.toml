@@ -1,2 +1,2 @@
-name = "nerd-bible"
+name = "frontend"
 pages_build_output_dir = "./web/dist"
