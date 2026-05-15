@@ -1,3 +1,15 @@
+# views
+- settings
+	- sql
+	- storage
+	- arbitrary CSS
+		- palette
+		- choice of persisting in device/db
+	- licenses
+- reader
+- editor
+- translator (interlinear grid)
+
 - what should clicking logo do?
 	- dashboard page?
 - how show/hide left panel
@@ -7,8 +19,8 @@
 		- style (solid, double, dotted, dashed, wavy)
 		- strikethrough, underline, and/or overline
 		- thickness
-		- shadow
-			- list of offset-x, offset-y, blur-radius, color
+	- shadow
+		- list of offset-x, offset-y, blur-radius, color
 - user-editable color palette?
 - dropdown separator for app vs reader settings
 - [x] allow light/dark theme?

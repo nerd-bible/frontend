@@ -363,7 +363,7 @@ const myAttachment: Attachment = (element) => {
 			/* white-space: nowrap; */
 			/* word-break: break-word; */
 			text-indent: --spacing(-8);
-			padding-inline-start: --spacing(16);
+			padding-inline-start: --spacing(8);
 		}
 
 		.poetry > *,

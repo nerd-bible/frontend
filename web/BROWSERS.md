@@ -31,9 +31,11 @@ allow one. Those work since 2022.
 
 OPFS is [about 50% faster](https://rhashimoto.github.io/wa-sqlite/demo/benchmarks/?config=default,MemoryVFS;default,OPFSCoopSyncVFS;asyncify,IDBBatchAtomicVFS)
 than IndexedDb. Because SQLite is so important to our app, I think it's worth
-not supporting browsers between 2022 and 2023.
+not supporting browsers between 2022 and 2023 for the 50% speed boost and
+allow importing/exporting SQLite databases.
 
-If we want to support older browsers, we could in theory asyncify
+If we want to support older browsers, we could in theory asyncify and lock
+through IndexedDb polling. This would support since 2018.
 
 | feature                                                                                                      | 100% year | polyfill |
 | ------------------------------------------------------------------------------------------------------------ | --------- | -------- |
