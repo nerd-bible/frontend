@@ -1,5 +1,5 @@
 <script lang="ts">
-import { settings, chapterNumDisplays, themes } from "../settings.svelte";
+import { settings, themes } from "../settings.svelte";
 import { t } from "../l10n.svelte.ts";
 import { p, route } from "../routes.ts";
 </script>
@@ -26,42 +26,43 @@ import { p, route } from "../routes.ts";
 
 	{#if route.pathname.match(/^\/[^/]+$/)}
 		<label>
-			<span>{t("Font size")} {settings.fontSize}</span>
-			<input
-				type="range"
-				min="8"
-				max="48"
-				step="2"
-				bind:value={settings.fontSize}
-			/>
+			<span>{t("Font size")}</span>
+			<div>
+				{settings.fontSize}
+				<input
+					type="range"
+					min="8"
+					max="48"
+					step="2"
+					bind:value={settings.fontSize}
+				/>
+			</div>
 		</label>
 		<label>
-			<span>{t("Line height")} {settings.lineHeight}</span>
-			<input
-				type="range"
-				min="1"
-				max="2"
-				step="0.1"
-				bind:value={settings.lineHeight}
-			/>
+			<span>{t("Line height")}</span>
+			<div>
+				{settings.lineHeight}
+				<input
+					type="range"
+					min="1"
+					max="2"
+					step="0.1"
+					bind:value={settings.lineHeight}
+				/>
+			</div>
 		</label>
 		<label>
-			<span>{t("Column width")} {settings.columnWidth}</span>
-			<input
-				type="range"
-				min="100"
-				max="2000"
-				step="20"
-				bind:value={settings.columnWidth}
-			/>
-		</label>
-		<label>
-			<span>{t("Chapter style")}</span>
-			<select name="chapterStyle" bind:value={settings.chapterNumDisplay}>
-				{#each chapterNumDisplays as numDisplay}
-					<option value={numDisplay}>{t(numDisplay)}</option>
-				{/each}
-			</select>
+			<span>{t("Column width")}</span>
+			<div>
+				{settings.columnWidth}
+				<input
+					type="range"
+					min="100"
+					max="2000"
+					step="20"
+					bind:value={settings.columnWidth}
+				/>
+			</div>
 		</label>
 		<label>
 			<span>{t("Drop caps")}</span>
@@ -73,12 +74,32 @@ import { p, route } from "../routes.ts";
 			/>
 		</label>
 		<label>
+			<span>{t("Show chapter numbers")}</span>
+			<input
+				type="checkbox"
+				checked={settings.showChapterNum === "true"}
+				onchange={(ev) =>
+					(settings.showChapterNum = ev.currentTarget.checked
+						? "true"
+						: "false")}
+			/>
+		</label>
+		<label>
 			<span>{t("Show verse numbers")}</span>
 			<input
 				type="checkbox"
 				checked={settings.showVerseNum === "true"}
 				onchange={(ev) =>
 					(settings.showVerseNum = ev.currentTarget.checked ? "true" : "false")}
+			/>
+		</label>
+		<label>
+			<span>{t("Show outline")}</span>
+			<input
+				type="checkbox"
+				checked={settings.showOutline === "true"}
+				onchange={(ev) =>
+					(settings.showOutline = ev.currentTarget.checked ? "true" : "false")}
 			/>
 		</label>
 		<label>
@@ -111,6 +132,12 @@ form {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+
+		& > div {
+			display: flex;
+			align-items: center;
+			gap: --spacing(2);
+		}
 	}
 
 	& > label > input[type="checkbox"] {

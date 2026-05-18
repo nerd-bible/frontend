@@ -17,8 +17,9 @@ export const initial = {
 	columnGap: "4",
 	fontSize: parseFloat(getComputedStyle(document.body).fontSize).toString(),
 	lineHeight: "1.5",
-	chapterNumDisplay: "None",
 	showDropCaps: "true",
+	showOutline: "false",
+	showChapterNum: "false",
 	showVerseNum: "false",
 	showFootnotes: "false",
 };
@@ -84,5 +85,3 @@ window.addEventListener("storage", (ev) => {
 // Misc constants
 export { locales };
 export const themes = ["System", "Dark", "Light"] as const;
-export const chapterNumDisplays = ["Normal", "Small", "None"] as const;
-export type ChapterNumDisplay = (typeof chapterNumDisplays)[number];

@@ -1,5 +1,4 @@
 <script lang="ts">
-import { onMount } from "svelte";
 import { settings } from "../../settings.svelte";
 import sample from "../../genesis.html?raw";
 import {
@@ -9,9 +8,10 @@ import {
 	inline,
 	shift,
 } from "@floating-ui/dom";
-import type { Attachment } from 'svelte/attachments';
+import type { Attachment } from "svelte/attachments";
 // import { docFromBookLang } from "./tree.svelte.ts";
 
+// https://github.com/aleventhal/aria-annotations/blob/master/README.md#simplified-aria-annotations-proposal--explainer
 // https://jsfiddle.net/4o73hgwu/7/
 interface Props {
 	book: string;
@@ -19,78 +19,83 @@ interface Props {
 
 const { book }: Props = $props();
 let dir = $state<"ltr" | "rtl">("ltr");
+let tooltipRef: HTMLDivElement;
 // let doc = $derived(docFromBookLang(book, settings.locale));
-let svg: SVGElement;
-let div: HTMLDivElement;
-let rects: { x: number; y: number; width: number; height: number }[] = $state(
-	[],
-);
-let paths: string[] = $state([]);
-onMount(() => {
-	const parentBounds = div.getBoundingClientRect();
-	div.querySelectorAll("mark").forEach((m) => {
-		const from = m.getBoundingClientRect();
-		const fromRect = {
-			x: from.x - 8,
-			y: from.y - parentBounds.y,
-			width: from.width,
-			height: from.height,
-		};
-		const to = m.nextElementSibling!.getBoundingClientRect();
-		const toRect = {
-			x: to.x - 8,
-			y: to.y - parentBounds.y,
-			width: to.width,
-			height: to.height,
-		};
-		rects.push(fromRect);
-		rects.push(toRect);
-		const fromBottomLeft = [fromRect.x, fromRect.y + fromRect.height];
-		const toBottomRight = [toRect.x + toRect.width, toRect.y + toRect.height];
-		const halfway = [
-			(fromBottomLeft[0] + toBottomRight[0]) / 2,
-			toRect.y + toRect.height + 8,
-		];
-		const xy = ([x, y]: number[]) => `${x},${y}`;
-		paths.push(`M${xy(fromBottomLeft)} Q${xy(halfway)} ${xy(toBottomRight)}`);
-	});
-});
+let paths = $state<string[]>([]);
+let inlineNotes = $state(false);
 
-const myAttachment: Attachment = (element) => {
-	console.log(element.nodeName);
+const layoutNotes: Attachment = (div) => {
+	const parentRect = div.getBoundingClientRect();
+	const sameLineNoteStyles = ["wavy", "dashed", "dotted", "none"];
+
+	function layout() {
+		settings.showFootnotes;
+		let lastY = 0;
+		let lastHeight = 0;
+		let overlapping = 0;
+		inlineNotes =
+			div.clientWidth - +settings.columnWidth < +settings.fontSize * 12;
+
+		div.querySelectorAll("mark").forEach((mark) => {
+			const fromRects = mark.getClientRects();
+			const rect = fromRects[fromRects.length - 1];
+			const y = Math.max(lastY + lastHeight, rect.top - parentRect.top);
+			const note = mark.ariaDetailsElements![0] as HTMLElement;
+
+			let style = "solid";
+			if (y === lastY + lastHeight)
+				style = sameLineNoteStyles[overlapping++ % sameLineNoteStyles.length];
+			else overlapping = 0;
+			mark.style.textDecorationStyle = style;
+			note.style.textDecorationStyle = style;
+			note.style.top = y + "px";
+
+			lastY = y;
+			lastHeight = note.clientHeight;
+		});
+	}
+
+	layout();
+	const obs = new ResizeObserver(layout);
+	obs.observe(div);
 
 	return () => {
-		console.log('cleaning up');
+		obs.disconnect();
 	};
 };
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->
-<div class="wrapper" {@attach myAttachment}>
-	<div class="toc">Table of contents</div>
-	<div
+<div
+	class="wrapper"
+	class:inline-notes={inlineNotes}
+	class:hide-footnotes={settings.showFootnotes !== "true"}
+	{@attach layoutNotes}
+>
+	<!-- <div class="toc"></div> -->
+	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+	<main
 		class="editor"
 		{dir}
 		class:hide-verse={settings.showVerseNum !== "true"}
-		class:hide-footnotes={settings.showFootnotes !== "true"}
+		class:hide-chapter={settings.showChapterNum !== "true"}
+		class:hide-outline={settings.showOutline !== "true"}
 		class:drop-caps={settings.showDropCaps === "true"}
-		data-chapter-display={settings.chapterNumDisplay}
 		style:--column-width={`${settings.columnWidth}px`}
 		style:--column-gap={`${settings.columnGap}px`}
 		style:--font-size={`${settings.fontSize}px`}
 		style:--line-height={settings.lineHeight}
 		onclick={(ev) => {
-			const target = ev.target as HTMLElement;
-			if (target.tagName === "BUTTON") {
-				const reference = new Range();
-				reference.setStartBefore(target);
-				reference.setEndAfter(target);
-
+			const mark = ev.target as HTMLElement;
+			if (mark.tagName === "MARK") {
+				const reference = mark;
 				const computed = getComputedStyle(document.body);
 				const remToPx = (rem: string) =>
 					parseFloat(rem) * parseFloat(computed.fontSize);
 				const spacing = remToPx(computed.getPropertyValue("--spacing-inc"));
+				const note = mark.ariaDetailsElements![0] as HTMLElement;
+				tooltipRef.replaceChildren(note.cloneNode(true));
 
 				const middleware = [
 					offset(spacing * 2), // from `placement`
@@ -109,7 +114,6 @@ const myAttachment: Attachment = (element) => {
 					inline({ padding: 0 }),
 				];
 
-				const tooltipRef = target.nextElementSibling as HTMLElement;
 				const update = () =>
 					computePosition(reference, tooltipRef, {
 						placement: "top",
@@ -125,21 +129,21 @@ const myAttachment: Attachment = (element) => {
 				// selection?.addRange(range);
 			}
 		}}
-		bind:this={div}
 	>
 		{@html sample}
-	</div>
-	<div class="notes"></div>
-
-	<svg
-		bind:this={svg}
-		xmlns="http://www.w3.org/2000/svg"
-		stroke="red"
-		fill="none"
+	</main>
+	<div
+		role="note"
+		class="notes"
+		class:hide-footnotes={settings.showFootnotes !== "true"}
 	>
-		{#each rects as r}
-			<rect x={r.x} y={r.y} width={r.width} height={r.height} />
-		{/each}
+		<div class="footnote" id="pnote1">Literally <i>day one</i></div>
+		<div class="footnote" id="pnote2">
+			Or a canopy or a firmament or a vault
+		</div>
+	</div>
+
+	<svg xmlns="http://www.w3.org/2000/svg" stroke="red" fill="none">
 		{#each paths as d}
 			<path {d} />
 		{/each}
@@ -147,45 +151,18 @@ const myAttachment: Attachment = (element) => {
 </div>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
-<!-- <div -->
-<!-- 	class="tooltip" -->
-<!-- 	bind:this={tooltipRef} -->
-<!-- 	onmousedown={(ev) => ev.preventDefault()} -->
-<!-- > -->
-<!-- 	{#each Object.keys(settings.userHighlights) as k} -->
-<!-- 		<button -->
-<!-- 			onclick={() => { -->
-<!-- 				if (!view) return; -->
-<!---->
-<!-- 				const { from, to } = view.state.selection; -->
-<!-- 				view?.dispatch( -->
-<!-- 					view.state.tr.setMeta("annotate", { from, to, class: k }), -->
-<!-- 				); -->
-<!-- 				document.getSelection()?.removeAllRanges(); -->
-<!---->
-<!-- 				// const decoSet: DecorationSet = key.getState(view.state); -->
-<!-- 				// const decos = decoSet.find(from, to); -->
-<!-- 				// console.log(decos); -->
-<!-- 			}} -->
-<!-- 		> -->
-<!-- 			{k} -->
-<!-- 		</button> -->
-<!-- 	{/each} -->
-<!-- 	<button -->
-<!-- 		onclick={() => { -->
-<!-- 			settings.userHighlights["pink"] = { -->
-<!-- 				"background-color": "rgb(255,192,203)", -->
-<!-- 			}; -->
-<!-- 		}}>add</button -->
-<!-- 	> -->
-<!-- </div> -->
+<div
+	class="tooltip"
+	bind:this={tooltipRef}
+	onmousedown={(ev) => ev.preventDefault()}
+></div>
 
 <style>
 .wrapper {
 	max-width: 100%;
 	position: relative;
 	display: flex;
-	gap: --spacing(2);
+	gap: --spacing(8);
 
 	& > *:not(svg) {
 		z-index: 2;
@@ -198,10 +175,12 @@ const myAttachment: Attachment = (element) => {
 .notes {
 	flex-grow: 1;
 }
+
 :global {
 	.editor {
 		font-size: var(--font-size);
 		line-height: var(--line-height);
+		counter-reset: chapter;
 
 		/* Failed double column experiment */
 		/* column-width: calc((100vw + var(--spacing-inc) * 16) / 3); */
@@ -216,12 +195,10 @@ const myAttachment: Attachment = (element) => {
 		/* &::-webkit-scrollbar { */
 		/* 	display: none; */
 		/* } */
-		width: var(--column-width);
+		max-width: var(--column-width);
 
 		&.hide-verse .verse,
-		&.hide-footnotes .footnote,
-		&[data-chapter-display="None"] h2,
-		& > h1 + .chapter > h2 {
+		&[data-chapter-display="None"] h2 {
 			display: none;
 		}
 
@@ -233,8 +210,7 @@ const myAttachment: Attachment = (element) => {
 			/* follow dir instead of being all smart */
 			unicode-bidi: bidi-override;
 
-			margin-top: --spacing(1);
-			margin-bottom: --spacing(4);
+			text-indent: 2ch;
 		}
 
 		ol.inline,
@@ -256,9 +232,6 @@ const myAttachment: Attachment = (element) => {
 			/* & ~ * { margin-inline-end: -2px; } */
 		}
 
-		/* h1 = title */
-		/* h2 = chapter number */
-		/* h3-h6 = outline heading */
 		h1 {
 			text-align: center;
 			font-weight: bolder;
@@ -269,7 +242,24 @@ const myAttachment: Attachment = (element) => {
 		h5,
 		h6 {
 			opacity: 0.5;
+			margin-top: calc(2lh / 9);
+			margin-bottom: calc(1lh / 9);
 		}
+		h1:has(+ h2),
+		h2:has(+ h3),
+		h3:has(+ h4),
+		h4:has(+ h5),
+		h5:has(+ h6) {
+			margin: 0;
+		}
+		h1 + h2,
+		h2 + h3,
+		h3 + h4,
+		h4 + h5,
+		h5 + h6 {
+			margin-top: 0;
+		}
+
 		h2 {
 			font-size: 1.75em;
 		}
@@ -285,71 +275,47 @@ const myAttachment: Attachment = (element) => {
 		h6 {
 			font-size: 1em;
 		}
-
-		&[data-chapter-display="Normal"] h2 {
-			line-height: normal;
-			margin-bottom: --spacing(1);
-
-			&:first-child {
-				margin-top: 0;
+		&.hide-outline {
+			h2,
+			h3,
+			h4,
+			h5,
+			h6 {
+				display: none;
 			}
 		}
-		&[data-chapter-display="Small"] h2 {
-			opacity: 0.5;
-			font-size: 0.75em;
-			position: relative;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			gap: --spacing(4);
 
-			&::before,
-			&::after {
-				content: "";
-				flex-grow: 1;
-				/* width: --spacing(12); */
-				border-bottom: 1px solid;
+		&:not(.hide-chapter) > .chapter {
+			& > h2:first-child,
+			& > h3:first-child,
+			& > h4:first-child,
+			& > h5:first-child,
+			& > h6:first-child {
+				margin-top: 0;
 			}
-			padding: --spacing(2) 0;
+			&::before {
+				opacity: 0.5;
+				font-size: 1.75em;
+				counter-increment: chapter;
+				content: "Chapter " counter(chapter);
+			}
+		}
+
+		&:not(.hide-chapter) > .chapter,
+		&.drop-caps > .chapter {
+			margin-bottom: 1lh;
 		}
 
 		&.drop-caps > .chapter > p:first-of-type {
-			min-height: 2lh;
 			& > .verse:first-of-type {
 				display: none;
 			}
 			&::first-letter {
-				float: inline-start;
 				font-size: 2lh;
 				line-height: 1;
 				font-weight: bold;
 				margin-inline-end: 0.1em;
 			}
-		}
-
-		small {
-			--width: calc(
-				(100vw - var(--column-width) - var(--spacing-inc) * 24) / 2
-			);
-			font-size: inherit;
-			position: relative;
-			width: var(--width);
-			float: inline-end;
-			margin-inline-end: calc(-1 * var(--width) - var(--spacing-inc) * 8);
-		}
-
-		button {
-			text-decoration-line: underline;
-			text-decoration-style: wavy;
-			text-decoration-skip-ink: none;
-			text-decoration-color: green;
-			padding: 0;
-			background: none;
-		}
-
-		mark {
-			background: none;
-			color: inherit;
 		}
 
 		blockquote {
@@ -392,6 +358,28 @@ const myAttachment: Attachment = (element) => {
 	/* https://stackoverflow.com/questions/9933092/css-prevent-absolute-positioned-element-from-overflowing-body */
 	/* right: 0; */
 	/* overflow: hidden; */
+}
+.notes > * {
+	position: absolute;
+}
+
+.hide-footnotes {
+	& > .editor :global(mark) {
+		text-decoration: none;
+	}
+}
+
+.hide-footnotes,
+.inline-notes {
+	& > .notes {
+		display: none;
+	}
+}
+
+.editor :global(mark),
+.notes > div {
+	text-decoration-color: var(--color-fg-500);
+	text-decoration-line: underline;
 }
 
 svg {

@@ -17,7 +17,7 @@
 
 	/* light */
 	--color-fg-50: var(--color-gray-950);
-	--color-fg-200: var(--color-gray-800);
+	--color-fg-500: var(--color-gray-400);
 	--color-bg-50: var(--color-yellow-50);
 	--color-bg-100: var(--color-yellow-100);
 	--color-bg-200: var(--color-yellow-200);
@@ -31,7 +31,7 @@
 
 .dark {
 	--color-fg-50: var(--color-gray-50);
-	--color-fg-200: var(--color-gray-200);
+	--color-fg-500: var(--color-gray-500);
 	--color-bg-50: var(--color-yellow-950);
 	--color-bg-100: var(--color-yellow-900);
 	--color-bg-200: var(--color-yellow-800);

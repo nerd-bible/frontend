@@ -12,6 +12,7 @@ function onScroll() {
 	visible = Boolean(
 		pointerOver ||
 		window.scrollY <= lastScrollY ||
+		window.scrollY <= 0 ||
 		headerRef.contains(document.activeElement),
 	);
 	lastScrollY = window.scrollY;

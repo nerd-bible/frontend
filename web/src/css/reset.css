@@ -345,3 +345,8 @@ input[type="checkbox"] {
 		background-color: var(--color-secondary);
 	}
 }
+
+mark {
+	background: none;
+	color: inherit;
+}

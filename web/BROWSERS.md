@@ -52,6 +52,7 @@ through IndexedDb polling. This would support since 2018.
 
 | feature                                                 | 100% year | polyfill       |
 | ------------------------------------------------------- | --------- | -------------- |
+| [Counters](https://caniuse.com/css-counters)            | 2008      | no             |
 | [Variables](https://caniuse.com/css-variables)          | 2017      | no             |
 | [Grid](https://caniuse.com/css-grid)                    | 2017      | no             |
 | [Woff2](https://caniuse.com/woff2)                      | 2017      | no             |
@@ -59,6 +60,7 @@ through IndexedDb polling. This would support since 2018.
 | [Focus-within](https://caniuse.com/css-focus-within)    | 2019      | more js        |
 | [font-synthesis](https://caniuse.com/wf-font-synthesis) | 2022      | no             |
 | [lh](https://caniuse.com/wf-lh)                         | 2023      | maybe          |
+| [:has](https://caniuse.com/css-has)                     | 2023      | no             |
 
 ## Browserstack
 

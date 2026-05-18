@@ -5,6 +5,4 @@ import { route } from "../routes.ts";
 const book = $derived(route.getParams("/:id").id);
 </script>
 
-<main>
-	<Editor {book} />
-</main>
+<Editor {book} />
