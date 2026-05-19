@@ -105,6 +105,14 @@ const layoutNotes: Attachment = (div) => {
 };
 </script>
 
+<svelte:document
+	onclick={(ev) => {
+		if (!tooltipRef.contains(ev.target as HTMLElement)) {
+			selectedNote = undefined;
+			tooltipPos.top = -100;
+		}
+	}}
+/>
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
@@ -128,10 +136,15 @@ const layoutNotes: Attachment = (div) => {
 		style:--line-height={settings.lineHeight}
 		onclick={(ev) => {
 			const mark = ev.target as HTMLElement;
-			if (settings.showFootnotes === "true" && mark.tagName === "MARK" && inlineNotes) {
+			if (
+				settings.showFootnotes === "true" &&
+				mark.tagName === "MARK" &&
+				inlineNotes
+			) {
 				const note = mark.ariaDetailsElements![0] as HTMLElement;
 				tooltipRef.replaceChildren(note.cloneNode(true));
 				selectedNote = mark;
+				ev.stopPropagation();
 			}
 		}}
 	>
