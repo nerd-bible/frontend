@@ -51,68 +51,6 @@ import { p, route } from "../routes.ts";
 				/>
 			</div>
 		</label>
-		<label>
-			<span>{t("Column width")}</span>
-			<div>
-				{settings.columnWidth}
-				<input
-					type="range"
-					min="100"
-					max="2000"
-					step="20"
-					bind:value={settings.columnWidth}
-				/>
-			</div>
-		</label>
-		<label>
-			<span>{t("Drop caps")}</span>
-			<input
-				type="checkbox"
-				checked={settings.showDropCaps === "true"}
-				onchange={(ev) =>
-					(settings.showDropCaps = ev.currentTarget.checked ? "true" : "false")}
-			/>
-		</label>
-		<label>
-			<span>{t("Show chapter numbers")}</span>
-			<input
-				type="checkbox"
-				checked={settings.showChapterNum === "true"}
-				onchange={(ev) =>
-					(settings.showChapterNum = ev.currentTarget.checked
-						? "true"
-						: "false")}
-			/>
-		</label>
-		<label>
-			<span>{t("Show verse numbers")}</span>
-			<input
-				type="checkbox"
-				checked={settings.showVerseNum === "true"}
-				onchange={(ev) =>
-					(settings.showVerseNum = ev.currentTarget.checked ? "true" : "false")}
-			/>
-		</label>
-		<label>
-			<span>{t("Show outline")}</span>
-			<input
-				type="checkbox"
-				checked={settings.showOutline === "true"}
-				onchange={(ev) =>
-					(settings.showOutline = ev.currentTarget.checked ? "true" : "false")}
-			/>
-		</label>
-		<label>
-			<span>{t("Show footnotes")}</span>
-			<input
-				type="checkbox"
-				checked={settings.showFootnotes === "true"}
-				onchange={(ev) =>
-					(settings.showFootnotes = ev.currentTarget.checked
-						? "true"
-						: "false")}
-			/>
-		</label>
 	{/if}
 	<a href={p("/settings")}>
 		<span>{t("Settings")}</span>

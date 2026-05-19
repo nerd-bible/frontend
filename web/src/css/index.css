@@ -11,7 +11,6 @@
 body {
 	display: flex;
 	flex-direction: column;
-	padding: 0 --spacing(2) --spacing(4) --spacing(2);
 	width: 100%;
 	/* avoid tooltips scrolling */
 	overflow-x: hidden;

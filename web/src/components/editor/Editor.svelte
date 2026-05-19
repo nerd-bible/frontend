@@ -1,14 +1,13 @@
 <script lang="ts">
 import { settings } from "../../settings.svelte";
 import sample from "../../genesis.html?raw";
-import {
-	computePosition,
-	autoUpdate,
-	offset,
-	inline,
-	shift,
-} from "@floating-ui/dom";
+import Tabs from "../Tabs.svelte";
+import Outline from "./Outline.svelte";
+import Layers from "./Layers.svelte";
+import View from "./View.svelte";
+import { computePosition, offset, inline, shift } from "@floating-ui/dom";
 import type { Attachment } from "svelte/attachments";
+import { t } from "../../l10n.svelte";
 // import { docFromBookLang } from "./tree.svelte.ts";
 
 // https://github.com/aleventhal/aria-annotations/blob/master/README.md#simplified-aria-annotations-proposal--explainer
@@ -24,163 +23,6 @@ let selectedNote = $state<HTMLElement>();
 // let doc = $derived(docFromBookLang(book, settings.locale));
 let paths = $state<string[]>([]);
 let inlineNotes = $state(false);
-
-type Container = [string, (string | Container)[]];
-
-const toc: (string | Container)[] = [
-	[
-		"The Creation",
-		[
-			"The First Day",
-			"The Second Day",
-			"The Third Day",
-			"The Fourth Day",
-			"The Fifth Day",
-			"The Sixth Day",
-			"The Seventh Day",
-		],
-	],
-	"Man and Woman in the Garden",
-	"The Serpent’s Deception",
-	"God Arraigns Adam and Eve",
-	"The Fate of the Serpent",
-	"The Punishment of Mankind",
-	"Cain and Abel",
-	"The Descendants of Cain",
-	"Seth and Enosh",
-	"The Descendants of Adam",
-	"God Takes Up Enoch",
-	"From Methuselah to Noah",
-	"Corruption on the Earth",
-	"Noah’s Favor with God",
-	"Preparing the Ark",
-	"The Great Flood",
-	"The Ark Rests on Ararat",
-	"Noah Sends a Raven and a Dove",
-	"Exiting the Ark",
-	"Noah Builds an Altar",
-	"The Covenant of the Rainbow",
-	"Noah’s Shame and Canaan’s Curse",
-	"Shem’s Blessing and Noah’s Death",
-	["The Table of Nations", ["The Japhethites", "The Hamites", "The Semites"]],
-	"The Tower of Babel",
-	"Genealogy from Shem to Abram",
-	"Terah’s Descendants",
-	"The Call of Abram",
-	"Abram and Sarai in Egypt",
-	"Abram and Lot Part Ways",
-	"Lot Proceeds toward Sodom",
-	"God Renews the Promise to Abram",
-	"The War of the Kings",
-	"Abram Rescues Lot",
-	"Melchizedek Blesses Abram",
-	"God’s Covenant with Abram",
-	"God Confirms His Promise",
-	"Hagar and Ishmael",
-	"Abraham to Father Many Nations",
-	"The Covenant of Circumcision",
-	"The Three Visitors",
-	"Sarah Laughs at the Promise",
-	"Abraham Intercedes for Sodom",
-	"Lot Welcomes the Angels",
-	"Lot Flees to Zoar",
-	"The Destruction of Sodom and Gomorrah",
-	"Lot and His Daughters",
-	"Abraham: Sarah, and Abimelech",
-	"The Birth of Isaac",
-	"Sarah Turns against Hagar",
-	"The Covenant at Beersheba",
-	"The Offering of Isaac",
-	"The LORD Provides the Sacrifice",
-	"The Sons of Nahor",
-	"The Death and Burial of Sarah",
-	"A Wife for Isaac",
-	"Rebekah Is Chosen",
-	"Isaac Marries Rebekah",
-	"Abraham and Keturah",
-	"The Death of Abraham",
-	"The Descendants of Ishmael",
-	"Jacob and Esau",
-	"Esau Sells His Birthright",
-	"God’s Promise to Isaac",
-	"Isaac Deceives Abimelech",
-	"Isaac’s Prosperity",
-	"Isaac’s Covenant with Abimelech",
-	"Esau’s Wives",
-	"Isaac Blesses Jacob",
-	"Esau’s Lost Hope",
-	"Jacob’s Departure",
-	"Esau Marries Mahalath",
-	"Jacob’s Ladder",
-	"The Stone of Bethel",
-	"Jacob Meets Rachel",
-	"Jacob Marries Leah and Rachel",
-	"Reuben: Simeon, Levi, and Judah",
-	"Dan and Naphtali",
-	"Gad and Asher",
-	"Issachar: Zebulun, and Dinah",
-	"Joseph",
-	"Jacob Prospers",
-	"Jacob Flees from Laban",
-	"Laban Pursues Jacob",
-	"Jacob’s Covenant with Laban",
-	"Jacob Prepares to Meet Esau",
-	"Jacob Wrestles with God",
-	"Jacob Meets Esau",
-	"Jacob Settles in Shechem",
-	"The Defiling of Dinah",
-	"The Revenge of Dinah’s Brothers",
-	"Jacob Returns to Bethel",
-	"Benjamin Born, Rachel Dies",
-	"The Sons of Jacob",
-	"The Death of Isaac",
-	"The Descendants of Esau",
-	"The Descendants of Seir",
-	"The Kings of Edom",
-	"Joseph’s Dreams",
-	"Joseph Sold into Egypt",
-	"Jacob Mourns Joseph",
-	"Judah and Tamar",
-	"The Birth of Perez and Zerah",
-	"Joseph and Potiphar’s Wife",
-	"Joseph Falsely Imprisoned",
-	"The Cupbearer and the Baker",
-	"The Dreams of Pharaoh",
-	"Joseph Interprets Pharaoh’s Dreams",
-	"Joseph Given Charge of Egypt",
-	"The Seven Years of Plenty",
-	"The Famine Begins",
-	"Joseph’s Brothers Sent to Egypt",
-	"Joseph’s Brothers Return to Canaan",
-	"The Return to Egypt with Benjamin",
-	"Joseph’s Hospitality to His Brothers",
-	"Benjamin and the Silver Cup",
-	"Judah Pleads for Benjamin",
-	"Joseph Reveals His Identity",
-	"Joseph Sends for His Father",
-	"Pharaoh Invites Jacob to Egypt",
-	"The Revival of Jacob",
-	"Jacob’s Journey to Egypt",
-	[
-		"Those Who Went to Egypt",
-		[
-			"The Children of Leah",
-			"The Children of Zilpah",
-			"The Children of Rachel",
-			"The Children of Bilhah",
-		],
-	],
-	"Jacob Arrives in Egypt",
-	"Jacob Settles in Goshen",
-	"The Famine Continues",
-	"The Israelites Prosper in Goshen",
-	"Jacob Blesses Ephraim and Manasseh",
-	"Jacob Blesses His Sons",
-	"The Death of Jacob",
-	"Mourning and Burial for Jacob",
-	"Joseph Comforts His Brothers",
-	"The Death of Joseph",
-];
 
 function layoutTooltip() {
 	const reference = selectedNote;
@@ -225,31 +67,32 @@ const layoutNotes: Attachment = (div) => {
 		let lastHeight = 0;
 		let overlapping = 0;
 		inlineNotes =
-			div.clientWidth - +settings.columnWidth < +settings.fontSize * 12;
+			div.clientWidth - +settings.columnWidth * 2 < +settings.fontSize * 12;
 		if (settings.showFootnotes === "false") return;
 		if (inlineNotes) layoutTooltip();
 		else {
 			tooltipPos.top = -100;
 			selectedNote = undefined;
+
+			div.querySelectorAll("mark").forEach((mark) => {
+				const fromRects = mark.getClientRects();
+				const rect = fromRects[fromRects.length - 1];
+				const y = Math.max(lastY + lastHeight, rect.top - parentRect.top);
+				const note = mark.ariaDetailsElements![0] as HTMLElement;
+
+				let style = "solid";
+				if (y === lastY + lastHeight)
+					style = sameLineNoteStyles[overlapping++ % sameLineNoteStyles.length];
+				else overlapping = 0;
+				mark.style.textDecorationStyle = style;
+				note.style.textDecorationStyle = style;
+				note.style.position = "absolute";
+				note.style.top = y + "px";
+
+				lastY = y;
+				lastHeight = note.clientHeight;
+			});
 		}
-
-		div.querySelectorAll("mark").forEach((mark) => {
-			const fromRects = mark.getClientRects();
-			const rect = fromRects[fromRects.length - 1];
-			const y = Math.max(lastY + lastHeight, rect.top - parentRect.top);
-			const note = mark.ariaDetailsElements![0] as HTMLElement;
-
-			let style = "solid";
-			if (y === lastY + lastHeight)
-				style = sameLineNoteStyles[overlapping++ % sameLineNoteStyles.length];
-			else overlapping = 0;
-			mark.style.textDecorationStyle = style;
-			note.style.textDecorationStyle = style;
-			note.style.top = y + "px";
-
-			lastY = y;
-			lastHeight = note.clientHeight;
-		});
 	}
 
 	layout();
@@ -293,24 +136,16 @@ function highlightNote(ev: MouseEvent) {
 	class:inline-notes={inlineNotes}
 	class:hide-footnotes={settings.showFootnotes !== "true"}
 	style:--column-width={`${settings.columnWidth}px`}
+	style:--line-height={settings.lineHeight}
+	style:--font-size={`${settings.fontSize}px`}
 	{@attach layoutNotes}
 >
-	{#snippet renderToc(item: string | Container | (string | Container)[])}
-		{#if Array.isArray(item)}
-			<ul>
-				{#each item as subitem}
-					<li>{@render renderToc(subitem)}</li>
-				{/each}
-			</ul>
-		{:else}
-			<a href="#foo">{item}</a>
-		{/if}
-	{/snippet}
-
 	<aside class="left">
-		<nav>
-			{@render renderToc(toc)}
-		</nav>
+		<Tabs items={[
+			{ label: t("Outline"), component: Outline },
+			{ label: t("View"), component: View },
+			{ label: t("Layers"), component: Layers },
+		]} />
 	</aside>
 	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 	<main
@@ -321,8 +156,6 @@ function highlightNote(ev: MouseEvent) {
 		class:hide-outline={settings.showOutline !== "true"}
 		class:drop-caps={settings.showDropCaps === "true"}
 		style:--column-gap={`${settings.columnGap}px`}
-		style:--font-size={`${settings.fontSize}px`}
-		style:--line-height={settings.lineHeight}
 		onclick={(ev) => {
 			const mark = ev.target as HTMLElement;
 			if (settings.showFootnotes === "true" && mark.tagName === "MARK") {
@@ -379,27 +212,22 @@ function highlightNote(ev: MouseEvent) {
 	display: flex;
 	justify-content: center;
 	gap: --spacing(8);
+	font-size: var(--font-size);
+	line-height: var(--line-height);
 
 	& > *:not(svg) {
 		z-index: 2;
 		max-width: var(--column-width);
 	}
-}
-.left {
-	padding: --spacing(4) 0;
-	nav > ul > li ul ul {
-		margin-inline-start: --spacing(4);
-	}
-	a {
-		color: var(--color-link);
+	& > aside {
+		flex: 1 1 0;
 	}
 }
 
 :global {
 	.editor {
-		font-size: var(--font-size);
-		line-height: var(--line-height);
 		counter-reset: chapter;
+		padding-bottom: --spacing(4);
 
 		/* Failed double column experiment */
 		/* column-width: calc((100vw + var(--spacing-inc) * 16) / 3); */
@@ -576,20 +404,10 @@ function highlightNote(ev: MouseEvent) {
 	/* right: 0; */
 	/* overflow: hidden; */
 }
-.notes > * {
-	position: relative;
-}
 
 .hide-footnotes {
 	& > .editor :global(mark) {
 		text-decoration: none;
-	}
-}
-
-.hide-footnotes,
-.inline-notes {
-	& > .notes {
-		display: none;
 	}
 }
 
