@@ -103,6 +103,19 @@ const layoutNotes: Attachment = (div) => {
 		obs.disconnect();
 	};
 };
+
+function highlight(ele: HTMLElement) {
+	ele.classList.remove("focus");
+	void ele.offsetWidth; // Force reflow to restart animation
+	ele.classList.add("focus");
+}
+
+function highlightNote(ev: MouseEvent) {
+	const ele = ev.currentTarget as HTMLElement;
+	const referencedBy = document.querySelectorAll(`[aria-details=${ele.id}]`);
+	for (let i = 0; i < referencedBy.length; i++)
+		highlight(referencedBy[i] as HTMLElement);
+}
 </script>
 
 <svelte:document
@@ -136,27 +149,32 @@ const layoutNotes: Attachment = (div) => {
 		style:--line-height={settings.lineHeight}
 		onclick={(ev) => {
 			const mark = ev.target as HTMLElement;
-			if (
-				settings.showFootnotes === "true" &&
-				mark.tagName === "MARK" &&
-				inlineNotes
-			) {
+			if (settings.showFootnotes === "true" && mark.tagName === "MARK") {
 				const note = mark.ariaDetailsElements![0] as HTMLElement;
-				tooltipRef.replaceChildren(note.cloneNode(true));
-				selectedNote = mark;
-				ev.stopPropagation();
+				if (inlineNotes) {
+					const cloned = note.cloneNode(true) as HTMLElement;
+					cloned.removeAttribute("id");
+					tooltipRef.replaceChildren(cloned);
+					selectedNote = mark;
+					ev.stopPropagation();
+				} else {
+					highlight(note);
+				}
 			}
 		}}
 	>
 		{@html sample}
 	</main>
+	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 	<div
 		role="note"
 		class="notes"
 		class:hide-footnotes={settings.showFootnotes !== "true"}
 	>
-		<div class="footnote" id="pnote1">Literally <i>day one</i></div>
-		<div class="footnote" id="pnote2">
+		<div class="footnote" id="pnote1" onclick={highlightNote}>
+			Literally <i>day one</i>
+		</div>
+		<div class="footnote" id="pnote2" onclick={highlightNote}>
 			Or a canopy or a firmament or a vault
 		</div>
 	</div>
@@ -399,8 +417,20 @@ const layoutNotes: Attachment = (div) => {
 
 .editor :global(mark),
 .notes > div {
+	&:global(.focus) {
+		animation: fade-in 1s ease forwards;
+	}
 	text-decoration-color: var(--color-fg-500);
 	text-decoration-line: underline;
+}
+
+@keyframes fade-in {
+	from {
+		background: var(--color-focus-100);
+	}
+	to {
+		background: none;
+	}
 }
 
 svg {
