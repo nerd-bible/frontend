@@ -135,6 +135,7 @@ function highlightNote(ev: MouseEvent) {
 	class="wrapper"
 	class:inline-notes={inlineNotes}
 	class:hide-footnotes={settings.showFootnotes !== "true"}
+	style:--column-width={`${settings.columnWidth}px`}
 	{@attach layoutNotes}
 >
 	<!-- <div class="toc"></div> -->
@@ -146,7 +147,6 @@ function highlightNote(ev: MouseEvent) {
 		class:hide-chapter={settings.showChapterNum !== "true"}
 		class:hide-outline={settings.showOutline !== "true"}
 		class:drop-caps={settings.showDropCaps === "true"}
-		style:--column-width={`${settings.columnWidth}px`}
 		style:--column-gap={`${settings.columnGap}px`}
 		style:--font-size={`${settings.fontSize}px`}
 		style:--line-height={settings.lineHeight}
@@ -204,18 +204,17 @@ function highlightNote(ev: MouseEvent) {
 	max-width: 100%;
 	position: relative;
 	display: flex;
+	justify-content: center;
 	gap: --spacing(8);
 
 	& > *:not(svg) {
 		z-index: 2;
+		max-width: var(--column-width);
 	}
 }
 .toc {
 	flex-shrink: 1;
 	padding: --spacing(4) 0;
-}
-.notes {
-	flex-grow: 1;
 }
 
 :global {
@@ -237,10 +236,8 @@ function highlightNote(ev: MouseEvent) {
 		/* &::-webkit-scrollbar { */
 		/* 	display: none; */
 		/* } */
-		max-width: var(--column-width);
 
-		&.hide-verse .verse,
-		&[data-chapter-display="None"] h2 {
+		&.hide-verse .verse {
 			display: none;
 		}
 
@@ -402,7 +399,7 @@ function highlightNote(ev: MouseEvent) {
 	/* overflow: hidden; */
 }
 .notes > * {
-	position: absolute;
+	position: relative;
 }
 
 .hide-footnotes {
