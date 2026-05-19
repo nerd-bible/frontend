@@ -13,28 +13,68 @@ import type { Attachment } from "svelte/attachments";
 
 // https://github.com/aleventhal/aria-annotations/blob/master/README.md#simplified-aria-annotations-proposal--explainer
 // https://jsfiddle.net/4o73hgwu/7/
-interface Props {
-	book: string;
-}
-
-const { book }: Props = $props();
+// interface Props {
+// 	book: string;
+// }
+// const { book }: Props = $props();
 let dir = $state<"ltr" | "rtl">("ltr");
 let tooltipRef: HTMLDivElement;
+let tooltipPos = $state({ left: 0, top: -100 });
+let selectedNote = $state<HTMLElement>();
 // let doc = $derived(docFromBookLang(book, settings.locale));
 let paths = $state<string[]>([]);
 let inlineNotes = $state(false);
+
+function layoutTooltip() {
+	const reference = selectedNote;
+	if (!reference) return;
+	const computed = getComputedStyle(document.body);
+	const remToPx = (rem: string) =>
+		parseFloat(rem) * parseFloat(computed.fontSize);
+	const spacing = remToPx(computed.getPropertyValue("--spacing-inc"));
+
+	const middleware = [
+		offset(spacing * 2), // from `placement`
+		// flip(), // to opposite of `placement` if cannot fit
+		shift({
+			padding: {
+				left: parseFloat(computed.paddingLeft),
+				right: parseFloat(computed.paddingRight),
+				// needs to be taller than header because appears under header
+				// this is difficult to fix because of stacking contexts
+				// TODO: make stack above header and change to same as bottom
+				top: spacing * 14,
+				bottom: spacing * 2,
+			},
+		}),
+		inline({ padding: 0 }),
+	];
+
+	computePosition(reference, tooltipRef, {
+		placement: "top",
+		middleware,
+	}).then(({ x, y }) => {
+		tooltipPos.left = x;
+		tooltipPos.top = y;
+	});
+}
 
 const layoutNotes: Attachment = (div) => {
 	const parentRect = div.getBoundingClientRect();
 	const sameLineNoteStyles = ["wavy", "dashed", "dotted", "none"];
 
 	function layout() {
-		settings.showFootnotes;
 		let lastY = 0;
 		let lastHeight = 0;
 		let overlapping = 0;
 		inlineNotes =
 			div.clientWidth - +settings.columnWidth < +settings.fontSize * 12;
+		if (settings.showFootnotes === "false") return;
+		if (inlineNotes) layoutTooltip();
+		else {
+			tooltipPos.top = -100;
+			selectedNote = undefined;
+		}
 
 		div.querySelectorAll("mark").forEach((mark) => {
 			const fromRects = mark.getClientRects();
@@ -88,45 +128,10 @@ const layoutNotes: Attachment = (div) => {
 		style:--line-height={settings.lineHeight}
 		onclick={(ev) => {
 			const mark = ev.target as HTMLElement;
-			if (mark.tagName === "MARK") {
-				const reference = mark;
-				const computed = getComputedStyle(document.body);
-				const remToPx = (rem: string) =>
-					parseFloat(rem) * parseFloat(computed.fontSize);
-				const spacing = remToPx(computed.getPropertyValue("--spacing-inc"));
+			if (settings.showFootnotes === "true" && mark.tagName === "MARK" && inlineNotes) {
 				const note = mark.ariaDetailsElements![0] as HTMLElement;
 				tooltipRef.replaceChildren(note.cloneNode(true));
-
-				const middleware = [
-					offset(spacing * 2), // from `placement`
-					// flip(), // to opposite of `placement` if cannot fit
-					shift({
-						padding: {
-							left: parseFloat(computed.paddingLeft),
-							right: parseFloat(computed.paddingRight),
-							// needs to be taller than header because appears under header
-							// this is difficult to fix because of stacking contexts
-							// TODO: make stack above header and change to same as bottom
-							top: spacing * 14,
-							bottom: spacing * 2,
-						},
-					}),
-					inline({ padding: 0 }),
-				];
-
-				const update = () =>
-					computePosition(reference, tooltipRef, {
-						placement: "top",
-						middleware,
-					}).then(({ x, y }) => {
-						tooltipRef.style.left = `${x}px`;
-						tooltipRef.style.top = `${y}px`;
-						tooltipRef.style.display = "flex";
-					});
-				const cleanup = autoUpdate(reference, tooltipRef, update);
-
-				// const selection = window.getSelection();
-				// selection?.addRange(range);
+				selectedNote = mark;
 			}
 		}}
 	>
@@ -154,6 +159,9 @@ const layoutNotes: Attachment = (div) => {
 <div
 	class="tooltip"
 	bind:this={tooltipRef}
+	style:display={settings.showFootnotes == "true" ? null : "none"}
+	style:top={tooltipPos.top + "px"}
+	style:left={tooltipPos.left + "px"}
 	onmousedown={(ev) => ev.preventDefault()}
 ></div>
 
@@ -340,7 +348,7 @@ const layoutNotes: Attachment = (div) => {
 }
 
 :global(.tooltip) {
-	display: none;
+	display: flex;
 	position: absolute;
 	background: var(--color-bg-300);
 	filter: drop-shadow(var(--drop-shadow-xl));

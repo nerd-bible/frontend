@@ -18,10 +18,10 @@ export const initial = {
 	fontSize: parseFloat(getComputedStyle(document.body).fontSize).toString(),
 	lineHeight: "1.5",
 	showDropCaps: "true",
-	showOutline: "false",
+	showOutline: "true",
 	showChapterNum: "false",
 	showVerseNum: "false",
-	showFootnotes: "false",
+	showFootnotes: "true",
 };
 export const length = $state({ n: storage.length });
 
