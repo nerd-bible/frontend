@@ -4,16 +4,17 @@ Goal: 99% of global audience (since 2017)
 
 ## JS
 
-| feature                                                          | 100% year      | polyfill                                                                  |
-| ---------------------------------------------------------------- | -------------- | ------------------------------------------------------------------------- |
-| [Fetch](https://caniuse.com/fetch)                               | 2017           | no                                                                        |
-| [ES6](https://compat-table.github.io/compat-table/es6/)          | 2017           | not easy (babel/ts)                                                       |
-| [Proxy](https://caniuse.com/proxy) (svelte)                      | 2017           | no                                                                        |
-| [Service worker](https://caniuse.com/serviceworkers)             | 2018           | no                                                                        |
-| [Floating UI](https://floating-ui.com/docs/misc#browser-support) | ?              | ?                                                                         |
-| [BigInt](https://caniuse.com/bigint)                             | 2020           | [JSBI](https://github.com/GoogleChromeLabs/jsbi)                          |
-| [Intl.Segmenter](https://caniuse.com/wf-intl-segmenter)          | 2021 (FF 2025) | [yes (2.5MB)](https://github.com/toeverything/intl-segmenter-polyfill-rs) |
-| [Intl.DisplayNames](https://caniuse.com/wf-intl-display-names)   | 2021           | ?                                                                         |
+| feature                                                            | 100% year      | polyfill                                                                  |
+| ------------------------------------------------------------------ | -------------- | ------------------------------------------------------------------------- |
+| [Fetch](https://caniuse.com/fetch)                                 | 2017           | no                                                                        |
+| [ES6](https://compat-table.github.io/compat-table/es6/)            | 2017           | not easy (babel/ts)                                                       |
+| [Proxy](https://caniuse.com/proxy) (svelte)                        | 2017           | no                                                                        |
+| [Service worker](https://caniuse.com/serviceworkers)               | 2018           | no                                                                        |
+| [Floating UI](https://floating-ui.com/docs/misc#browser-support)   | ?              | ?                                                                         |
+| [BigInt](https://caniuse.com/bigint)                               | 2020           | [JSBI](https://github.com/GoogleChromeLabs/jsbi)                          |
+| [Intl.Segmenter](https://caniuse.com/wf-intl-segmenter)            | 2021 (FF 2025) | [yes (2.5MB)](https://github.com/toeverything/intl-segmenter-polyfill-rs) |
+| [Intl.DisplayNames](https://caniuse.com/wf-intl-display-names)     | 2021           | ?                                                                         |
+| [getAnimations](https://caniuse.com/mdn-api_element_getanimations) | 2023           | no                                                                        |
 
 ### Sqlite persistence
 

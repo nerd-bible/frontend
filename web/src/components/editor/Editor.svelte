@@ -105,9 +105,12 @@ const layoutNotes: Attachment = (div) => {
 };
 
 function highlight(ele: HTMLElement) {
-	ele.classList.remove("focus");
-	void ele.offsetWidth; // Force reflow to restart animation
 	ele.classList.add("focus");
+	const animations = ele.getAnimations();
+	animations.forEach((anim) => {
+		anim.cancel(); // Stop the current instance
+		anim.play(); // Restart from the beginning
+	});
 }
 
 function highlightNote(ev: MouseEvent) {
