@@ -179,12 +179,7 @@ const toc: (string | Container)[] = [
 
 <style>
 nav {
-	--top: 0px;
-	padding: --spacing(4);
-	height: calc(100vh - var(--top));
-	overflow: auto;
-	top: var(--top);
-	position: sticky;
+	/* Select moved to layers -- can add back if want
 	h2 {
 		font-size: 1.2rem;
 		display: flex;
@@ -198,6 +193,7 @@ nav {
 		margin-top: --spacing(1);
 		margin-bottom: --spacing(2);
 	}
+ */
 	& > ul > li {
 		text-indent: --spacing(-2);
 		padding-inline-start: --spacing(2);
@@ -210,7 +206,4 @@ nav {
 	}
 }
 
-:global(header:not(.hidden) + .wrapper) > .left nav {
-	--top: calc(2rem + --spacing(6));
-}
 </style>

@@ -414,19 +414,31 @@ function highlightNote(ev: MouseEvent) {
 .editor :global(mark),
 .notes > div {
 	&:global(.focus) {
-		animation: fade-in 1s ease forwards;
+		animation: focus 1s ease forwards;
 	}
 	text-decoration-color: var(--color-fg-500);
 	text-decoration-line: underline;
 }
 
-@keyframes fade-in {
+@keyframes focus {
 	from {
 		background: var(--color-focus-100);
 	}
 	to {
 		background: none;
 	}
+}
+
+.left {
+	--top: 0px;
+	height: calc(100vh - var(--top));
+	overflow: auto;
+	top: var(--top);
+	position: sticky;
+}
+
+:global(header:not(.hidden)) + .wrapper > .left {
+	--top: calc(2rem + --spacing(6));
 }
 
 svg {

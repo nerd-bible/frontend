@@ -24,3 +24,9 @@ const uid = $props.id();
 		{@render items[active].component()}
 	</div>
 </section>
+
+<style>
+div[role="tabpanel"] {
+	padding: --spacing(4);
+}
+</style>
