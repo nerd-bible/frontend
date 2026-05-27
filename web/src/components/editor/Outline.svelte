@@ -179,6 +179,7 @@ const toc: (string | Container)[] = [
 
 <style>
 nav {
+	padding: --spacing(4);
 	/* Select moved to layers -- can add back if want
 	h2 {
 		font-size: 1.2rem;

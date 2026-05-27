@@ -3,7 +3,7 @@ import { settings } from "../../settings.svelte";
 import { t } from "../../l10n.svelte.ts";
 </script>
 
-<form>
+<form class="table-form">
 	<label>
 		<span>{t("Drop caps")}</span>
 		<input
@@ -32,10 +32,8 @@ import { t } from "../../l10n.svelte.ts";
 		/>
 	</label>
 </form>
-
 <style>
 form {
-	display: flex;
-	flex-direction: column;
+	padding-top: --spacing(2);
 }
 </style>

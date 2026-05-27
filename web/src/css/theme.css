@@ -22,6 +22,7 @@
 	--color-bg-100: var(--color-yellow-100);
 	--color-bg-200: var(--color-yellow-200);
 	--color-bg-300: var(--color-yellow-300);
+	--color-focus-50: var(--color-blue-50);
 	--color-focus-100: var(--color-blue-200);
 	--color-focus-200: var(--color-blue-400);
 	--color-link: var(--color-blue-500);
@@ -37,6 +38,7 @@
 	--color-bg-100: var(--color-yellow-900);
 	--color-bg-200: var(--color-yellow-800);
 	--color-bg-300: var(--color-yellow-700);
+	--color-focus-50: var(--color-blue-500);
 	--color-focus-100: var(--color-blue-400);
 	--color-focus-200: var(--color-blue-300);
 	--color-link: var(--color-blue-400);

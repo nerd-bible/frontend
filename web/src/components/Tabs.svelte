@@ -30,14 +30,12 @@ section {
 	--border-size: 2px;
 	--border-color: var(--color-bg-200);
 	--border: var(--border-size) solid var(--border-color);
-}
-div[role="tablist"] {
 	display: flex;
-	overflow: auto;
+	flex-direction: column;
+	height: 100%;
 }
 div[role="tabpanel"] {
-	padding: --spacing(4);
-	padding-top: --spacing(2);
+	overflow: auto;
 }
 button {
 	background: none;

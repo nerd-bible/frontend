@@ -435,7 +435,8 @@ function highlightNote(ev: MouseEvent) {
 	overflow: auto;
 	top: var(--top);
 	position: sticky;
-	padding: 0 --spacing(4);
+	padding: --spacing(4);
+	padding-top: 0;
 }
 
 :global(header:not(.hidden)) + .wrapper > .left {

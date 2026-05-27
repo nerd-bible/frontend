@@ -4,7 +4,7 @@ import { t } from "../l10n.svelte.ts";
 import { p, route } from "../routes.ts";
 </script>
 
-<form class="popover">
+<form class="table-form">
 	<!-- <label> -->
 	<!-- 	<span>{t("Language")}</span> -->
 	<!-- 	<select name="locale" bind:value={settings.locale}> -->
@@ -62,33 +62,8 @@ import { p, route } from "../routes.ts";
 form {
 	padding: --spacing(2) 0;
 	width: --spacing(84);
-	line-height: 2;
-
-	& > * {
-		width: 100%;
-		padding: --spacing(1) --spacing(4);
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-
-		& > div {
-			display: flex;
-			align-items: center;
-			gap: --spacing(2);
-		}
-	}
-
-	& > label > input[type="checkbox"] {
-		width: 2em;
-	}
-
-	& > *:hover {
-		background: var(--color-bg-100);
-	}
 
 	select {
-		width: --spacing(32);
-		padding: --spacing(2);
 		background: var(--color-bg-300);
 	}
 }

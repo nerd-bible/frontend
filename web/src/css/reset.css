@@ -35,7 +35,7 @@
  * 7. Disable tap highlights on iOS.
  */
 :host {
-	line-height: 1; /* 1 */
+	line-height: 1.5; /* 1 */
 	-webkit-text-size-adjust: 100%; /* 2 */
 	tab-size: 4; /* 3 */
 	font-family:
@@ -249,6 +249,7 @@ input:where([type="button"], [type="reset"], [type="submit"]),
 /* Form controls */
 select {
 	background: var(--color-bg-50);
+	width: --spacing(32);
 }
 button {
 	padding: --spacing(2);
@@ -349,4 +350,24 @@ input[type="checkbox"] {
 mark {
 	background: none;
 	color: inherit;
+}
+
+.table-form {
+	& > * {
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: --spacing(1) --spacing(4);
+
+		& > div {
+			display: flex;
+			align-items: center;
+			gap: --spacing(2);
+		}
+	}
+
+	& > *:hover {
+		background: var(--color-bg-100);
+	}
 }
