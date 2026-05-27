@@ -411,6 +411,10 @@ function highlightNote(ev: MouseEvent) {
 	}
 }
 
+.hide-footnotes .notes {
+	display: none;
+}
+
 .editor :global(mark),
 .notes > div {
 	&:global(.focus) {

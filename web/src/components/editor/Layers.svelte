@@ -3,8 +3,6 @@ import { settings } from "../../settings.svelte";
 import { t } from "../../l10n.svelte";
 import Plus from "virtual:icons/lucide/plus";
 import Trash from "virtual:icons/lucide/trash";
-import Eye from "virtual:icons/lucide/eye";
-import EyeClosed from "virtual:icons/lucide/eye-closed";
 
 const notesId = $props.id();
 </script>
@@ -25,19 +23,17 @@ const notesId = $props.id();
 	<ul id={notesId}>
 		{#each ["Publisher"] as r}
 			<li>
-				{r}
-				<button
-					type="button"
-					onclick={() => {
-						settings.showFootnotes = settings.showFootnotes === "true" ? "false" : "true";
-					}}
-				>
-					{#if settings.showFootnotes}
-						<Eye />
-					{:else}
-						<EyeClosed />
-					{/if}
-				</button>
+				<label>
+					<span>{r}</span>
+					<input
+						type="checkbox"
+						checked={settings.showFootnotes === "true"}
+						onchange={(ev) =>
+							(settings.showFootnotes = ev.currentTarget.checked
+								? "true"
+								: "false")}
+					/>
+				</label>
 			</li>
 		{/each}
 	</ul>
@@ -50,10 +46,12 @@ form {
 		background: none;
 	}
 }
-li {
+ul, ul > li {
+	width: 100%;
+}
+li > label {
 	display: flex;
 	align-items: center;
-	width: 100%;
 	justify-content: space-between;
 }
 
