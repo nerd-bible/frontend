@@ -30,38 +30,24 @@ section {
 	--border-size: 2px;
 	--border-color: var(--color-bg-200);
 	--border: var(--border-size) solid var(--border-color);
-	padding: --spacing(4);
 }
 div[role="tablist"] {
 	display: flex;
-	align-items: baseline;
-	gap: --spacing(2);
 	overflow: auto;
-	padding: 0 --spacing(2);
-	padding-top: --spacing(2);
-	margin-bottom: calc(-1 * var(--border-size));
-	position: relative;
-	z-index: 2;
 }
 div[role="tabpanel"] {
 	padding: --spacing(4);
-	border: var(--border);
-	border-radius: var(--radius-md);
-	position: relative;
-	z-index: 1;
+	padding-top: --spacing(2);
 }
 button {
-	border-radius: var(--radius-md) var(--radius-md) 0 0;
-	border: var(--border-size) solid transparent;
-	border-bottom: none;
+	background: none;
+	border-radius: 0;
+	border-bottom: 2px solid var(--color-fg-500);
+	margin: --spacing(1);
 	&[aria-selected="true"] {
-		background: var(--color-bg-50);
-		border-color: var(--border-color);
-	}
-
-	&[aria-selected="false"] {
-		padding-bottom: --spacing(1);
-		margin-bottom: --spacing(1);
+		text-shadow: -0.03ex 0 0 currentColor, 0.03ex 0 0 currentColor;
+		-webkit-text-stroke-width: 0.04ex;
+		border-color: var(--color-focus-200);
 	}
 }
 </style>
