@@ -19,6 +19,7 @@
 	margin: 0; /* 2 */
 	padding: 0; /* 2 */
 	border: 0 solid; /* 3 */
+	border-radius: var(--radius-md); /* 3 */
 
 	&:focus {
 		@apply box-focus;
@@ -222,7 +223,6 @@ textarea,
 	font-variation-settings: inherit; /* 1 */
 	letter-spacing: inherit; /* 1 */
 	color: inherit; /* 1 */
-	border-radius: var(--radius-md); /* 2 */
 	background-color: transparent; /* 3 */
 	opacity: 1; /* 4 */
 }
@@ -253,7 +253,6 @@ select {
 }
 button {
 	padding: --spacing(2);
-	border-radius: var(--radius-md);
 	align-items: center;
 	background: var(--color-bg-100);
 
@@ -269,7 +268,6 @@ button {
 }
 @utility track {
 	background: var(--color-secondary);
-	border-radius: var(--radius-md);
 	height: 0.5em;
 }
 @utility thumb {
@@ -347,17 +345,28 @@ input[type="checkbox"] {
 	}
 }
 
-mark {
-	background: none;
-	color: inherit;
+select {
+	--arrow-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"/></svg>');
+	--select-bg: var(--color-bg-100);
+	--arrow-bg: var(--color-bg-200);
+	--arrow-width: --spacing(8);
+	appearance: none;
+	padding: --spacing(2);
+	background:
+		var(--arrow-icon) no-repeat right --spacing(1) center / 1.4em,
+		linear-gradient(to left, var(--arrow-bg) var(--arrow-width), var(--select-bg) var(--arrow-width));
+	cursor: pointer;
+	option {
+		color: inherit;
+		background-color: var(--select-bg);
+	}
 }
-
-.table-form {
+form.table {
 	& > * {
 		width: 100%;
 		display: flex;
 		justify-content: space-between;
-		align-items: center;
+		align-items: baseline;
 		padding: --spacing(1) --spacing(4);
 
 		& > div {

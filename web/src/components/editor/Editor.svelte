@@ -381,31 +381,27 @@ function highlightNote(ev: MouseEvent) {
 		}
 	}
 
-	.hide-footnotes {
-		.notes {
-			display: none;
-		}
-		& > .editor :global(mark) {
-			text-decoration: none;
-		}
-	}
-
 	.sticky {
 		--top: 0px;
 		height: calc(100vh - var(--top));
 		overflow: auto;
 		top: var(--top);
 		position: sticky;
-		padding: --spacing(4);
+		padding: --spacing(2);
 		padding-top: 0;
 	}
 
-	header:not(.hidden) + .wrapper > .left {
+	header:not(.hidden) + .wrapper > .sticky {
 		--top: calc(2rem + --spacing(6));
 	}
 
 	.main {
 		flex: 1;
+	}
+
+	mark {
+		background: none;
+		color: inherit;
 	}
 }
 
@@ -430,7 +426,10 @@ function highlightNote(ev: MouseEvent) {
 	/* overflow: hidden; */
 }
 
-.editor :global(mark),
+:global(.hide-footnotes .notes) {
+	display: none;
+}
+:global(.wrapper):not(.hide-footnotes) .editor :global(mark),
 .notes > div {
 	&:global(.focus) {
 		animation: focus 1s ease forwards;

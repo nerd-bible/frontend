@@ -7,10 +7,10 @@ import Plus from "virtual:icons/lucide/plus";
 const notesId = $props.id();
 </script>
 
-<form class="table-form">
+<form class="table">
 	<label for={notesId}>
 		{t("Notes")}
-		<button type="button"><Plus /></button>
+		<button type="button">+</button>
 	</label>
 	<ul id={notesId}>
 		{#each ["Publisher"] as r}

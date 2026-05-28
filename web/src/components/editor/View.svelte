@@ -3,7 +3,7 @@ import { settings } from "../../settings.svelte";
 import { t } from "../../l10n.svelte.ts";
 </script>
 
-<form class="table-form">
+<form class="table">
 	<label>
 		<span>{t("Drop caps")}</span>
 		<input

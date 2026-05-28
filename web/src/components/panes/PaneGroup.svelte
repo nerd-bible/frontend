@@ -1,6 +1,7 @@
 <script lang="ts">
-import type { Snippet, ClassValue } from "svelte";
+import type { Snippet } from "svelte";
 import type { Attachment } from "svelte/attachments";
+import type { ClassValue } from "svelte/elements";
 
 interface Props {
 	children: Snippet;
@@ -19,14 +20,14 @@ const attachment: Attachment = (div) => {
 	}
 };
 function onPointerUp(ev: PointerEvent) {
-		console.log("up");
-		prevSibling = undefined;
-		nextSibling = undefined;
-		ev.preventDefault();
+	prevSibling = undefined;
+	nextSibling = undefined;
+	ev.preventDefault();
 }
 </script>
+
 <svelte:document
-	onpointerdown={ev => {
+	onpointerdown={(ev) => {
 		if (!ev.target.hasAttribute("data-resizer")) return;
 		pointerLast = ev.screenX;
 		prevSibling = (ev.target as HTMLElement).previousElementSibling;
@@ -35,12 +36,12 @@ function onPointerUp(ev: PointerEvent) {
 	}}
 	onpointerup={onPointerUp}
 	onpointerleave={onPointerUp}
-	onpointermove={ev => {
+	onpointermove={(ev) => {
 		if (!prevSibling || !prevSibling) return;
 
 		const diff = ev.screenX - pointerLast;
 		const prevWidth = Number.parseFloat(prevSibling.style.width);
-		const nextWidth = Number.parseFloat(nextSibling.style.width); 
+		const nextWidth = Number.parseFloat(nextSibling.style.width);
 
 		prevSibling.style.width = prevWidth + diff + "px";
 		nextSibling.style.width = nextWidth - diff + "px";

@@ -172,10 +172,12 @@ const toc: (string | Container)[] = [
 {/snippet}
 
 <div class="outline">
-	<select bind:value={settings.showOutline}>
-		<option value="true">Publisher</option>
-		<option value="false">{t("None")}</option>
-	</select>
+	<form>
+		<select bind:value={settings.showOutline}>
+			<option value="true">Publisher</option>
+			<option value="false">{t("None")}</option>
+		</select>
+	</form>
 	<nav>
 		{#if settings.showOutline === "true"}
 			{@render outlineItem(toc)}
@@ -184,23 +186,29 @@ const toc: (string | Container)[] = [
 </div>
 
 <style>
+form {
+	padding: --spacing(4) 0;
+}
+
+form,
+select {
+	width: 100%;
+}
+
 .outline {
 	padding: --spacing(4);
+	padding-top: 0;
+}
 
-	select {
-		margin-bottom: --spacing(4);
-	}
-
-	& > nav > ul > li {
-		text-indent: --spacing(-2);
-		padding-inline-start: --spacing(2);
-		& ul ul {
-			margin-inline-start: --spacing(4);
-		}
-	}
-	a {
-		color: var(--color-link);
+nav > ul > li {
+	text-indent: --spacing(-2);
+	padding-inline-start: --spacing(2);
+	& ul ul {
+		margin-inline-start: --spacing(4);
 	}
 }
 
+a {
+	color: var(--color-link);
+}
 </style>

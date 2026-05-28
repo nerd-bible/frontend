@@ -1,5 +1,6 @@
 <script lang="ts">
-	import type { Snippet, ClassValue } from 'svelte';
+	import type { Snippet } from 'svelte';
+	import type { ClassValue } from 'svelte/elements';
 
 	interface Props {
 		children: Snippet;
@@ -11,8 +12,3 @@
 <div data-pane style:width={width} class={className}>
 	{@render children()}
 </div>
-<style>
-div {
-	overflow: hidden;
-}
-</style>

@@ -22,6 +22,13 @@
 	--color-bg-100: var(--color-yellow-100);
 	--color-bg-200: var(--color-yellow-200);
 	--color-bg-300: var(--color-yellow-300);
+	--color-bg-400: var(--color-yellow-400);
+	--color-bg-500: var(--color-yellow-500);
+	--color-bg-600: var(--color-yellow-600);
+	--color-bg-700: var(--color-yellow-700);
+	--color-bg-800: var(--color-yellow-800);
+	--color-bg-900: var(--color-yellow-900);
+	--color-bg-950: var(--color-yellow-950);
 	--color-focus-50: var(--color-blue-50);
 	--color-focus-100: var(--color-blue-200);
 	--color-focus-200: var(--color-blue-400);
@@ -38,6 +45,13 @@
 	--color-bg-100: var(--color-yellow-900);
 	--color-bg-200: var(--color-yellow-800);
 	--color-bg-300: var(--color-yellow-700);
+	--color-bg-400: var(--color-yellow-600);
+	--color-bg-500: var(--color-yellow-500);
+	--color-bg-600: var(--color-yellow-400);
+	--color-bg-700: var(--color-yellow-300);
+	--color-bg-800: var(--color-yellow-200);
+	--color-bg-900: var(--color-yellow-100);
+	--color-bg-950: var(--color-yellow-50);
 	--color-focus-50: var(--color-blue-500);
 	--color-focus-100: var(--color-blue-400);
 	--color-focus-200: var(--color-blue-300);

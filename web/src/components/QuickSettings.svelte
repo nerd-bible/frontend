@@ -4,7 +4,7 @@ import { t } from "../l10n.svelte.ts";
 import { p, route } from "../routes.ts";
 </script>
 
-<form class="table-form">
+<form class="table">
 	<!-- <label> -->
 	<!-- 	<span>{t("Language")}</span> -->
 	<!-- 	<select name="locale" bind:value={settings.locale}> -->
@@ -64,7 +64,8 @@ form {
 	width: --spacing(84);
 
 	select {
-		background: var(--color-bg-300);
+		--select-bg: var(--color-bg-300);
+		--arrow-bg: var(--color-bg-400);
 	}
 }
 :global(#popover) {
