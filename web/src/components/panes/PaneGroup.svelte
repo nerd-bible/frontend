@@ -18,6 +18,12 @@ const attachment: Attachment = (div) => {
 		// 	child.style.width = child.clientWidth + "px";
 	}
 };
+function onPointerUp(ev: PointerEvent) {
+		console.log("up");
+		prevSibling = undefined;
+		nextSibling = undefined;
+		ev.preventDefault();
+}
 </script>
 <svelte:document
 	onpointerdown={ev => {
@@ -27,11 +33,8 @@ const attachment: Attachment = (div) => {
 		nextSibling = (ev.target as HTMLElement).nextElementSibling;
 		ev.preventDefault();
 	}}
-	onpointerup={ev => {
-		prevSibling = undefined;
-		nextSibling = undefined;
-		ev.preventDefault();
-	}}
+	onpointerup={onPointerUp}
+	onpointerleave={onPointerUp}
 	onpointermove={ev => {
 		if (!prevSibling || !prevSibling) return;
 
@@ -54,5 +57,6 @@ const attachment: Attachment = (div) => {
 <style>
 div {
 	display: flex;
+	touch-action: none;
 }
 </style>
