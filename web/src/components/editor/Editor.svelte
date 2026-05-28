@@ -8,6 +8,7 @@ import View from "./View.svelte";
 import { computePosition, offset, inline, shift } from "@floating-ui/dom";
 import type { Attachment } from "svelte/attachments";
 import { t } from "../../l10n.svelte";
+import { PaneGroup, Pane, PaneResizer } from "../panes/index.ts";
 // import { docFromBookLang } from "./tree.svelte.ts";
 
 // https://github.com/aleventhal/aria-annotations/blob/master/README.md#simplified-aria-annotations-proposal--explainer
@@ -131,69 +132,79 @@ function highlightNote(ev: MouseEvent) {
 />
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->
-<div
-	class="wrapper"
-	class:inline-notes={inlineNotes}
-	class:hide-footnotes={settings.showFootnotes !== "true"}
-	style:--column-width={`${settings.columnWidth}px`}
-	style:--line-height={settings.lineHeight}
-	style:--font-size={`${settings.fontSize}px`}
+<!-- style={--line-height={settings.lineHeight} -->
+<!-- style:--font-size={`${settings.fontSize}px`} -->
+<PaneGroup
+	class={{
+		wrapper: true,
+		"inline-notes": inlineNotes,
+		"hide-footnotes": settings.showFootnotes !== "true",
+	}}
 	{@attach layoutNotes}
 >
-	<aside class="left">
-		<Tabs items={[
-			{ label: t("Outline"), component: Outline },
-			{ label: t("View"), component: View },
-			{ label: t("Layers"), component: Layers },
-		]} />
-	</aside>
-	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-	<main
-		class="editor"
-		{dir}
-		class:hide-verse={settings.showVerseNum !== "true"}
-		class:hide-chapter={settings.showChapterNum !== "true"}
-		class:hide-outline={settings.showOutline !== "true"}
-		class:drop-caps={settings.showDropCaps === "true"}
-		style:--column-gap={`${settings.columnGap}px`}
-		onclick={(ev) => {
-			const mark = ev.target as HTMLElement;
-			if (settings.showFootnotes === "true" && mark.tagName === "MARK") {
-				const note = mark.ariaDetailsElements![0] as HTMLElement;
-				if (inlineNotes) {
-					const cloned = note.cloneNode(true) as HTMLElement;
-					cloned.removeAttribute("id");
-					tooltipRef.replaceChildren(cloned);
-					selectedNote = mark;
-					ev.stopPropagation();
-				} else {
-					highlight(note);
+	<Pane class="sticky">
+		<aside>
+			<Tabs
+				items={[
+					{ label: t("Outline"), component: Outline },
+					{ label: t("View"), component: View },
+					{ label: t("Layers"), component: Layers },
+				]}
+			/>
+		</aside>
+	</Pane>
+	<PaneResizer />
+	<Pane>
+		<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+		<main
+			class="editor"
+			{dir}
+			class:hide-verse={settings.showVerseNum !== "true"}
+			class:hide-chapter={settings.showChapterNum !== "true"}
+			class:hide-outline={settings.showOutline !== "true"}
+			class:drop-caps={settings.showDropCaps === "true"}
+			onclick={(ev) => {
+				const mark = ev.target as HTMLElement;
+				if (settings.showFootnotes === "true" && mark.tagName === "MARK") {
+					const note = mark.ariaDetailsElements![0] as HTMLElement;
+					if (inlineNotes) {
+						const cloned = note.cloneNode(true) as HTMLElement;
+						cloned.removeAttribute("id");
+						tooltipRef.replaceChildren(cloned);
+						selectedNote = mark;
+						ev.stopPropagation();
+					} else {
+						highlight(note);
+					}
 				}
-			}
-		}}
-	>
-		{@html sample}
-	</main>
+			}}
+		>
+			{@html sample}
+		</main>
+	</Pane>
+	<PaneResizer />
 	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-	<aside
-		role="note"
-		class="notes"
-		class:hide-footnotes={settings.showFootnotes !== "true"}
-	>
-		<div class="footnote" id="pnote1" onclick={highlightNote}>
-			Literally <i>day one</i>
-		</div>
-		<div class="footnote" id="pnote2" onclick={highlightNote}>
-			Or a canopy or a firmament or a vault
-		</div>
-	</aside>
+	<Pane>
+		<aside
+			role="note"
+			class="notes"
+			class:hide-footnotes={settings.showFootnotes !== "true"}
+		>
+			<div class="footnote" id="pnote1" onclick={highlightNote}>
+				Literally <i>day one</i>
+			</div>
+			<div class="footnote" id="pnote2" onclick={highlightNote}>
+				Or a canopy or a firmament or a vault
+			</div>
+		</aside>
+	</Pane>
 
 	<svg xmlns="http://www.w3.org/2000/svg" stroke="red" fill="none">
 		{#each paths as d}
 			<path {d} />
 		{/each}
 	</svg>
-</div>
+</PaneGroup>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
@@ -206,25 +217,12 @@ function highlightNote(ev: MouseEvent) {
 ></div>
 
 <style>
-.wrapper {
-	max-width: 100%;
-	position: relative;
-	display: flex;
-	justify-content: center;
-	gap: --spacing(8);
-	font-size: var(--font-size);
-	line-height: var(--line-height);
-
-	& > *:not(svg) {
-		z-index: 2;
-		max-width: var(--column-width);
-	}
-	& > aside {
-		flex: 1 1 0;
-	}
-}
-
 :global {
+	.wrapper {
+		font-size: var(--font-size);
+		line-height: var(--line-height);
+		position: relative;
+	}
 	.editor {
 		counter-reset: chapter;
 		padding-bottom: --spacing(4);
@@ -382,6 +380,42 @@ function highlightNote(ev: MouseEvent) {
 			margin: 0;
 		}
 	}
+
+	.hide-footnotes {
+		.notes {
+			display: none;
+		}
+		& > .editor :global(mark) {
+			text-decoration: none;
+		}
+	}
+
+	.sticky {
+		--top: 0px;
+		height: calc(100vh - var(--top));
+		overflow: auto;
+		top: var(--top);
+		position: sticky;
+		padding: --spacing(4);
+		padding-top: 0;
+	}
+
+	header:not(.hidden) + .wrapper > .left {
+		--top: calc(2rem + --spacing(6));
+	}
+	.sticky {
+		width: 250px;
+	}
+	.notes {
+		width: 400px;
+	}
+	.sticky,
+	.notes,
+	main {
+		min-width: 0;
+		flex-shrink: 0;
+		flex-grow: 0;
+	}
 }
 
 :global(.tooltip) {
@@ -405,16 +439,6 @@ function highlightNote(ev: MouseEvent) {
 	/* overflow: hidden; */
 }
 
-.hide-footnotes {
-	& > .editor :global(mark) {
-		text-decoration: none;
-	}
-}
-
-.hide-footnotes .notes {
-	display: none;
-}
-
 .editor :global(mark),
 .notes > div {
 	&:global(.focus) {
@@ -433,26 +457,12 @@ function highlightNote(ev: MouseEvent) {
 	}
 }
 
-.left {
-	--top: 0px;
-	height: calc(100vh - var(--top));
-	overflow: auto;
-	top: var(--top);
-	position: sticky;
-	padding: --spacing(4);
-	padding-top: 0;
-}
-
-:global(header:not(.hidden)) + .wrapper > .left {
-	--top: calc(2rem + --spacing(6));
-}
-
 svg {
 	width: 100%;
 	height: 100%;
 	position: absolute;
 	top: 0;
 	left: 0;
-	z-index: 1;
+	z-index: -1;
 }
 </style>

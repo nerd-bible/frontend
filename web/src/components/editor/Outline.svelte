@@ -171,31 +171,27 @@ const toc: (string | Container)[] = [
 	{/if}
 {/snippet}
 
-<nav class="outline">
-	{#if settings.showOutline === "true"}
-		{@render outlineItem(toc)}
-	{/if}
-</nav>
+<div class="outline">
+	<select bind:value={settings.showOutline}>
+		<option value="true">Publisher</option>
+		<option value="false">{t("None")}</option>
+	</select>
+	<nav>
+		{#if settings.showOutline === "true"}
+			{@render outlineItem(toc)}
+		{/if}
+	</nav>
+</div>
 
 <style>
-nav {
+.outline {
 	padding: --spacing(4);
-	/* Select moved to layers -- can add back if want
-	h2 {
-		font-size: 1.2rem;
-		display: flex;
-		justify-content: space-between;
-		& > select {
-			background: var(--color-bg-100);
-		}
+
+	select {
+		margin-bottom: --spacing(4);
 	}
-	hr {
-		opacity: 0.5;
-		margin-top: --spacing(1);
-		margin-bottom: --spacing(2);
-	}
- */
-	& > ul > li {
+
+	& > nav > ul > li {
 		text-indent: --spacing(-2);
 		padding-inline-start: --spacing(2);
 		& ul ul {

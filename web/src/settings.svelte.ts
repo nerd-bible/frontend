@@ -13,8 +13,6 @@ export const initial = {
 	})[0]!,
 	theme: "System",
 	// Reader settings
-	columnWidth: "800",
-	columnGap: "4",
 	fontSize: parseFloat(getComputedStyle(document.body).fontSize).toString(),
 	lineHeight: "1.5",
 	showDropCaps: "true",
