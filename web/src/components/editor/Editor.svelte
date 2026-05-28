@@ -142,7 +142,7 @@ function highlightNote(ev: MouseEvent) {
 	}}
 	{@attach layoutNotes}
 >
-	<Pane class="sticky">
+	<Pane class="sticky" width="250px">
 		<aside>
 			<Tabs
 				items={[
@@ -154,7 +154,7 @@ function highlightNote(ev: MouseEvent) {
 		</aside>
 	</Pane>
 	<PaneResizer />
-	<Pane>
+	<Pane class="main">
 		<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 		<main
 			class="editor"
@@ -184,7 +184,7 @@ function highlightNote(ev: MouseEvent) {
 	</Pane>
 	<PaneResizer />
 	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-	<Pane>
+	<Pane width="400px">
 		<aside
 			role="note"
 			class="notes"
@@ -403,18 +403,9 @@ function highlightNote(ev: MouseEvent) {
 	header:not(.hidden) + .wrapper > .left {
 		--top: calc(2rem + --spacing(6));
 	}
-	.sticky {
-		width: 250px;
-	}
-	.notes {
-		width: 400px;
-	}
-	.sticky,
-	.notes,
-	main {
-		min-width: 0;
-		flex-shrink: 0;
-		flex-grow: 0;
+
+	.main {
+		flex: 1;
 	}
 }
 

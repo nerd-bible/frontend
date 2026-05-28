@@ -4,9 +4,15 @@
 	interface Props {
 		children: Snippet;
 		class?: ClassValue | undefined | null;
+		width?: string;
 	}
-	let { children, class: className }: Props = $props();
+	let { children, class: className, width = "auto" }: Props = $props();
 </script>
-<div data-pane class={className}>
+<div data-pane style:width={width} class={className}>
 	{@render children()}
 </div>
+<style>
+div {
+	overflow: hidden;
+}
+</style>

@@ -7,7 +7,8 @@ interface Props {
 	class?: ClassValue | undefined | null;
 }
 let { children, class: className }: Props = $props();
-let resizing: HTMLElement | undefined;
+let prevSibling: HTMLElement | undefined;
+let nextSibling: HTMLElement | undefined;
 let pointerLast = -1;
 
 const attachment: Attachment = (div) => {
@@ -22,26 +23,26 @@ const attachment: Attachment = (div) => {
 	onpointerdown={ev => {
 		if (!ev.target.hasAttribute("data-resizer")) return;
 		pointerLast = ev.screenX;
-		resizing = (ev.target as HTMLElement).previousElementSibling;
-		console.log(resizing);
+		prevSibling = (ev.target as HTMLElement).previousElementSibling;
+		nextSibling = (ev.target as HTMLElement).nextElementSibling;
 		ev.preventDefault();
 	}}
 	onpointerup={ev => {
-		resizing = undefined;
+		prevSibling = undefined;
+		nextSibling = undefined;
 		ev.preventDefault();
 	}}
 	onpointermove={ev => {
-		if (!resizing) return;
+		if (!prevSibling || !prevSibling) return;
 
 		const diff = ev.screenX - pointerLast;
-		console.log("move", diff);
-		if (!resizing.style.width) resizing.style.width = resizing.clientWidth + "px";
-		const from = Number.parseFloat(resizing.style.width);
-		console.log("from", from);
-		resizing.style.width = from + diff + "px";
-		console.log("to", resizing.style.width);
-		pointerLast = ev.screenX;
+		const prevWidth = Number.parseFloat(prevSibling.style.width);
+		const nextWidth = Number.parseFloat(nextSibling.style.width); 
 
+		prevSibling.style.width = prevWidth + diff + "px";
+		nextSibling.style.width = nextWidth - diff + "px";
+
+		pointerLast = ev.screenX;
 		ev.preventDefault();
 	}}
 />
