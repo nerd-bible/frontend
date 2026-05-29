@@ -14,13 +14,6 @@ let prevSibling: HTMLElement | undefined;
 let nextSibling: HTMLElement | undefined;
 let pointerLast = -1;
 
-const attachment: Attachment = (div) => {
-	for (let i = 0; i < div.children.length; i++) {
-		const child = div.children[i];
-		// if (child.hasAttribute("data-pane"))
-		// 	child.style.width = child.clientWidth + "px";
-	}
-};
 function onPointerUp(ev: PointerEvent) {
 	prevSibling = undefined;
 	nextSibling = undefined;
