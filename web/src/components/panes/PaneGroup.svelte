@@ -6,8 +6,9 @@ import type { ClassValue } from "svelte/elements";
 interface Props {
 	children: Snippet;
 	class?: ClassValue | undefined | null;
+	style?: string | undefined | null;
 }
-let { children, class: className }: Props = $props();
+let { children, class: className, style }: Props = $props();
 let container: HTMLElement;
 let prevSibling: HTMLElement | undefined;
 let nextSibling: HTMLElement | undefined;
@@ -54,7 +55,7 @@ function onPointerUp(ev: PointerEvent) {
 	}}
 />
 
-<div bind:this={container} class={className}>
+<div bind:this={container} class={className} {style}>
 	{@render children()}
 </div>
 

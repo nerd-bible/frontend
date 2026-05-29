@@ -130,16 +130,13 @@ function highlightNote(ev: MouseEvent) {
 		}
 	}}
 />
-<!-- svelte-ignore a11y_click_events_have_key_events -->
-<!-- svelte-ignore a11y_no_static_element_interactions -->
-<!-- style={--line-height={settings.lineHeight} -->
-<!-- style:--font-size={`${settings.fontSize}px`} -->
 <PaneGroup
 	class={{
 		wrapper: true,
 		"inline-notes": inlineNotes,
 		"hide-footnotes": settings.showFootnotes !== "true",
 	}}
+	style={`--line-height:${settings.lineHeight};--font-size:${settings.fontSize}px;`}
 	{@attach layoutNotes}
 >
 	<Pane class="sticky" width="250px">
@@ -156,6 +153,7 @@ function highlightNote(ev: MouseEvent) {
 	<PaneResizer />
 	<Pane class="main">
 		<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<main
 			class="editor"
 			{dir}
@@ -183,19 +181,18 @@ function highlightNote(ev: MouseEvent) {
 		</main>
 	</Pane>
 	<PaneResizer />
-	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 	<Pane width="400px">
 		<aside
 			role="note"
 			class="notes"
 			class:hide-footnotes={settings.showFootnotes !== "true"}
 		>
-			<div class="footnote" id="pnote1" onclick={highlightNote}>
+			<a href="void" class="footnote" id="pnote1" onclick={highlightNote}>
 				Literally <i>day one</i>
-			</div>
-			<div class="footnote" id="pnote2" onclick={highlightNote}>
+			</a>
+			<a href="void" class="footnote" id="pnote2" onclick={highlightNote}>
 				Or a canopy or a firmament or a vault
-			</div>
+			</a>
 		</aside>
 	</Pane>
 
@@ -387,10 +384,9 @@ function highlightNote(ev: MouseEvent) {
 		overflow: auto;
 		top: var(--top);
 		position: sticky;
-		padding: --spacing(2);
-		padding-top: 0;
 		& > aside {
 			height: 100%;
+			padding: 0 --spacing(2) --spacing(4) --spacing(2);
 		}
 	}
 
@@ -433,7 +429,8 @@ function highlightNote(ev: MouseEvent) {
 	display: none;
 }
 :global(.wrapper):not(.hide-footnotes) .editor :global(mark),
-.notes > div {
+.notes > * {
+	display: block;
 	&:global(.focus) {
 		animation: focus 1s ease forwards;
 	}
