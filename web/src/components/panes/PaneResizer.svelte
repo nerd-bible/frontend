@@ -2,14 +2,13 @@
 <style>
 div {
 	flex-shrink: 0;
-	width: 12px;
-	background-color: #3182ce;
+	width: --spacing(8);
 	cursor: ew-resize;
 	background: linear-gradient(
 		to right,
-		transparent,
-		var(--color-bg-100),
-		transparent
+		transparent 40%,
+		var(--color-bg-100) 50%,
+		transparent 60%
 	);
 }
 </style>

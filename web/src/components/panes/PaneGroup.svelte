@@ -8,6 +8,7 @@ interface Props {
 	class?: ClassValue | undefined | null;
 }
 let { children, class: className }: Props = $props();
+let container: HTMLElement;
 let prevSibling: HTMLElement | undefined;
 let nextSibling: HTMLElement | undefined;
 let pointerLast = -1;
@@ -28,30 +29,32 @@ function onPointerUp(ev: PointerEvent) {
 
 <svelte:document
 	onpointerdown={(ev) => {
-		if (!ev.target.hasAttribute("data-resizer")) return;
+		const target = ev.target as HTMLElement;
+		if (!target.hasAttribute("data-resizer")) return;
 		pointerLast = ev.screenX;
-		prevSibling = (ev.target as HTMLElement).previousElementSibling;
-		nextSibling = (ev.target as HTMLElement).nextElementSibling;
+		prevSibling = target.previousElementSibling as HTMLElement;
+		nextSibling = target.nextElementSibling as HTMLElement;
 		ev.preventDefault();
 	}}
 	onpointerup={onPointerUp}
 	onpointerleave={onPointerUp}
 	onpointermove={(ev) => {
-		if (!prevSibling || !prevSibling) return;
+		if (!prevSibling || !nextSibling) return;
 
 		const diff = ev.screenX - pointerLast;
-		const prevWidth = Number.parseFloat(prevSibling.style.width);
-		const nextWidth = Number.parseFloat(nextSibling.style.width);
+		const prevWidth = prevSibling.clientWidth;
+		const nextWidth = nextSibling.clientWidth;
+		const parentWidth = container.clientWidth;
 
-		prevSibling.style.width = prevWidth + diff + "px";
-		nextSibling.style.width = nextWidth - diff + "px";
+		prevSibling.style.width = ((prevWidth + diff) * 100 / parentWidth).toFixed(2) + "%";
+		nextSibling.style.width = ((nextWidth - diff) * 100 / parentWidth).toFixed(2) + "%";
 
 		pointerLast = ev.screenX;
 		ev.preventDefault();
 	}}
 />
 
-<div {@attach attachment} class={className}>
+<div bind:this={container} class={className}>
 	{@render children()}
 </div>
 

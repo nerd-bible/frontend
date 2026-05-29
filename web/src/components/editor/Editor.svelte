@@ -389,6 +389,9 @@ function highlightNote(ev: MouseEvent) {
 		position: sticky;
 		padding: --spacing(2);
 		padding-top: 0;
+		& > aside {
+			height: 100%;
+		}
 	}
 
 	header:not(.hidden) + .wrapper > .sticky {
