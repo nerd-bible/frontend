@@ -219,6 +219,8 @@ function highlightNote(ev: MouseEvent) {
 		font-size: var(--font-size);
 		line-height: var(--line-height);
 		position: relative;
+		height: 100%;
+		overflow: auto;
 	}
 	.editor {
 		counter-reset: chapter;
@@ -379,19 +381,13 @@ function highlightNote(ev: MouseEvent) {
 	}
 
 	.sticky {
-		--top: 0px;
-		height: calc(100vh - var(--top));
-		overflow: auto;
-		top: var(--top);
+		height: 100%;
+		top: 0;
 		position: sticky;
 		& > aside {
 			height: 100%;
 			padding: 0 --spacing(2) --spacing(4) --spacing(2);
 		}
-	}
-
-	header:not(.hidden) + .wrapper > .sticky {
-		--top: calc(2rem + --spacing(6));
 	}
 
 	.main {

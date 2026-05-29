@@ -12,7 +12,7 @@ function onScroll() {
 	visible = Boolean(
 		pointerOver ||
 		window.scrollY <= lastScrollY ||
-		window.scrollY <= 0 ||
+		window.scrollY <= headerRef.clientHeight / 2 ||
 		headerRef.contains(document.activeElement),
 	);
 	lastScrollY = window.scrollY;
@@ -23,7 +23,6 @@ function onScroll() {
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <header
 	bind:this={headerRef}
-	class:hidden={!visible}
 	onpointerenter={() => (pointerOver = true)}
 	onpointerleave={() => (pointerOver = false)}
 >
@@ -54,13 +53,9 @@ function onScroll() {
 header {
 	display: flex;
 	gap: --spacing(4);
-	padding: --spacing(2);
-	flex-wrap: nowrap;
+	padding: --spacing(2) --spacing(4);
 	justify-content: space-between;
 	align-items: center;
-	position: sticky;
-	transition: top;
-	top: 0;
 	background: var(--color-bg-50);
 	background: color-mix(in srgb, var(--color-bg-50), transparent 5%);
 	/* dont affect selection in body */
@@ -90,12 +85,6 @@ header {
 			width: 100%;
 			padding: --spacing(2);
 		}
-	}
-
-	&.hidden {
-		transition-property: translate;
-		transition-duration: 1s;
-		translate: 0 calc(-2rem - --spacing(8));
 	}
 }
 </style>

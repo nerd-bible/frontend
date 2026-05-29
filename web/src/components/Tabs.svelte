@@ -30,11 +30,16 @@ section {
 	--border-size: 2px;
 	--border-color: var(--color-bg-200);
 	--border: var(--border-size) solid var(--border-color);
-	display: flex;
-	flex-direction: column;
 	height: 100%;
+	display: grid;
+	grid-template-rows: 2lh 1fr;
 }
-div[role="tabpanel"] {
+[role="tablist"] {
+	background: var(--color-bg-50);
+	display: flex;
+	overflow: auto;
+}
+[role="tabpanel"] {
 	overflow: auto;
 }
 button {

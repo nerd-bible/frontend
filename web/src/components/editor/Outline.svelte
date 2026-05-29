@@ -187,7 +187,7 @@ const toc: (string | Container)[] = [
 
 <style>
 form {
-	padding: --spacing(4) 0;
+	padding: --spacing(2) 0 --spacing(4) 0;
 }
 
 form,

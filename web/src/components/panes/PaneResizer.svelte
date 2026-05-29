@@ -10,5 +10,7 @@ div {
 		var(--color-bg-100) 50%,
 		transparent 60%
 	);
+	position: sticky;
+	top: 0;
 }
 </style>

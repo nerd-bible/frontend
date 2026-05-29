@@ -12,7 +12,8 @@
 body {
 	display: flex;
 	flex-direction: column;
-	width: 100%;
+	width: 100vw;
+	height: 100vh;
 	/* avoid tooltips scrolling */
 	overflow-x: hidden;
 	/* avoid relayout when reader is tall */
