@@ -38,30 +38,32 @@ allow importing/exporting SQLite databases.
 If we want to support older browsers, we could in theory asyncify and lock
 through IndexedDb polling. This would support since 2018.
 
-| feature                                                                                                      | 100% year | polyfill |
-| ------------------------------------------------------------------------------------------------------------ | --------- | -------- |
-| [IndexedDb](https://caniuse.com/indexeddb)                                                                   | 2015      | no       |
-| [Wasm](https://caniuse.com/wasm)                                                                             | 2018      | no       |
-| [Web lock](https://caniuse.com/mdn-api_navigator_locks)                                                      | 2022      | no       |
-| [Atomics](https://caniuse.com/mdn-javascript_builtins_atomics)                                               | 2022      | no       |
-| [OPFS](https://caniuse.com/wf-origin-private-file-system)                                                    | 2023      | no       |
-| [Shared worker](https://caniuse.com/mdn-api_sharedworker)                                                    | 2023      | no       |
-| [SharedArrayBuffer (needs COEP+COOP headers)](https://caniuse.com/mdn-javascript_builtins_sharedarraybuffer) | 2026      | no       |
-| [JSPI](https://caniuse.com/wf-wasm-jspi)                                                                     |           | no       |
+| feature                                                                                                      | baseline | polyfill |
+| ------------------------------------------------------------------------------------------------------------ | -------- | -------- |
+| [IndexedDb](https://caniuse.com/indexeddb)                                                                   | 2015     | no       |
+| [Wasm](https://caniuse.com/wasm)                                                                             | 2018     | no       |
+| [Web lock](https://caniuse.com/mdn-api_navigator_locks)                                                      | 2022     | no       |
+| [Atomics](https://caniuse.com/mdn-javascript_builtins_atomics)                                               | 2022     | no       |
+| [OPFS](https://caniuse.com/wf-origin-private-file-system)                                                    | 2023     | no       |
+| [Shared worker](https://caniuse.com/mdn-api_sharedworker)                                                    | 2023     | no       |
+| [SharedArrayBuffer (needs COEP+COOP headers)](https://caniuse.com/mdn-javascript_builtins_sharedarraybuffer) | 2026     | no       |
+| [JSPI](https://caniuse.com/wf-wasm-jspi)                                                                     | N/A      | no       |
 
 ## CSS
 
-| feature                                                 | 100% year | polyfill       |
-| ------------------------------------------------------- | --------- | -------------- |
-| [Counters](https://caniuse.com/css-counters)            | 2008      | no             |
-| [Variables](https://caniuse.com/css-variables)          | 2017      | no             |
-| [Grid](https://caniuse.com/css-grid)                    | 2017      | no             |
-| [Woff2](https://caniuse.com/woff2)                      | 2017      | no             |
-| [Logical props](https://caniuse.com/css-logical-props)  | 2019      | lang selectors |
-| [Focus-within](https://caniuse.com/css-focus-within)    | 2019      | more js        |
-| [font-synthesis](https://caniuse.com/wf-font-synthesis) | 2022      | no             |
-| [lh](https://caniuse.com/wf-lh)                         | 2023      | maybe          |
-| [:has](https://caniuse.com/css-has)                     | 2023      | no             |
+| feature                                                     | baseline | polyfill       |
+| ----------------------------------------------------------- | -------- | -------------- |
+| [Counters](https://caniuse.com/css-counters)                | 2008     | no             |
+| [Variables](https://caniuse.com/css-variables)              | 2017     | no             |
+| [Grid](https://caniuse.com/css-grid)                        | 2017     | no             |
+| [Woff2](https://caniuse.com/woff2)                          | 2017     | no             |
+| [Logical props](https://caniuse.com/css-logical-props)      | 2019     | lang selectors |
+| [Focus-within](https://caniuse.com/css-focus-within)        | 2019     | more js        |
+| [font-synthesis](https://caniuse.com/wf-font-synthesis)     | 2022     | no             |
+| [lh](https://caniuse.com/wf-lh)                             | 2023     | maybe          |
+| [:has](https://caniuse.com/css-has)                         | 2023     | no             |
+| [Scrollbar gutter](https://caniuse.com/wf-scrollbar-gutter) | 2024     | no             |
+| [Scrollbar color](https://caniuse.com/wf-scrollbar-color)   | 2025     | no             |
 
 ## Browserstack
 

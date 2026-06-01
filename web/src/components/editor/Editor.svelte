@@ -139,7 +139,7 @@ function highlightNote(ev: MouseEvent) {
 	style={`--line-height:${settings.lineHeight};--font-size:${settings.fontSize}px;`}
 	{@attach layoutNotes}
 >
-	<Pane class="sticky" width="250px">
+	<Pane class="sticky" width="300px">
 		<aside>
 			<Tabs
 				items={[
@@ -221,6 +221,7 @@ function highlightNote(ev: MouseEvent) {
 		position: relative;
 		height: 100%;
 		overflow: auto;
+		scrollbar-gutter: stable;
 	}
 	.editor {
 		counter-reset: chapter;
@@ -426,12 +427,14 @@ function highlightNote(ev: MouseEvent) {
 }
 :global(.wrapper):not(.hide-footnotes) .editor :global(mark),
 .notes > * {
-	display: block;
 	&:global(.focus) {
 		animation: focus 1s ease forwards;
 	}
 	text-decoration-color: var(--color-fg-500);
 	text-decoration-line: underline;
+}
+.notes > * {
+	display: block;
 }
 
 @keyframes focus {

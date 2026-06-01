@@ -16,8 +16,7 @@ body {
 	height: 100vh;
 	/* avoid tooltips scrolling */
 	overflow-x: hidden;
-	/* avoid relayout when reader is tall */
-	overflow-y: scroll;
+	scrollbar-color: var(--color-fg-50) var(--color-bg-100);
 }
 
 body > *:last-child {

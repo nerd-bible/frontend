@@ -32,12 +32,12 @@ section {
 	--border: var(--border-size) solid var(--border-color);
 	height: 100%;
 	display: grid;
-	grid-template-rows: 2lh 1fr;
+	grid-template-rows: auto 1fr;
 }
 [role="tablist"] {
 	background: var(--color-bg-50);
 	display: flex;
-	overflow: auto;
+	flex-wrap: wrap;
 }
 [role="tabpanel"] {
 	overflow: auto;
@@ -48,7 +48,9 @@ button {
 	border-bottom: 2px solid var(--color-fg-500);
 	margin: --spacing(1);
 	&[aria-selected="true"] {
-		text-shadow: -0.03ex 0 0 currentColor, 0.03ex 0 0 currentColor;
+		text-shadow:
+			-0.03ex 0 0 currentColor,
+			0.03ex 0 0 currentColor;
 		-webkit-text-stroke-width: 0.04ex;
 		border-color: var(--color-focus-200);
 	}
