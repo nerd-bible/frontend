@@ -33,10 +33,12 @@ const notesId = $props.id();
 
 <style>
 form {
-	padding-top: --spacing(2);
 	& > *[for]:hover {
 		background: none;
 	}
+}
+button {
+	line-height: 1;
 }
 ul, ul > li {
 	width: 100%;

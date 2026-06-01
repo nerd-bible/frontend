@@ -195,11 +195,6 @@ select {
 	width: 100%;
 }
 
-.outline {
-	padding: --spacing(4);
-	padding-top: 0;
-}
-
 nav > ul > li {
 	text-indent: --spacing(-2);
 	padding-inline-start: --spacing(2);

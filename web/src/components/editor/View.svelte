@@ -32,8 +32,3 @@ import { t } from "../../l10n.svelte.ts";
 		/>
 	</label>
 </form>
-<style>
-form {
-	padding-top: --spacing(2);
-}
-</style>

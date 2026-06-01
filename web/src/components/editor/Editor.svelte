@@ -139,7 +139,7 @@ function highlightNote(ev: MouseEvent) {
 	style={`--line-height:${settings.lineHeight};--font-size:${settings.fontSize}px;`}
 	{@attach layoutNotes}
 >
-	<Pane class="sticky" width="300px">
+	<Pane class="sticky" width="400px">
 		<aside>
 			<Tabs
 				items={[
@@ -151,7 +151,7 @@ function highlightNote(ev: MouseEvent) {
 		</aside>
 	</Pane>
 	<PaneResizer />
-	<Pane class="main">
+	<Pane class="main" width="70ch">
 		<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<main
@@ -181,16 +181,26 @@ function highlightNote(ev: MouseEvent) {
 		</main>
 	</Pane>
 	<PaneResizer />
-	<Pane width="400px">
+	<Pane class="grow">
 		<aside
 			role="note"
 			class="notes"
 			class:hide-footnotes={settings.showFootnotes !== "true"}
 		>
-			<a href="void" class="footnote" id="pnote1" onclick={highlightNote}>
+			<a
+				href="javascript:void(0)"
+				class="footnote"
+				id="pnote1"
+				onclick={highlightNote}
+			>
 				Literally <i>day one</i>
 			</a>
-			<a href="void" class="footnote" id="pnote2" onclick={highlightNote}>
+			<a
+				href="javascript:void(0)"
+				class="footnote"
+				id="pnote2"
+				onclick={highlightNote}
+			>
 				Or a canopy or a firmament or a vault
 			</a>
 		</aside>
@@ -253,7 +263,7 @@ function highlightNote(ev: MouseEvent) {
 			/* follow dir instead of being all smart */
 			unicode-bidi: bidi-override;
 
-			text-indent: 2ch;
+			margin-block-end: 0.5lh;
 		}
 
 		ol.inline,
@@ -341,6 +351,8 @@ function highlightNote(ev: MouseEvent) {
 				font-size: 1.75em;
 				counter-increment: chapter;
 				content: "Chapter " counter(chapter);
+				display: block;
+				margin-block-end: --spacing(1);
 			}
 		}
 
@@ -361,23 +373,29 @@ function highlightNote(ev: MouseEvent) {
 			}
 		}
 
+		.poetry,
+		.line-group,
+		ol:not(.inline),
+		ul:not(.inline) {
+			margin-inline-start: --spacing(8);
+
+			& > * {
+				/* white-space: nowrap; */
+				/* word-break: break-word; */
+				text-indent: --spacing(-8);
+				padding-inline-start: --spacing(8);
+			}
+		}
+
 		blockquote {
-			padding-inline-start: --spacing(8);
+			margin-inline-start: --spacing(8);
 		}
 
-		.poetry > *,
-		.line-group > *,
-		ol:not(.inline) > li,
-		ul:not(.inline) > li {
-			/* white-space: nowrap; */
-			/* word-break: break-word; */
-			text-indent: --spacing(-8);
-			padding-inline-start: --spacing(8);
-		}
-
-		.poetry > *,
-		.line-group > * {
-			margin: 0;
+		.line-group,
+		.poetry {
+			& > p {
+				margin: 0;
+			}
 		}
 	}
 
@@ -389,10 +407,6 @@ function highlightNote(ev: MouseEvent) {
 			height: 100%;
 			padding: 0 --spacing(2) --spacing(4) --spacing(2);
 		}
-	}
-
-	.main {
-		flex: 1;
 	}
 
 	mark {
@@ -433,8 +447,14 @@ function highlightNote(ev: MouseEvent) {
 	text-decoration-color: var(--color-fg-500);
 	text-decoration-line: underline;
 }
-.notes > * {
-	display: block;
+:global(.grow) {
+	flex: 1;
+}
+.notes {
+	margin-right: --spacing(4);
+	& > * {
+		display: block;
+	}
 }
 
 @keyframes focus {
