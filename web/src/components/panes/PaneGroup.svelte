@@ -1,6 +1,5 @@
 <script lang="ts">
 import type { Snippet } from "svelte";
-import type { Attachment } from "svelte/attachments";
 import type { ClassValue } from "svelte/elements";
 
 interface Props {
@@ -10,13 +9,19 @@ interface Props {
 }
 let { children, class: className, style }: Props = $props();
 let container: HTMLElement;
-let prevSibling: HTMLElement | undefined;
-let nextSibling: HTMLElement | undefined;
-let pointerLast = -1;
+let start:
+	| undefined
+	| {
+			pointer: number;
+			pane: HTMLElement;
+			paneWidth: number;
+			paneMinWidth: number;
+			paneMaxWidth: number;
+			available: number;
+	  };
 
 function onPointerUp(ev: PointerEvent) {
-	prevSibling = undefined;
-	nextSibling = undefined;
+	start = undefined;
 	ev.preventDefault();
 }
 </script>
@@ -25,25 +30,42 @@ function onPointerUp(ev: PointerEvent) {
 	onpointerdown={(ev) => {
 		const target = ev.target as HTMLElement;
 		if (!target.hasAttribute("data-resizer")) return;
-		pointerLast = ev.screenX;
-		prevSibling = target.previousElementSibling as HTMLElement;
-		nextSibling = target.nextElementSibling as HTMLElement;
+		const pane = target.previousElementSibling as HTMLElement | null;
+		if (!pane) return;
+
+		const parent = pane.parentElement as HTMLElement;
+		let available = parent.clientWidth;
+		for (let i = 0; i < parent.children.length; i++) {
+			const child = parent.children[i];
+			if (child.hasAttribute("data-pane") || child.hasAttribute("data-resizer"))
+				available -= child.clientWidth;
+		}
+
+		const computed = getComputedStyle(pane);
+
+		start = {
+			pointer: ev.screenX,
+			pane,
+			paneWidth: pane.clientWidth,
+			paneMinWidth: parseFloat(computed.minWidth),
+			paneMaxWidth: parseFloat(computed.maxWidth),
+			available,
+		};
+
 		ev.preventDefault();
 	}}
 	onpointerup={onPointerUp}
 	onpointerleave={onPointerUp}
 	onpointermove={(ev) => {
-		if (!prevSibling || !nextSibling) return;
+		if (!start) return;
 
-		const diff = ev.screenX - pointerLast;
-		const prevWidth = prevSibling.clientWidth;
-		const nextWidth = nextSibling.clientWidth;
-		const parentWidth = container.clientWidth;
+		const diff = Math.min(ev.screenX - start.pointer, start.available);
+		start.pane.style.width =
+			Math.min(
+				Math.max(start.paneWidth + diff, start.paneMinWidth),
+				start.paneMaxWidth,
+			) + "px";
 
-		prevSibling.style.width = ((prevWidth + diff) * 100 / parentWidth).toFixed(2) + "%";
-		nextSibling.style.width = ((nextWidth - diff) * 100 / parentWidth).toFixed(2) + "%";
-
-		pointerLast = ev.screenX;
 		ev.preventDefault();
 	}}
 />

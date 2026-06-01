@@ -139,7 +139,7 @@ function highlightNote(ev: MouseEvent) {
 	style={`--line-height:${settings.lineHeight};--font-size:${settings.fontSize}px;`}
 	{@attach layoutNotes}
 >
-	<Pane class="sticky" width="400px">
+	<Pane class="sticky" width="400px" minWidth={300} collapsible>
 		<aside>
 			<Tabs
 				items={[
@@ -151,7 +151,7 @@ function highlightNote(ev: MouseEvent) {
 		</aside>
 	</Pane>
 	<PaneResizer />
-	<Pane class="main" width="70ch">
+	<Pane class="main" width="70ch" minWidth={400}>
 		<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<main
@@ -181,7 +181,7 @@ function highlightNote(ev: MouseEvent) {
 		</main>
 	</Pane>
 	<PaneResizer />
-	<Pane class="grow">
+	<Pane minWidth={400}>
 		<aside
 			role="note"
 			class="notes"
@@ -205,6 +205,7 @@ function highlightNote(ev: MouseEvent) {
 			</a>
 		</aside>
 	</Pane>
+	<PaneResizer />
 
 	<svg xmlns="http://www.w3.org/2000/svg" stroke="red" fill="none">
 		{#each paths as d}
@@ -446,9 +447,6 @@ function highlightNote(ev: MouseEvent) {
 	}
 	text-decoration-color: var(--color-fg-500);
 	text-decoration-line: underline;
-}
-:global(.grow) {
-	flex: 1;
 }
 .notes {
 	margin-right: --spacing(4);

@@ -173,7 +173,7 @@ const toc: (string | Container)[] = [
 
 <div class="outline">
 	<form>
-		<select bind:value={settings.showOutline}>
+		<select bind:value={settings.showOutline} name="outline">
 			<option value="true">Publisher</option>
 			<option value="false">{t("None")}</option>
 		</select>
