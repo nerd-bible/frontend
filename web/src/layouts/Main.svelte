@@ -7,7 +7,7 @@ let { children }: { children: Snippet } = $props();
 </script>
 
 <svelte:head>
-	<title>nerd Bible - {(route.meta as any)?.title ?? route.params.id}</title>
+	<title>{(route.meta as any)?.title ?? route.params.id} | nerd Bible </title>
 </svelte:head>
 <Header />
 {@render children()}

@@ -8,7 +8,7 @@ import View from "./View.svelte";
 import { computePosition, offset, inline, shift } from "@floating-ui/dom";
 import type { Attachment } from "svelte/attachments";
 import { t } from "../../l10n.svelte";
-import { PaneGroup, Pane, PaneResizer } from "../panes/index.ts";
+import { PaneResizer } from "../panes/index.ts";
 // import { docFromBookLang } from "./tree.svelte.ts";
 
 // https://github.com/aleventhal/aria-annotations/blob/master/README.md#simplified-aria-annotations-proposal--explainer
@@ -130,28 +130,23 @@ function highlightNote(ev: MouseEvent) {
 		}
 	}}
 />
-<PaneGroup
-	class={{
-		wrapper: true,
-		"inline-notes": inlineNotes,
-		"hide-footnotes": settings.showFootnotes !== "true",
-	}}
+<div
+	class="wrapper"
+	class:inline-notes={inlineNotes}
+	class:hide-footnotes={settings.showFootnotes !== "true"}
 	style={`--line-height:${settings.lineHeight};--font-size:${settings.fontSize}px;`}
 	{@attach layoutNotes}
 >
-	<Pane class="sticky" width="400px" minWidth={300} collapsible>
-		<aside>
-			<Tabs
-				items={[
-					{ label: t("Outline"), component: Outline },
-					{ label: t("View"), component: View },
-					{ label: t("Layers"), component: Layers },
-				]}
-			/>
-		</aside>
-	</Pane>
+	<aside class="sticky">
+		<Tabs
+			items={[
+				{ label: t("Outline"), component: Outline },
+				{ label: t("View"), component: View },
+				{ label: t("Layers"), component: Layers },
+			]}
+		/>
+	</aside>
 	<PaneResizer />
-	<Pane class="main" width="70ch" minWidth={400}>
 		<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<main
@@ -177,11 +172,11 @@ function highlightNote(ev: MouseEvent) {
 				}
 			}}
 		>
+			<h1>Genesis</h1>
 			{@html sample}
 		</main>
-	</Pane>
 	<PaneResizer />
-	<Pane minWidth={400}>
+		<!-- svelte-ignore a11y_invalid_attribute -->
 		<aside
 			role="note"
 			class="notes"
@@ -201,18 +196,17 @@ function highlightNote(ev: MouseEvent) {
 				id="pnote2"
 				onclick={highlightNote}
 			>
-				Or a canopy or a firmament or a vault
+				Or a canopy or a firmament or a vault and the rest of this is a long
+			sentence to test line wrapping because width is finite
 			</a>
 		</aside>
-	</Pane>
-	<PaneResizer />
 
 	<svg xmlns="http://www.w3.org/2000/svg" stroke="red" fill="none">
 		{#each paths as d}
 			<path {d} />
 		{/each}
 	</svg>
-</PaneGroup>
+</div>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
@@ -225,13 +219,21 @@ function highlightNote(ev: MouseEvent) {
 ></div>
 
 <style>
+.editor {
+	min-width: 80ch;
+	max-width: 90ch;
+}
+.sticky, .notes {
+	width: 35ch;
+}
 :global {
 	.wrapper {
+		display: grid;
+		grid-template-columns: subgrid;
 		font-size: var(--font-size);
 		line-height: var(--line-height);
 		position: relative;
 		height: 100%;
-		overflow: auto;
 		scrollbar-gutter: stable;
 	}
 	.editor {
@@ -401,9 +403,8 @@ function highlightNote(ev: MouseEvent) {
 	}
 
 	.sticky {
-		height: 100%;
-		top: 0;
-		position: sticky;
+		/* attempt to align baseline button text with h1 */
+		margin-top: 1.9em;
 		& > aside {
 			height: 100%;
 			padding: 0 --spacing(2) --spacing(4) --spacing(2);
@@ -465,11 +466,7 @@ function highlightNote(ev: MouseEvent) {
 }
 
 svg {
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	top: 0;
-	left: 0;
+	grid-column: 2 / 4;
 	z-index: -1;
 }
 </style>

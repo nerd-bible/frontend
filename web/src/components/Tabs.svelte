@@ -46,14 +46,11 @@ section {
 button {
 	background: none;
 	border-radius: 0;
-	border-bottom: 2px solid var(--color-fg-500);
-	margin: --spacing(1);
+	color: var(--color-fg-200);
 	&[aria-selected="true"] {
-		text-shadow:
-			-0.03ex 0 0 currentColor,
-			0.03ex 0 0 currentColor;
-		-webkit-text-stroke-width: 0.04ex;
-		border-color: var(--color-focus-200);
+		color: var(--color-fg-50);
+		margin-bottom: -2px;
+		border-bottom: 2px solid var(--color-focus-200);
 	}
 }
 </style>

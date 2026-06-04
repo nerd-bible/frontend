@@ -9,7 +9,7 @@ type CssFunction = { args: string[]; value: string };
 // Should be different syntax for decl/caller
 // Maybe this can work?
 // https://github.com/postcss/postcss/blob/main/docs/syntax.md
-const fnPattern = /(--[\w-]+)\(([\w-.]+(?:,\s*[\w-.]+)*)\)/;
+const fnPattern = /(--[\w-]+)\(([^,\)]+(?:,[^,\)]+)*)\)/;
 function parseFn(s: string) {
 	const parsed = fnPattern.exec(s);
 	if (!parsed) return; // probably some other valid syntax

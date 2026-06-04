@@ -3,6 +3,8 @@ import Menu from "virtual:icons/lucide/menu";
 import QuickSettings from "./QuickSettings.svelte";
 import { t } from "../l10n.svelte.ts";
 import { p } from "../routes.ts";
+import Logo from "../../img/logo.svg?raw";
+import LogoWide from "../../img/logo-wide.svg?raw";
 
 let headerRef: HTMLElement;
 let lastScrollY = window.scrollY;
@@ -26,7 +28,10 @@ function onScroll() {
 	onpointerenter={() => (pointerOver = true)}
 	onpointerleave={() => (pointerOver = false)}
 >
-	<a href={p("/")} class="logo" title={t("Home")}></a>
+	<a href={p("/")} class="logo">
+		{@html Logo}
+	</a>
+	<div></div>
 	<search>
 		<!-- svelte-ignore a11y_autofocus -->
 		<input
@@ -36,6 +41,7 @@ function onScroll() {
 			id="search"
 		/>
 	</search>
+	<div></div>
 	<nb-dropdown class="options">
 		<button aria-label={t("Menu")}>
 			<Menu />
@@ -47,31 +53,29 @@ function onScroll() {
 </header>
 
 <style>
-.options > button {
-	display: flex;
+.options {
+	height: 100%;
+	aspect-ratio: 1;
+	justify-self: end;
+	& > button {
+		display: flex;
+	}
 }
 header {
-	display: flex;
-	gap: --spacing(4);
-	padding: --spacing(2) --spacing(4);
-	justify-content: space-between;
 	align-items: center;
-	background: var(--color-bg-50);
-	background: color-mix(in srgb, var(--color-bg-50), transparent 5%);
 	/* dont affect selection in body */
 	user-select: none;
 	/* create stacking context above main */
 	z-index: 10;
+	height: 100%;
 
 	& > .logo {
-		height: 2rem;
-		aspect-ratio: 1;
-		background-image: url(../../img/logo.svg), url(../../img/logo-32.png);
-		background-size: cover;
-		&.connected {
-			filter: drop-shadow(0 0 --spacing(2) var(--color-secondary))
-				drop-shadow(0 0 --spacing(4) var(--color-secondary))
-				drop-shadow(0 0 --spacing(8) var(--color-secondary));
+		justify-self: start;
+		height: 100%;
+
+		& > :global(svg) {
+			height: 100%;
+			width: auto;
 		}
 	}
 
@@ -81,6 +85,11 @@ header {
 		align-items: center;
 
 		& > input {
+			text-align: center;
+
+			&:focus {
+				text-align: start;
+			}
 			background: var(--color-bg-100);
 			width: 100%;
 			padding: --spacing(2);

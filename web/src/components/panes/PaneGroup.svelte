@@ -59,7 +59,7 @@ function onPointerUp(ev: PointerEvent) {
 	onpointermove={(ev) => {
 		if (!start) return;
 
-		const diff = Math.min(ev.screenX - start.pointer, start.available);
+		const diff = Math.min(ev.screenX - start.pointer);
 		start.pane.style.width =
 			Math.min(
 				Math.max(start.paneWidth + diff, start.paneMinWidth),
@@ -76,7 +76,11 @@ function onPointerUp(ev: PointerEvent) {
 
 <style>
 div {
-	display: flex;
+	display: grid;
+	grid-template-columns: repeat(5, auto);
+	grid-template-rows: auto auto;
+	grid-auto-flow: row;
+	justify-content: center;
 	touch-action: none;
 }
 </style>

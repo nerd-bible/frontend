@@ -7,23 +7,25 @@
 	font-family: var(--font-sans);
 	background: var(--color-bg-50);
 	color: var(--color-fg-50);
-}
-
-body {
-	display: flex;
-	flex-direction: column;
-	width: 100vw;
-	height: 100vh;
-	/* avoid tooltips scrolling */
-	overflow-x: hidden;
 	scrollbar-color: var(--color-fg-50) var(--color-bg-100);
 }
 
-body > *:last-child {
-	flex-grow: 1;
+body {
+	display: grid;
+	& > *:not(.tooltip) {
+		display: grid;
+		grid-template-columns: subgrid;
+		grid-column: 1 / span all;
+	}
+	justify-content: center;
+	grid-template-columns: auto --spacing(8) auto --spacing(8) auto;
+	grid-template-rows: calc(1lh + --spacing(4)) auto;
+	margin: --spacing(4);
+	min-height: 100svh;
+	/* avoid tooltips scrolling */
+	/* overflow-x: hidden; */
 }
 
 noscript > h1 {
 	display: block;
-	font-size: 2rem;
 }
