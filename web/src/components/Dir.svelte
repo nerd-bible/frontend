@@ -84,7 +84,7 @@ let entries = $derived(walk(dir));
 {/await}
 
 <style>
-:global(ul ul) {
+ul :global(ul) {
 	padding-inline-start: --spacing(4);
 }
 </style>

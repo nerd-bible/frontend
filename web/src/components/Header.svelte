@@ -4,7 +4,6 @@ import QuickSettings from "./QuickSettings.svelte";
 import { t } from "../l10n.svelte.ts";
 import { p } from "../routes.ts";
 import Logo from "../../img/logo.svg?raw";
-import LogoWide from "../../img/logo-wide.svg?raw";
 
 let headerRef: HTMLElement;
 let lastScrollY = window.scrollY;
@@ -68,6 +67,11 @@ header {
 	/* create stacking context above main */
 	z-index: 10;
 	height: 100%;
+
+	position: sticky;
+	top: 0;
+	background: var(--color-bg-50);
+	padding: --spacing(4) 0;
 
 	& > .logo {
 		justify-self: start;

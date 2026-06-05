@@ -27,6 +27,10 @@
 	- [ ] PRETTY
 		- [ ] arbitrary CSS
 		- [ ] text-align justify
+		- [ ] layout!
+			- [ ] mobile
+			- [x] sticky header
+			- [ ] sticky sidebar
 	- [ ] user notes
 	- [ ] word tooltip
 

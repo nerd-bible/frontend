@@ -1,6 +1,7 @@
 <script lang="ts">
 import { settings } from "../../settings.svelte";
 import { t } from "../../l10n.svelte";
+import Select from "../Select.svelte";
 
 type Container = [string, (string | Container)[]];
 const toc: (string | Container)[] = [
@@ -173,10 +174,10 @@ const toc: (string | Container)[] = [
 
 <div class="outline">
 	<form>
-		<select bind:value={settings.showOutline} name="outline">
+		<Select bind:value={settings.showOutline} name="outline">
 			<option value="true">Publisher</option>
 			<option value="false">{t("None")}</option>
-		</select>
+		</Select>
 	</form>
 	<nav>
 		{#if settings.showOutline === "true"}
@@ -191,14 +192,14 @@ form {
 }
 
 form,
-select {
+form > :global(*) {
 	width: 100%;
 }
 
 nav > ul > li {
 	text-indent: --spacing(-2);
 	padding-inline-start: --spacing(2);
-	& ul ul {
+	ul ul {
 		margin-inline-start: --spacing(4);
 	}
 }

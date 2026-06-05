@@ -38,6 +38,7 @@ section {
 	background: var(--color-bg-50);
 	display: flex;
 	flex-wrap: wrap;
+	margin: 2px 0;
 }
 [role="tabpanel"] {
 	overflow: auto;

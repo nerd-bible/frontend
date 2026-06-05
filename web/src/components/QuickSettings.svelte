@@ -2,26 +2,27 @@
 import { settings, themes } from "../settings.svelte";
 import { t } from "../l10n.svelte.ts";
 import { p, route } from "../routes.ts";
+import Select from "./Select.svelte";
 </script>
 
 <form class="table">
 	<!-- <label> -->
 	<!-- 	<span>{t("Language")}</span> -->
-	<!-- 	<select name="locale" bind:value={settings.locale}> -->
+	<!-- 	<Select name="locale" bind:value={settings.locale}> -->
 	<!-- 		{#each locales as k} -->
 	<!-- 			<option value={k}> -->
 	<!-- 				{new Intl.DisplayNames([k], { type: "language" }).of(k)} -->
 	<!-- 			</option> -->
 	<!-- 		{/each} -->
-	<!-- 	</select> -->
+	<!-- 	</Select> -->
 	<!-- </label> -->
 	<label>
 		<span>{t("Theme")}</span>
-		<select name="theme" bind:value={settings.theme}>
+		<Select name="theme" bind:value={settings.theme}>
 			{#each themes as theme}
 				<option value={theme}>{t(theme)}</option>
 			{/each}
-		</select>
+		</Select>
 	</label>
 
 	{#if route.pathname.match(/^\/[^/]+$/)}
@@ -62,11 +63,7 @@ import { p, route } from "../routes.ts";
 form {
 	padding: --spacing(2) 0;
 	width: --spacing(84);
-
-	select {
-		--select-bg: var(--color-bg-300);
-		--arrow-bg: var(--color-bg-400);
-	}
+	--select-bg: var(--color-bg-300);
 }
 :global(#popover) {
 	position: absolute;

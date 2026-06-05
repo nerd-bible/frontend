@@ -59,16 +59,16 @@ function layoutTooltip() {
 	});
 }
 
-const layoutNotes: Attachment = (div) => {
+const layout: Attachment = (div) => {
 	const parentRect = div.getBoundingClientRect();
 	const sameLineNoteStyles = ["wavy", "dashed", "dotted", "none"];
 
-	function layout() {
+	function layoutNotes() {
 		let lastY = 0;
 		let lastHeight = 0;
 		let overlapping = 0;
-		inlineNotes =
-			div.clientWidth - +settings.columnWidth * 2 < +settings.fontSize * 12;
+		inlineNotes = false;
+		// div.clientWidth - +settings.columnWidth * 2 < +settings.fontSize * 12;
 		if (settings.showFootnotes === "false") return;
 		if (inlineNotes) layoutTooltip();
 		else {
@@ -96,8 +96,8 @@ const layoutNotes: Attachment = (div) => {
 		}
 	}
 
-	layout();
-	const obs = new ResizeObserver(layout);
+	layoutNotes();
+	const obs = new ResizeObserver(layoutNotes);
 	obs.observe(div);
 
 	return () => {
@@ -135,7 +135,7 @@ function highlightNote(ev: MouseEvent) {
 	class:inline-notes={inlineNotes}
 	class:hide-footnotes={settings.showFootnotes !== "true"}
 	style={`--line-height:${settings.lineHeight};--font-size:${settings.fontSize}px;`}
-	{@attach layoutNotes}
+	{@attach layout}
 >
 	<aside class="sticky">
 		<Tabs
@@ -147,59 +147,59 @@ function highlightNote(ev: MouseEvent) {
 		/>
 	</aside>
 	<PaneResizer />
-		<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-		<!-- svelte-ignore a11y_click_events_have_key_events -->
-		<main
-			class="editor"
-			{dir}
-			class:hide-verse={settings.showVerseNum !== "true"}
-			class:hide-chapter={settings.showChapterNum !== "true"}
-			class:hide-outline={settings.showOutline !== "true"}
-			class:drop-caps={settings.showDropCaps === "true"}
-			onclick={(ev) => {
-				const mark = ev.target as HTMLElement;
-				if (settings.showFootnotes === "true" && mark.tagName === "MARK") {
-					const note = mark.ariaDetailsElements![0] as HTMLElement;
-					if (inlineNotes) {
-						const cloned = note.cloneNode(true) as HTMLElement;
-						cloned.removeAttribute("id");
-						tooltipRef.replaceChildren(cloned);
-						selectedNote = mark;
-						ev.stopPropagation();
-					} else {
-						highlight(note);
-					}
+	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+	<!-- svelte-ignore a11y_click_events_have_key_events -->
+	<main
+		class="editor"
+		{dir}
+		class:hide-verse={settings.showVerseNum !== "true"}
+		class:hide-chapter={settings.showChapterNum !== "true"}
+		class:hide-outline={settings.showOutline !== "true"}
+		class:drop-caps={settings.showDropCaps === "true"}
+		onclick={(ev) => {
+			const mark = ev.target as HTMLElement;
+			if (settings.showFootnotes === "true" && mark.tagName === "MARK") {
+				const note = mark.ariaDetailsElements![0] as HTMLElement;
+				if (inlineNotes) {
+					const cloned = note.cloneNode(true) as HTMLElement;
+					cloned.removeAttribute("id");
+					tooltipRef.replaceChildren(cloned);
+					selectedNote = mark;
+					ev.stopPropagation();
+				} else {
+					highlight(note);
 				}
-			}}
-		>
-			<h1>Genesis</h1>
-			{@html sample}
-		</main>
+			}
+		}}
+	>
+		<h1>Genesis</h1>
+		{@html sample}
+	</main>
 	<PaneResizer />
-		<!-- svelte-ignore a11y_invalid_attribute -->
-		<aside
-			role="note"
-			class="notes"
-			class:hide-footnotes={settings.showFootnotes !== "true"}
+	<!-- svelte-ignore a11y_invalid_attribute -->
+	<aside
+		role="note"
+		class="notes"
+		class:hide-footnotes={settings.showFootnotes !== "true"}
+	>
+		<a
+			href="javascript:void(0)"
+			class="footnote"
+			id="pnote1"
+			onclick={highlightNote}
 		>
-			<a
-				href="javascript:void(0)"
-				class="footnote"
-				id="pnote1"
-				onclick={highlightNote}
-			>
-				Literally <i>day one</i>
-			</a>
-			<a
-				href="javascript:void(0)"
-				class="footnote"
-				id="pnote2"
-				onclick={highlightNote}
-			>
-				Or a canopy or a firmament or a vault and the rest of this is a long
+			Literally <i>day one</i>
+		</a>
+		<a
+			href="javascript:void(0)"
+			class="footnote"
+			id="pnote2"
+			onclick={highlightNote}
+		>
+			Or a canopy or a firmament or a vault and the rest of this is a long
 			sentence to test line wrapping because width is finite
-			</a>
-		</aside>
+		</a>
+	</aside>
 
 	<svg xmlns="http://www.w3.org/2000/svg" stroke="red" fill="none">
 		{#each paths as d}
@@ -220,12 +220,14 @@ function highlightNote(ev: MouseEvent) {
 
 <style>
 .editor {
-	min-width: 80ch;
-	max-width: 90ch;
+	min-width: 20ch;
+	max-width: 80ch;
 }
-.sticky, .notes {
-	width: 35ch;
+.sticky,
+.notes {
+	max-width: 35ch;
 }
+
 :global {
 	.wrapper {
 		display: grid;
@@ -403,8 +405,10 @@ function highlightNote(ev: MouseEvent) {
 	}
 
 	.sticky {
-		/* attempt to align baseline button text with h1 */
-		margin-top: 1.9em;
+		position: sticky;
+		--header-height: calc(1lh + --spacing(12));
+		top: var(--header-height);
+		max-height: calc(100vh - var(--header-height));
 		& > aside {
 			height: 100%;
 			padding: 0 --spacing(2) --spacing(4) --spacing(2);
