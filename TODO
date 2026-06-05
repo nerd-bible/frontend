@@ -28,9 +28,10 @@
 		- [ ] arbitrary CSS
 		- [ ] text-align justify
 		- [ ] layout!
-			- [ ] mobile
+			- [x] mobile
 			- [x] sticky header
 			- [x] sticky sidebar
+			- [ ] cleanup
 		- [ ] quick settings
 			- [ ] convert dropdown
 			- [ ] reusable responsive table layout w/o compromise

@@ -59,6 +59,7 @@ through IndexedDb polling. This would support since 2018.
 | [Woff2](https://caniuse.com/woff2)                          | 2017     | no             |
 | [Logical props](https://caniuse.com/css-logical-props)      | 2019     | lang selectors |
 | [Focus-within](https://caniuse.com/css-focus-within)        | 2019     | more js        |
+| [Logical properties](https://caniuse.com/css-logical-props) | 2021     | no             |
 | [font-synthesis](https://caniuse.com/wf-font-synthesis)     | 2022     | no             |
 | [lh](https://caniuse.com/wf-lh)                             | 2023     | maybe          |
 | [:has](https://caniuse.com/css-has)                         | 2023     | no             |

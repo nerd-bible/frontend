@@ -5,8 +5,7 @@ nb-dropdown {
 	& > .content {
 		position: absolute;
 		border-radius: var(--radius-md);
-		top: auto;
-		/** TODO: CSS logical properties polyfill */
+		top: 47px;
 		inset-inline-end: 0;
 		display: none;
 		background: var(--color-bg-200);
