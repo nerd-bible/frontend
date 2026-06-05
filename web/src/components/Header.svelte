@@ -30,7 +30,6 @@ function onScroll() {
 	<a href={p("/")} class="logo">
 		{@html Logo}
 	</a>
-	<div></div>
 	<search>
 		<!-- svelte-ignore a11y_autofocus -->
 		<input
@@ -40,7 +39,6 @@ function onScroll() {
 			id="search"
 		/>
 	</search>
-	<div></div>
 	<nb-dropdown class="options">
 		<button aria-label={t("Menu")}>
 			<Menu />
@@ -52,21 +50,16 @@ function onScroll() {
 </header>
 
 <style>
-.options {
-	height: 100%;
-	aspect-ratio: 1;
-	justify-self: end;
-	& > button {
-		display: flex;
-	}
-}
 header {
-	align-items: center;
+	display: grid;
+	grid-template-columns: var(--grid-template-columns);
+	grid-template-areas: var(--grid-template-areas);
 	/* dont affect selection in body */
 	user-select: none;
 	/* create stacking context above main */
 	z-index: 10;
-	height: 100%;
+	height: var(--header-height);
+	width: 100%;
 
 	position: sticky;
 	top: 0;
@@ -74,6 +67,7 @@ header {
 	padding: --spacing(4) 0;
 
 	& > .logo {
+		grid-area: l;
 		justify-self: start;
 		height: 100%;
 
@@ -84,9 +78,9 @@ header {
 	}
 
 	& > search {
-		flex: 1;
 		display: flex;
 		align-items: center;
+		grid-area: m;
 
 		& > input {
 			text-align: center;
@@ -97,6 +91,16 @@ header {
 			background: var(--color-bg-100);
 			width: 100%;
 			padding: --spacing(2);
+		}
+	}
+
+	& > .options {
+		height: 100%;
+		justify-self: end;
+		grid-area: r;
+
+		& > button {
+			height: 100%;
 		}
 	}
 }

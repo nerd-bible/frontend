@@ -23,6 +23,7 @@ let tooltipPos = $state({ left: 0, top: -100 });
 let selectedNote = $state<HTMLElement>();
 // let doc = $derived(docFromBookLang(book, settings.locale));
 let paths = $state<string[]>([]);
+let hideSticky = $state(false);
 let inlineNotes = $state(false);
 
 function layoutTooltip() {
@@ -67,8 +68,9 @@ const layout: Attachment = (div) => {
 		let lastY = 0;
 		let lastHeight = 0;
 		let overlapping = 0;
-		inlineNotes = false;
-		// div.clientWidth - +settings.columnWidth * 2 < +settings.fontSize * 12;
+		const ch = 11.43;
+		hideSticky = div.clientWidth < 140 * ch;
+		inlineNotes = div.clientWidth < 80 * ch;
 		if (settings.showFootnotes === "false") return;
 		if (inlineNotes) layoutTooltip();
 		else {
@@ -87,7 +89,6 @@ const layout: Attachment = (div) => {
 				else overlapping = 0;
 				mark.style.textDecorationStyle = style;
 				note.style.textDecorationStyle = style;
-				note.style.position = "absolute";
 				note.style.top = y + "px";
 
 				lastY = y;
@@ -133,6 +134,7 @@ function highlightNote(ev: MouseEvent) {
 <div
 	class="wrapper"
 	class:inline-notes={inlineNotes}
+	class:hide-sticky={hideSticky}
 	class:hide-footnotes={settings.showFootnotes !== "true"}
 	style={`--line-height:${settings.lineHeight};--font-size:${settings.fontSize}px;`}
 	{@attach layout}
@@ -146,7 +148,7 @@ function highlightNote(ev: MouseEvent) {
 			]}
 		/>
 	</aside>
-	<PaneResizer />
+	<PaneResizer style="grid-area:s1" />
 	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<main
@@ -175,7 +177,7 @@ function highlightNote(ev: MouseEvent) {
 		<h1>Genesis</h1>
 		{@html sample}
 	</main>
-	<PaneResizer />
+	<PaneResizer style="grid-area:s2" />
 	<!-- svelte-ignore a11y_invalid_attribute -->
 	<aside
 		role="note"
@@ -219,28 +221,19 @@ function highlightNote(ev: MouseEvent) {
 ></div>
 
 <style>
-.editor {
-	min-width: 20ch;
-	max-width: 80ch;
-}
-.sticky,
-.notes {
-	max-width: 35ch;
-}
-
 :global {
 	.wrapper {
-		display: grid;
-		grid-template-columns: subgrid;
 		font-size: var(--font-size);
 		line-height: var(--line-height);
+		display: grid;
+		grid-template-columns: var(--grid-template-columns);
+		grid-template-areas: var(--grid-template-areas);
 		position: relative;
-		height: 100%;
-		scrollbar-gutter: stable;
 	}
 	.editor {
 		counter-reset: chapter;
 		padding-bottom: --spacing(4);
+		grid-area: m;
 
 		/* Failed double column experiment */
 		/* column-width: calc((100vw + var(--spacing-inc) * 16) / 3); */
@@ -405,8 +398,8 @@ function highlightNote(ev: MouseEvent) {
 	}
 
 	.sticky {
+		grid-area: l;
 		position: sticky;
-		--header-height: calc(1lh + --spacing(12));
 		top: var(--header-height);
 		max-height: calc(100vh - var(--header-height));
 		& > aside {
@@ -442,8 +435,10 @@ function highlightNote(ev: MouseEvent) {
 	/* overflow: hidden; */
 }
 
-:global(.hide-footnotes .notes) {
-	display: none;
+:global(.hide-footnotes, .inline-notes) {
+	& > .notes {
+		display: none;
+	}
 }
 :global(.wrapper):not(.hide-footnotes) .editor :global(mark),
 .notes > * {
@@ -453,7 +448,27 @@ function highlightNote(ev: MouseEvent) {
 	text-decoration-color: var(--color-fg-500);
 	text-decoration-line: underline;
 }
+
+.hide-sticky {
+	--grid-template-columns: minmax(auto, 80ch) --spacing(8) 20ch;
+	--grid-template-areas: "m s2 r";
+
+	& > :global(*:nth-child(1)),
+	& > :global(*:nth-child(2)) {
+		display: none
+	}
+}
+.inline-notes {
+	--grid-template-columns: 1fr;
+	--grid-template-areas: "m";
+
+	& > :global(*:nth-child(4)),
+	& > :global(*:nth-child(5)) {
+		display: none
+	}
+}
 .notes {
+	grid-area: r;
 	margin-right: --spacing(4);
 	& > * {
 		display: block;
@@ -470,7 +485,10 @@ function highlightNote(ev: MouseEvent) {
 }
 
 svg {
-	grid-column: 2 / 4;
-	z-index: -1;
+	grid-column: m / r;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	pointer-events: none;
 }
 </style>

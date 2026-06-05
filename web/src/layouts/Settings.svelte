@@ -1,5 +1,4 @@
 <script lang="ts">
-import Main from "./Main.svelte";
 import type { Snippet } from "svelte";
 import { routes, p } from "../routes.ts";
 

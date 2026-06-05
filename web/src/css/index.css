@@ -11,9 +11,7 @@
 }
 
 body {
-	padding: 0 --spacing(4);
 	display: flex;
-	justify-content: center;
 	/* avoid tooltips scrolling */
 	/* overflow-x: hidden; */
 }

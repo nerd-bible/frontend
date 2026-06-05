@@ -30,7 +30,10 @@
 		- [ ] layout!
 			- [ ] mobile
 			- [x] sticky header
-			- [ ] sticky sidebar
+			- [x] sticky sidebar
+		- [ ] quick settings
+			- [ ] convert dropdown
+			- [ ] reusable responsive table layout w/o compromise
 	- [ ] user notes
 	- [ ] word tooltip
 

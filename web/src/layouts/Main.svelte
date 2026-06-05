@@ -7,7 +7,7 @@ let { children }: { children: Snippet } = $props();
 </script>
 
 <svelte:head>
-	<title>{(route.meta as any)?.title ?? route.params.id} | nerd Bible </title>
+	<title>{(route.meta as any)?.title ?? route.params.id} | nerd Bible</title>
 </svelte:head>
 <div>
 	<Header />
@@ -15,15 +15,21 @@ let { children }: { children: Snippet } = $props();
 </div>
 
 <style>
-	div {
-		width: calc(150ch + --spacing(16));
-		display: grid;
-		& > :global(*:not(.tooltip)) {
-			display: grid;
-			grid-template-columns: subgrid;
-			grid-column: 1 / span all;
-		}
+div {
+	padding: 0 --spacing(4);
+	width: calc(150ch + --spacing(16));
+
+	/* for sticky sidebars */
+	--header-height: calc(1lh + --spacing(12));
+
+	--grid-template-columns: 1fr --spacing(8) minmax(20ch, 80ch) --spacing(8) 1fr;
+	--grid-template-areas: "l s1 m s2 r";
+}
+
+@media (width > 80ch) {
+	:global(body) {
 		justify-content: center;
-		grid-template-columns: 1fr --spacing(8) auto --spacing(8) 1fr;
 	}
+}
+
 </style>
