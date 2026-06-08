@@ -12,8 +12,6 @@
 
 body {
 	display: flex;
-	/* avoid tooltips scrolling */
-	/* overflow-x: hidden; */
 }
 
 noscript > h1 {

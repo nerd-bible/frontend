@@ -175,12 +175,12 @@ const toc: (string | Container)[] = [
 <div class="outline">
 	<form>
 		<Select bind:value={settings.showOutline} name="outline">
-			<option value="true">Publisher</option>
-			<option value="false">{t("None")}</option>
+			<option value={true}>Publisher</option>
+			<option value={false}>{t("None")}</option>
 		</Select>
 	</form>
 	<nav>
-		{#if settings.showOutline === "true"}
+		{#if settings.showOutline}
 			{@render outlineItem(toc)}
 		{/if}
 	</nav>

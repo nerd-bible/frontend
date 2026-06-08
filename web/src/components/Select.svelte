@@ -11,8 +11,8 @@ let {
 </script>
 
 <div>
-	<select {value} {...props}>
-		{@render children()}
+	<select bind:value={value} {...props}>
+		{@render children?.()}
 	</select>
 	<Down />
 </div>

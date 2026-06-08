@@ -12,33 +12,36 @@ export const initial = {
 		defaultLocale: locales[0],
 	})[0]!,
 	theme: "System",
+	fontSize: parseFloat(getComputedStyle(document.body).fontSize),
+	lineHeight: 1.5,
 	// Reader settings
-	fontSize: parseFloat(getComputedStyle(document.body).fontSize).toString(),
-	lineHeight: "1.5",
-	showDropCaps: "true",
-	showOutline: "true",
-	showChapterNum: "false",
-	showVerseNum: "false",
-	showFootnotes: "true",
+	showDropCaps: true,
+	showOutline: true,
+	showChapterNum: false,
+	showVerseNum: false,
+	showFootnotes: true,
 };
 export const length = $state({ n: storage.length });
 
-function safeParse(s?: string | null): any {
-	if (!s) return;
+function safeParse<T>(s: string | null, defaultValue: T): T {
+	if (!s) return defaultValue;
 
 	try {
-		return JSON.parse(s);
-	} catch {
-		return;
-	}
+		const maybe = JSON.parse(s);
+		if (typeof maybe === typeof defaultValue) return maybe;
+	} catch {}
+
+	return defaultValue;
 }
 
 // Source of truth
 export const settings = $state(
 	Object.entries(initial).reduce(
 		(acc, [k, v]) => {
-			(acc[k as keyof typeof initial] as string) =
-				safeParse(storage.getItem(k)) ?? v;
+			(acc[k as keyof typeof initial] as any) = safeParse(
+				storage.getItem(k),
+				v,
+			);
 			return acc;
 		},
 		{} as typeof initial,
@@ -74,7 +77,7 @@ window.addEventListener("storage", (ev) => {
 	if (ev.storageArea === storage) {
 		if (ev.key && ev.key in initial) {
 			const k = ev.key as keyof typeof initial;
-			(settings[k] as string) = safeParse(ev.newValue) ?? initial[k];
+			(settings[k] as any) = safeParse(ev.newValue, initial[k]);
 		} else reset();
 		length.n = storage.length;
 	}

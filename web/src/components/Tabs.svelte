@@ -2,7 +2,7 @@
 // TODO: keyboard controls
 // inspiration: https://codepen.io/roblevin/pen/qBXmvoL
 type Props = { items: { label: string; component: any }[]; active: number };
-let { items = [], active = $bindable(0) } = $props();
+let { items = [], active = $bindable(0) }: Props = $props();
 
 const uid = $props.id();
 </script>
@@ -30,15 +30,19 @@ section {
 	--border-size: 2px;
 	--border-color: var(--color-bg-200);
 	--border: var(--border-size) solid var(--border-color);
-	height: 100%;
-	display: grid;
-	grid-template-rows: auto 1fr;
 }
 [role="tablist"] {
+	position: sticky;
+	top: 0;
+	z-index: 1;
 	background: var(--color-bg-50);
 	display: flex;
 	flex-wrap: wrap;
-	margin: 2px 0;
+	border-radius: 0;
+
+	& > button:focus {
+		outline-offset: calc(-1 * var(--outline-width));
+	}
 }
 [role="tabpanel"] {
 	overflow: auto;

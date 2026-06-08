@@ -1,0 +1,153 @@
+.editor {
+	counter-reset: chapter;
+	padding-bottom: --spacing(4);
+
+	&.hide-verse .verse {
+		display: none;
+	}
+
+	p,
+	ol,
+	ul,
+	blockquote,
+	div {
+		/* follow dir instead of being all smart */
+		unicode-bidi: bidi-override;
+
+		margin-block-end: 0.5lh;
+	}
+
+	ol.inline,
+	ul.inline {
+		display: inline;
+		margin: 0;
+		& > li {
+			display: inline;
+			margin: 0;
+		}
+	}
+
+	.verse {
+		&::before {
+			content: " ";
+		}
+		color: var(--color-fg-500);
+		margin-inline-end: 2px;
+		/* & ~ * { margin-inline-end: -2px; } */
+	}
+
+	h1 {
+		text-align: center;
+		font-weight: bold;
+	}
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		color: var(--color-fg-500);
+		margin-top: calc(2lh / 9);
+		margin-bottom: calc(1lh / 9);
+	}
+	h1:has(+ h2),
+	h2:has(+ h3),
+	h3:has(+ h4),
+	h4:has(+ h5),
+	h5:has(+ h6) {
+		margin: 0;
+	}
+	h1 + h2,
+	h2 + h3,
+	h3 + h4,
+	h4 + h5,
+	h5 + h6 {
+		margin-top: 0;
+	}
+
+	h2 {
+		font-size: 1.75em;
+	}
+	h3 {
+		font-size: 1.5em;
+	}
+	h4 {
+		font-size: 1.25em;
+	}
+	h5 {
+		font-size: 1em;
+	}
+	h6 {
+		font-size: 1em;
+	}
+	&.hide-outline {
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
+			display: none;
+		}
+	}
+
+	&:not(.hide-chapter) > .chapter {
+		& > h2:first-child,
+		& > h3:first-child,
+		& > h4:first-child,
+		& > h5:first-child,
+		& > h6:first-child {
+			margin-top: 0;
+		}
+		&::before {
+			color: var(--color-fg-500);
+			font-size: 1.75em;
+			counter-increment: chapter;
+			content: "Chapter " counter(chapter);
+			display: block;
+			margin-block-end: --spacing(1);
+		}
+	}
+
+	&:not(.hide-chapter) > .chapter,
+	&.drop-caps > .chapter {
+		margin-bottom: 1lh;
+	}
+
+	&.drop-caps > .chapter > p:first-of-type {
+		& > .verse:first-of-type {
+			display: none;
+		}
+		&::first-letter {
+			font-size: 2lh;
+			line-height: 1;
+			font-weight: bold;
+			margin-inline-end: 0.16em;
+			float: inline-start;
+		}
+	}
+
+	.poetry,
+	.line-group,
+	ol:not(.inline),
+	ul:not(.inline) {
+		margin-inline-start: --spacing(8);
+
+		& > * {
+			/* white-space: nowrap; */
+			/* word-break: break-word; */
+			text-indent: --spacing(-8);
+			padding-inline-start: --spacing(8);
+		}
+	}
+
+	blockquote {
+		margin-inline-start: --spacing(8);
+	}
+
+	.line-group,
+	.poetry {
+		& > p {
+			margin: 0;
+		}
+	}
+}
+

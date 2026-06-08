@@ -72,7 +72,4 @@ form {
 	filter: drop-shadow(var(--drop-shadow-xl));
 	border-radius: var(--radius-md);
 }
-:global(nb-dropdown:not(:defined) > div) {
-	display: none;
-}
 </style>

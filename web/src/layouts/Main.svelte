@@ -16,17 +16,18 @@ let { children }: { children: Snippet } = $props();
 
 <style>
 div {
-	padding: 0 --spacing(4);
+	--layout-padding-x: --spacing(4);
+	padding: 0 var(--layout-padding-x);
 	width: calc(150ch + --spacing(16));
 
 	/* for sticky sidebars */
 	--header-height: calc(1lh + --spacing(12));
 
-	--grid-template-columns: 1fr --spacing(8) minmax(20ch, 80ch) --spacing(8) 1fr;
+	--grid-template-columns: 1fr --spacing(8) 55% --spacing(8) 1fr;
 	--grid-template-areas: "l s1 m s2 r";
 }
 
-@media (width > 80ch) {
+@media (width > 150ch) {
 	:global(body) {
 		justify-content: center;
 	}

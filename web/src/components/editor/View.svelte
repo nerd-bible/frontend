@@ -6,29 +6,14 @@ import { t } from "../../l10n.svelte.ts";
 <form class="table">
 	<label>
 		<span>{t("Drop caps")}</span>
-		<input
-			type="checkbox"
-			checked={settings.showDropCaps === "true"}
-			onchange={(ev) =>
-				(settings.showDropCaps = ev.currentTarget.checked ? "true" : "false")}
-		/>
+		<input type="checkbox" bind:checked={settings.showDropCaps} />
 	</label>
 	<label>
 		<span>{t("Chapter numbers")}</span>
-		<input
-			type="checkbox"
-			checked={settings.showChapterNum === "true"}
-			onchange={(ev) =>
-				(settings.showChapterNum = ev.currentTarget.checked ? "true" : "false")}
-		/>
+		<input type="checkbox" bind:checked={settings.showChapterNum} />
 	</label>
 	<label>
 		<span>{t("Verse numbers")}</span>
-		<input
-			type="checkbox"
-			checked={settings.showVerseNum === "true"}
-			onchange={(ev) =>
-				(settings.showVerseNum = ev.currentTarget.checked ? "true" : "false")}
-		/>
+		<input type="checkbox" bind:checked={settings.showVerseNum} />
 	</label>
 </form>

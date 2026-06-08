@@ -1,5 +1,6 @@
 <script lang="ts">
 import Menu from "virtual:icons/lucide/menu";
+import Dropdown from "./Dropdown.svelte";
 import QuickSettings from "./QuickSettings.svelte";
 import { t } from "../l10n.svelte.ts";
 import { p } from "../routes.ts";
@@ -39,14 +40,12 @@ function onScroll() {
 			id="search"
 		/>
 	</search>
-	<nb-dropdown class="options">
-		<button aria-label={t("Menu")}>
-			<Menu />
-		</button>
-		<div class="content">
-			<QuickSettings />
-		</div>
-	</nb-dropdown>
+	{#snippet icon()}
+		<Menu />
+	{/snippet}
+	<Dropdown label={t("Main menu")} {icon}>
+		<QuickSettings />
+	</Dropdown>
 </header>
 
 <style>
@@ -65,6 +64,7 @@ header {
 	top: 0;
 	background: var(--color-bg-50);
 	padding: --spacing(4) 0;
+	border-radius: 0;
 
 	& > .logo {
 		grid-area: l;
@@ -94,12 +94,12 @@ header {
 		}
 	}
 
-	& > .options {
+	& > :global(.dropdown) {
 		height: 100%;
 		justify-self: end;
 		grid-area: r;
 
-		& > button {
+		& > :global(button) {
 			height: 100%;
 		}
 	}

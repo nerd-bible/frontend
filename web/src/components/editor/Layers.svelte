@@ -9,22 +9,15 @@ const notesId = $props.id();
 
 <form class="table">
 	<label for={notesId}>
-		{t("Notes")}
-		<button type="button">+</button>
+		<h2>{t("Notes")}</h2>
+		<!-- <button type="button">+</button> -->
 	</label>
 	<ul id={notesId}>
 		{#each ["Publisher"] as r}
 			<li>
 				<label>
 					<span>{r}</span>
-					<input
-						type="checkbox"
-						checked={settings.showFootnotes === "true"}
-						onchange={(ev) =>
-							(settings.showFootnotes = ev.currentTarget.checked
-								? "true"
-								: "false")}
-					/>
+					<input type="checkbox" bind:checked={settings.showFootnotes} />
 				</label>
 			</li>
 		{/each}
@@ -36,11 +29,12 @@ form {
 	& > *[for]:hover {
 		background: none;
 	}
+	h2 {
+		font-size: 1.8em;
+	}
 }
-button {
-	line-height: 1;
-}
-ul, ul > li {
+ul,
+ul > li {
 	width: 100%;
 }
 li > label {
@@ -49,7 +43,10 @@ li > label {
 	justify-content: space-between;
 }
 
-form > *:not([for]):hover button {
-	background: var(--color-bg-200);
-}
+/* button { */
+/* 	line-height: 1; */
+/* } */
+/* form > *:not([for]):hover button { */
+/* 	background: var(--color-bg-200); */
+/* } */
 </style>

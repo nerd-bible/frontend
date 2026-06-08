@@ -2,9 +2,10 @@
 import type { SvelteHTMLElements } from "svelte/elements";
 
 const props: SvelteHTMLElements["div"] = $props();
-
 </script>
+
 <div data-resizer {...props}></div>
+
 <style>
 div {
 	flex-shrink: 0;

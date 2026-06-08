@@ -13,6 +13,9 @@
 	--radius-3xl: 1.5rem;
 	--radius-4xl: 2rem;
 
+	--outline-width: 0.2rem;
+	--outline-offset: 0.1rem;
+
 	--drop-shadow-xl: 0 9px 7px rgb(0 0 0 / 0.1);
 
 	--select-bg: var(--color-bg-100);

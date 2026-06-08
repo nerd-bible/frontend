@@ -1,8 +1,8 @@
 @utility box-focus {
 	outline-color: var(--color-focus-200);
 	outline-style: solid;
-	outline-width: 0.2rem;
-	outline-offset: 0.1rem;
+	outline-width: var(--outline-width);
+	outline-offset: var(--outline-offset);
 }
 /* Fork of https://github.com/tailwindlabs/tailwindcss/blob/main/packages/tailwindcss/preflight.css */
 /**
@@ -332,6 +332,7 @@ input[type="checkbox"] {
 		border: 0.2rem solid var(--color-fg-50);
 		border-top: none;
 		border-left: none;
+		border-radius: 0;
 
 		visibility: hidden;
 		transform: translateY(-0.1em) rotate(35deg);
@@ -363,4 +364,13 @@ form.table {
 	& > *:hover {
 		background: var(--color-bg-100);
 	}
+
+	input {
+		margin-left: --spacing(4);
+	}
+}
+
+mark {
+	background: none;
+	color: inherit;
 }
