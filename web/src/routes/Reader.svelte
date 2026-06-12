@@ -2,7 +2,8 @@
 import Editor from "../components/editor/Editor.svelte";
 import { route } from "../routes.ts";
 
-const book = $derived(route.getParams("/:id").id);
+const docId = $derived(route.getParams("/:docId").docId);
+const ref = $derived(route.getParams("/:ref").ref);
 </script>
 
-<Editor {book} />
+<Editor />

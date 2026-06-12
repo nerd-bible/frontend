@@ -98,8 +98,8 @@ strong {
 
 /* Reset links to optimize for opt-in styling instead of opt-out. */
 a {
-	color: inherit;
-	text-decoration: none;
+	color: var(--color-link);
+	text-decoration: underline;
 }
 
 /**

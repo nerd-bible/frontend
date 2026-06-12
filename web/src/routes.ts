@@ -1,14 +1,36 @@
 import Reader from "./routes/Reader.svelte";
+import Home from "./routes/Home.svelte";
 import Main from "./layouts/Main.svelte";
 // import Settings from "./layouts/Settings.svelte";
 // import Sql from "./routes/settings/Sql.svelte";
 // import Storage from "./routes/settings/Storage.svelte";
-// import { t } from "./l10n.svelte";
-import { createRouter, type Routes } from "sv-router";
+import { t } from "./l10n.svelte";
+import { createRouter, type RouteMeta, type Routes } from "sv-router";
 import * as r from "@nerd-bible/ref";
+import { settings } from "./settings.svelte";
+
+export function titleFromRoute(params: Partial<Record<string, string>>, meta: RouteMeta) {
+	let next = "";
+
+	if (params.ref) {
+		next += params.ref;
+	} else if (params.docId) {
+		next += params.docId;
+	} else {
+		next += (meta as any)?.title;
+	}
+
+	next += " - nerd Bible";
+	return next;
+}
 
 export const routes: Routes = {
-	"/:id": Reader,
+	"/": {
+		meta: { title: t("Home") },
+		"/": Home,
+	},
+	"/:docId": Reader,
+	"/:docId/:ref": Reader,
 	// "/settings": {
 	// 	"/sql": {
 	// 		"/": Sql,
@@ -24,9 +46,18 @@ export const routes: Routes = {
 	layout: Main,
 	hooks: {
 		beforeLoad(ctx) {
-			if (ctx.pathname === "/")
-				throw navigate("/:id", { params: { id: "gen" } });
-			else if (ctx.pathname === "/settings") throw navigate("/settings/sql");
+			if (ctx.pathname === "/settings") throw navigate("/settings/sql");
+		},
+		afterLoad(ctx) {
+			const path = location.pathname + location.search + location.hash;
+			const params = route.getParams(path as any);
+			const title = titleFromRoute(params, ctx.meta);
+			if (path != settings.history[0]?.path && path != "/") {
+				settings.history.unshift({ path, title });
+				if (settings.history.length > settings.historyCount) {
+					settings.history.length = settings.historyCount;
+				}
+			}
 		},
 	},
 };

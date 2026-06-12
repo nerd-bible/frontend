@@ -1,13 +1,14 @@
 <script lang="ts">
 import Header from "../components/Header.svelte";
 import type { Snippet } from "svelte";
-import { route } from "../routes.ts";
+import { route, titleFromRoute } from "../routes.ts";
 
 let { children }: { children: Snippet } = $props();
+let title = $derived.by(() => titleFromRoute(route.params, route.meta));
 </script>
 
 <svelte:head>
-	<title>{(route.meta as any)?.title ?? route.params.id} | nerd Bible</title>
+	<title>{title}</title>
 </svelte:head>
 <div>
 	<Header />
@@ -32,5 +33,4 @@ div {
 		justify-content: center;
 	}
 }
-
 </style>

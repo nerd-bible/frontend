@@ -20,6 +20,9 @@ export const initial = {
 	showChapterNum: false,
 	showVerseNum: false,
 	showFootnotes: true,
+
+	historyCount: 50,
+	history: [] as { path: string, title: string}[],
 };
 export const length = $state({ n: storage.length });
 
