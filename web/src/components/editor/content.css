@@ -17,6 +17,16 @@
 		margin-block-end: 0.5lh;
 	}
 
+	&.justify-text {
+		p,
+		ol,
+		ul,
+		blockquote,
+		div {
+			text-align: justify;
+		}
+	}
+
 	ol.inline,
 	ul.inline {
 		display: inline;

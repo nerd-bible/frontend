@@ -10,7 +10,7 @@ let {
 }: {
 	label: string;
 	icon: Snippet;
-	expanded: boolean;
+	expanded?: boolean;
 	children: Snippet;
 } = $props();
 

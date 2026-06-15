@@ -1,7 +1,7 @@
 <script lang="ts">
 // TODO: keyboard controls
 // inspiration: https://codepen.io/roblevin/pen/qBXmvoL
-type Props = { items: { label: string; component: any }[]; active: number };
+type Props = { items: { label: string; component: any }[]; active?: number };
 let { items = [], active = $bindable(0) }: Props = $props();
 
 const uid = $props.id();

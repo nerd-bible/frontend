@@ -65,7 +65,7 @@
 	--color-link: var(--color-blue-400);
 
 	--color-primary: var(--color-orange-500);
-	--color-secondary: var(--color-violet-500);
+	--color-secondary: var(--color-violet-600);
 }
 
 @media (prefers-color-scheme: dark) {

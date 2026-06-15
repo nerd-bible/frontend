@@ -20,6 +20,7 @@ export const initial = {
 	showChapterNum: false,
 	showVerseNum: false,
 	showFootnotes: true,
+	justifyText: false,
 
 	historyCount: 50,
 	history: [] as { path: string, title: string}[],

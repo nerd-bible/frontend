@@ -28,9 +28,9 @@ function onScroll() {
 	onpointerenter={() => (pointerOver = true)}
 	onpointerleave={() => (pointerOver = false)}
 >
-	<a href={p("/")} class="logo">
+	<span class="logo">
 		{@html Logo}
-	</a>
+	</span>
 	<search>
 		<!-- svelte-ignore a11y_autofocus -->
 		<input

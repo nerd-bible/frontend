@@ -8,6 +8,11 @@
 	background: var(--color-bg-50);
 	color: var(--color-fg-50);
 	scrollbar-color: var(--color-fg-50) var(--color-bg-100);
+
+	/* for sticky sidebars and scroll margin */
+	--header-height: calc(1lh + --spacing(12));
+	scroll-padding-top: var(--header-height);
+	scroll-behavior: smooth;
 }
 
 body {

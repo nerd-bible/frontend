@@ -1,5 +1,5 @@
 import Reader from "./routes/Reader.svelte";
-import Home from "./routes/Home.svelte";
+import History from "./routes/History.svelte";
 import Main from "./layouts/Main.svelte";
 // import Settings from "./layouts/Settings.svelte";
 // import Sql from "./routes/settings/Sql.svelte";
@@ -25,9 +25,9 @@ export function titleFromRoute(params: Partial<Record<string, string>>, meta: Ro
 }
 
 export const routes: Routes = {
-	"/": {
-		meta: { title: t("Home") },
-		"/": Home,
+	"/history": {
+		"/": History,
+		meta: { title: t("History") },
 	},
 	"/:docId": Reader,
 	"/:docId/:ref": Reader,
@@ -49,8 +49,8 @@ export const routes: Routes = {
 			if (ctx.pathname === "/settings") throw navigate("/settings/sql");
 		},
 		afterLoad(ctx) {
+			const params = route.getParams(location.pathname as `/${string}`);
 			const path = location.pathname + location.search + location.hash;
-			const params = route.getParams(path as any);
 			const title = titleFromRoute(params, ctx.meta);
 			if (path != settings.history[0]?.path && path != "/") {
 				settings.history.unshift({ path, title });
@@ -58,6 +58,7 @@ export const routes: Routes = {
 					settings.history.length = settings.historyCount;
 				}
 			}
+			if (ctx.pathname === "/") throw navigate("/bsb/gen");
 		},
 	},
 };

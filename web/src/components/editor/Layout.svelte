@@ -77,11 +77,11 @@ const layout: Attachment = (div) => {
 			{@render col1()}
 		{/if}
 	</aside>
-	<div class="side-resizer" />
+	<div></div>
 	<main>
 		{@render col2()}
 	</main>
-	<PaneResizer class="main-resizer" />
+	<div></div>
 	<aside class="right">
 		{@render col3()}
 	</aside>
@@ -99,12 +99,10 @@ const layout: Attachment = (div) => {
 		position: sticky;
 		top: var(--header-height);
 		max-height: calc(100vh - var(--header-height));
+		overflow: auto;
 		z-index: 2;
-
-		& > aside {
-			height: 100%;
-			padding: 0 --spacing(2) --spacing(4) --spacing(2);
-		}
+		height: 100%;
+		padding: 0 --spacing(2);
 
 		:global(.dropdown) {
 			& > :global(.content) {
@@ -117,18 +115,14 @@ const layout: Attachment = (div) => {
 
 	& > .right {
 		margin-right: --spacing(4);
-		& > * {
-			display: block;
-		}
 	}
 }
 
 .two {
 	--grid-template-columns: 0px 0px minmax(auto, 80ch) --spacing(8) minmax(20ch, 1fr);
 
-	& > .left :global(.content) {
+	& > .left {
 		max-height: calc(100vh - var(--header-height) - --spacing(24));
-		overflow: auto;
 	}
 }
 

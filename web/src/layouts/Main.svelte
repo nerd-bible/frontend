@@ -21,9 +21,6 @@ div {
 	padding: 0 var(--layout-padding-x);
 	width: calc(150ch + --spacing(16));
 
-	/* for sticky sidebars */
-	--header-height: calc(1lh + --spacing(12));
-
 	--grid-template-columns: 1fr --spacing(8) 55% --spacing(8) 1fr;
 	--grid-template-areas: "l s1 m s2 r";
 }

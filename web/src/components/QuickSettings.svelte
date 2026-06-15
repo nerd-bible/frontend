@@ -24,35 +24,32 @@ import Select from "./Select.svelte";
 			{/each}
 		</Select>
 	</label>
-
-	{#if route.pathname.match(/^\/[^/]+$/)}
-		<label>
-			<span>{t("Font size")}</span>
-			<div>
-				{settings.fontSize}
-				<input
-					type="range"
-					min="8"
-					max="48"
-					step="2"
-					bind:value={settings.fontSize}
-				/>
-			</div>
-		</label>
-		<label>
-			<span>{t("Line height")}</span>
-			<div>
-				{settings.lineHeight}
-				<input
-					type="range"
-					min="1"
-					max="2"
-					step="0.1"
-					bind:value={settings.lineHeight}
-				/>
-			</div>
-		</label>
-	{/if}
+	<label>
+		<span>{t("Font size")}</span>
+		<div>
+			{settings.fontSize}
+			<input
+				type="range"
+				min="8"
+				max="48"
+				step="2"
+				bind:value={settings.fontSize}
+			/>
+		</div>
+	</label>
+	<label>
+		<span>{t("Line height")}</span>
+		<div>
+			{settings.lineHeight}
+			<input
+				type="range"
+				min="1"
+				max="2"
+				step="0.1"
+				bind:value={settings.lineHeight}
+			/>
+		</div>
+	</label>
 	<a href={p("/settings")}>
 		<span>{t("Settings")}</span>
 		<span>v{APP_VERSION}</span>

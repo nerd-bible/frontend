@@ -12,7 +12,6 @@ import "./content.css";
 // import { docFromBookLang } from "./tree.svelte.ts";
 
 // https://github.com/aleventhal/aria-annotations/blob/master/README.md#simplified-aria-annotations-proposal--explainer
-// https://jsfiddle.net/4o73hgwu/7/
 // interface Props {
 // 	book: string;
 // }
@@ -34,8 +33,8 @@ function layoutTooltip() {
 	const middleware = [
 		offset(spacing * 1), // from `placement`
 		flip(), // to opposite of `placement` if cannot fit
-		shift(),
 		inline({ padding: 0 }),
+		shift({ padding: spacing * 4 }),
 	];
 
 	computePosition(reference, tooltipRef, {
@@ -56,8 +55,7 @@ function highlight(ele: HTMLElement) {
 	});
 }
 
-function highlightNote(ev: MouseEvent) {
-	const ele = ev.currentTarget as HTMLElement;
+function highlightNote(ele: HTMLElement) {
 	const referencedBy = document.querySelectorAll(`[aria-details=${ele.id}]`);
 	for (let i = 0; i < referencedBy.length; i++)
 		highlight(referencedBy[i] as HTMLElement);
@@ -74,6 +72,7 @@ function highlightNote(ev: MouseEvent) {
 			} else {
 				const cloned = note.cloneNode(true) as HTMLElement;
 				cloned.removeAttribute("id");
+				cloned.style = "";
 				tooltipRef.replaceChildren(cloned);
 				selectedNote = mark;
 				layoutTooltip();
@@ -82,6 +81,16 @@ function highlightNote(ev: MouseEvent) {
 			selectedNote = undefined;
 			tooltipPos.top = -100;
 		}
+
+		if (mark.classList.contains("footnote")) {
+			highlightNote(mark);
+		}
+	}}
+/>
+<svelte:window
+	onresize={() => {
+		selectedNote = undefined;
+		tooltipPos.top = -100;
 	}}
 />
 {#snippet col1()}
@@ -101,6 +110,7 @@ function highlightNote(ev: MouseEvent) {
 		class:hide-chapter={!settings.showChapterNum}
 		class:hide-outline={!settings.showOutline}
 		class:drop-caps={settings.showDropCaps}
+		class:justify-text={settings.justifyText}
 	>
 		<h1>Genesis</h1>
 		{@html sample}
@@ -108,20 +118,10 @@ function highlightNote(ev: MouseEvent) {
 {/snippet}
 {#snippet col3()}
 	<div role="note" class="notes">
-		<a
-			href="javascript:void(0)"
-			class="footnote"
-			id="pnote1"
-			onclick={highlightNote}
-		>
+		<a class="footnote" id="pnote1">
 			Literally <i>day one</i>
 		</a>
-		<a
-			href="javascript:void(0)"
-			class="footnote"
-			id="pnote2"
-			onclick={highlightNote}
-		>
+		<a class="footnote" id="pnote2">
 			Or a canopy or a firmament or a vault and the rest of this is a long
 			sentence to test line wrapping because width is finite
 		</a>
@@ -133,7 +133,6 @@ function highlightNote(ev: MouseEvent) {
 	{col1}
 	{col2}
 	{col3}
-	{layoutTooltip}
 ></Layout>
 
 <div

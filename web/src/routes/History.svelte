@@ -26,14 +26,6 @@ import { settings } from "../settings.svelte";
 	padding: --spacing(4);
 	display: flex;
 	flex-wrap: wrap;
-	gap: --spacing(4);
-
-	& > section {
-		min-width: 80ch;
-		max-width: 100ch;
-		min-width: calc((100vw - --spacing(12)) / 2);
-		max-height: calc((100vh - var(--header-height) - --spacing(4)) / 2);
-		overflow: auto;
-	}
+	gap: --spacing(16);
 }
 </style>
