@@ -167,6 +167,10 @@ function highlightNote(ele: HTMLElement) {
 	text-decoration-line: underline;
 }
 
+.notes a {
+	color: var(--color-fg-200);
+}
+
 @keyframes focus {
 	from {
 		background: var(--color-focus-100);
