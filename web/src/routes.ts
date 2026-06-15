@@ -45,10 +45,10 @@ export const routes: Routes = {
 	layout: Main,
 	hooks: {
 		beforeLoad(ctx) {
-			if (ctx.pathname === "/settings") throw navigate("/settings/sql");
+			if (ctx.pathname === "/settings") navigate("/settings/sql");
 		},
 		afterLoad(ctx) {
-			if (ctx.pathname === "/") throw navigate("/bsb/gen");
+			if (ctx.pathname === "/") navigate("/bsb/gen");
 		},
 	},
 };

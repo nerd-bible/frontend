@@ -54,7 +54,7 @@ let div: HTMLDivElement;
 	>
 		{@render icon()}
 	</button>
-	<div class="content" {id}>
+	<div class="content scrollable" {id}>
 		{@render children()}
 	</div>
 </div>

@@ -2,10 +2,10 @@
 // Reponsive 3-column layout with features
 import type { SvelteHTMLElements } from "svelte/elements";
 import type { Attachment } from "svelte/attachments";
-import { PaneResizer } from "../panes/index.ts";
 import Toc from "virtual:icons/lucide/table-of-contents";
 import Dropdown from "../Dropdown.svelte";
 import { t } from "../../l10n.svelte.ts";
+import type { Snippet } from "svelte";
 
 const {
 	col1,
@@ -65,7 +65,7 @@ const layout: Attachment = (div) => {
 </script>
 
 <div class="grid" class:two={hideLeft} class:one={hideRight} {...rest} {@attach layout}>
-	<aside class="left scrollable">
+	<aside class="left" class:scrollable={!hideLeft}>
 		{#if hideLeft}
 			{#snippet icon()}
 				<Toc />
@@ -121,7 +121,11 @@ const layout: Attachment = (div) => {
 	--grid-template-columns: 0px 0px minmax(auto, 80ch) --spacing(8) minmax(20ch, 1fr);
 
 	& > .left {
-		max-height: calc(100vh - var(--header-height) - --spacing(24));
+		width: max-content;
+		overflow: initial;
+		& > :global(.dropdown > .content) {
+			max-height: calc(100vh - var(--header-height) - --spacing(24));
+		}
 	}
 }
 
