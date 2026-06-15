@@ -45,7 +45,6 @@ section {
 	}
 }
 [role="tabpanel"] {
-	overflow: auto;
 	padding: --spacing(4);
 }
 button {

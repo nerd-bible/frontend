@@ -50,6 +50,9 @@ import Select from "./Select.svelte";
 			/>
 		</div>
 	</label>
+	<a href={p("/catalog")}>
+		<span>{t("Catalog")}</span>
+	</a>
 	<a href={p("/settings")}>
 		<span>{t("Settings")}</span>
 		<span>v{APP_VERSION}</span>

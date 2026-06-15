@@ -65,7 +65,7 @@ const layout: Attachment = (div) => {
 </script>
 
 <div class="grid" class:two={hideLeft} class:one={hideRight} {...rest} {@attach layout}>
-	<aside class="left">
+	<aside class="left scrollable">
 		{#if hideLeft}
 			{#snippet icon()}
 				<Toc />
@@ -99,7 +99,6 @@ const layout: Attachment = (div) => {
 		position: sticky;
 		top: var(--header-height);
 		max-height: calc(100vh - var(--header-height));
-		overflow: auto;
 		z-index: 2;
 		height: 100%;
 		padding: 0 --spacing(2);
