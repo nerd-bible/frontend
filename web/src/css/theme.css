@@ -4,26 +4,32 @@
 	--font-cursive: "Gloria Hallelujah", cursive;
 	--spacing-inc: 0.25rem;
 
-	--radius-xs: 0.125rem;
-	--radius-sm: 0.25rem;
-	--radius-md: 0.375rem;
-	--radius-lg: 0.5rem;
-	--radius-xl: 0.75rem;
-	--radius-2xl: 1rem;
-	--radius-3xl: 1.5rem;
-	--radius-4xl: 2rem;
+	--radius-xs: 0.125em;
+	--radius-sm: 0.25em;
+	--radius-md: 0.375em;
+	--radius-lg: 0.5em;
+	--radius-xl: 0.75em;
+	--radius-2xl: 1em;
+	--radius-3xl: 1.5em;
+	--radius-4xl: 2em;
 
-	--outline-width: 0.2rem;
-	--outline-offset: 0.1rem;
+	--outline-width: 0.15rem;
+	--outline-offset: 0.05rem;
 
 	--drop-shadow-xl: 0 9px 7px rgb(0 0 0 / 0.1);
 
-	--select-bg: var(--color-bg-100);
-
 	/* light */
 	--color-fg-50: var(--color-gray-950);
+	--color-fg-100: var(--color-gray-900);
 	--color-fg-200: var(--color-gray-800);
-	--color-fg-500: var(--color-gray-400);
+	--color-fg-300: var(--color-gray-700);
+	--color-fg-400: var(--color-gray-600);
+	--color-fg-500: var(--color-gray-500);
+	--color-fg-600: var(--color-gray-400);
+	--color-fg-700: var(--color-gray-300);
+	--color-fg-800: var(--color-gray-200);
+	--color-fg-900: var(--color-gray-100);
+	--color-fg-950: var(--color-gray-50);
 	--color-bg-50: var(--color-yellow-50);
 	--color-bg-100: var(--color-yellow-100);
 	--color-bg-200: var(--color-yellow-200);
@@ -35,11 +41,11 @@
 	--color-bg-800: var(--color-yellow-800);
 	--color-bg-900: var(--color-yellow-900);
 	--color-bg-950: var(--color-yellow-950);
+
 	--color-focus-50: var(--color-blue-50);
 	--color-focus-100: var(--color-blue-200);
 	--color-focus-200: var(--color-blue-400);
 	--color-link: var(--color-blue-500);
-
 	--color-primary: var(--color-orange-400);
 	--color-secondary: var(--color-violet-400);
 }
@@ -47,7 +53,14 @@
 .dark {
 	--color-fg-50: var(--color-gray-50);
 	--color-fg-200: var(--color-gray-200);
+	--color-fg-300: var(--color-gray-300);
+	--color-fg-400: var(--color-gray-400);
 	--color-fg-500: var(--color-gray-500);
+	--color-fg-600: var(--color-gray-600);
+	--color-fg-700: var(--color-gray-700);
+	--color-fg-800: var(--color-gray-800);
+	--color-fg-900: var(--color-gray-900);
+	--color-fg-950: var(--color-gray-950);
 	--color-bg-50: var(--color-yellow-950);
 	--color-bg-100: var(--color-yellow-900);
 	--color-bg-200: var(--color-yellow-800);
@@ -59,11 +72,11 @@
 	--color-bg-800: var(--color-yellow-200);
 	--color-bg-900: var(--color-yellow-100);
 	--color-bg-950: var(--color-yellow-50);
+
 	--color-focus-50: var(--color-blue-500);
 	--color-focus-100: var(--color-blue-400);
 	--color-focus-200: var(--color-blue-300);
 	--color-link: var(--color-blue-400);
-
 	--color-primary: var(--color-orange-500);
 	--color-secondary: var(--color-violet-600);
 }
@@ -71,6 +84,12 @@
 @media (prefers-color-scheme: dark) {
 	.system {
 		@apply .dark;
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	* {
+		transition: background 200ms linear;
 	}
 }
 

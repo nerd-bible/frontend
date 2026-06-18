@@ -26,8 +26,8 @@ import Select from "./Select.svelte";
 	</label>
 	<label>
 		<span>{t("Font size")}</span>
-		<div>
-			{settings.fontSize}
+		<div class="io">
+			<output>{settings.fontSize}</output>
 			<input
 				type="range"
 				min="8"
@@ -39,8 +39,8 @@ import Select from "./Select.svelte";
 	</label>
 	<label>
 		<span>{t("Line height")}</span>
-		<div>
-			{settings.lineHeight}
+		<div class="io">
+			<output>{settings.lineHeight}</output>
 			<input
 				type="range"
 				min="1"
@@ -63,7 +63,6 @@ import Select from "./Select.svelte";
 form {
 	padding: --spacing(2) 0;
 	width: --spacing(84);
-	--select-bg: var(--color-bg-300);
 }
 :global(#popover) {
 	position: absolute;

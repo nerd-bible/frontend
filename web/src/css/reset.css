@@ -218,6 +218,7 @@ input,
 select,
 optgroup,
 textarea,
+option,
 ::file-selector-button {
 	font: inherit; /* 1 */
 	font-feature-settings: inherit; /* 1 */
@@ -226,6 +227,12 @@ textarea,
 	color: inherit; /* 1 */
 	background-color: transparent; /* 3 */
 	opacity: 1; /* 4 */
+	border: 0.1rem solid var(--color-fg-600);
+	background: var(--color-bg-100);
+
+	&:hover, &:focus, &.active {
+		background: var(--color-bg-200);
+	}
 }
 
 /** Prevent resizing textareas horizontally by default. */
@@ -239,6 +246,7 @@ input:where([type="button"], [type="reset"], [type="submit"]),
 ::file-selector-button {
 	appearance: button;
 	cursor: pointer;
+	border: none;
 }
 
 /* Correct the cursor style of increment and decrement buttons in Safari. */
@@ -248,19 +256,9 @@ input:where([type="button"], [type="reset"], [type="submit"]),
 }
 
 /* Form controls */
-select {
-	background: var(--color-bg-50);
-	width: --spacing(32);
-}
 button {
 	padding: --spacing(2);
 	align-items: center;
-	background: var(--color-bg-100);
-
-	&:hover,
-	&.active {
-		background: var(--color-bg-200);
-	}
 }
 
 @utility thumb-focus {
@@ -270,6 +268,7 @@ button {
 @utility track {
 	background: var(--color-secondary);
 	height: 0.5em;
+	border-radius: var(--radius-md);
 }
 @utility thumb {
 	background: var(--color-fg-50);
@@ -283,6 +282,7 @@ input[type="range"] {
 	background: transparent;
 	cursor: pointer;
 	padding: --spacing(2) 0;
+	border: none;
 
 	&:focus {
 		/* outline: none; */
@@ -330,7 +330,7 @@ input[type="checkbox"] {
 
 		height: 70%;
 		aspect-ratio: 1 / 1.75;
-		border: 0.2rem solid var(--color-fg-50);
+		border: 0.15em solid var(--color-fg-50);
 		border-top: none;
 		border-left: none;
 		border-radius: 0;
@@ -352,13 +352,12 @@ form.table {
 		width: 100%;
 		display: flex;
 		justify-content: space-between;
-		align-items: baseline;
+		align-items: center;
 		padding: --spacing(1) --spacing(4);
 
-		& > div {
+		& > .io {
 			display: flex;
 			align-items: center;
-			gap: --spacing(2);
 		}
 	}
 
@@ -367,11 +366,63 @@ form.table {
 	}
 
 	input {
-		margin-left: --spacing(4);
+		margin-inline-start: --spacing(4);
+		min-width: 2ch;
+	}
+	input:not([type='checkbox']), select {
+		width: 12ch;
 	}
 }
 
 mark {
 	background: none;
 	color: inherit;
+}
+
+*:has(.tooltip) {
+	--tmp-bg-100: var(--color-bg-100);
+	--tmp-bg-200: var(--color-bg-200);
+	--tmp-bg-300: var(--color-bg-300);
+	--tmp-bg-400: var(--color-bg-400);
+	--tmp-bg-500: var(--color-bg-500);
+	--tmp-bg-600: var(--color-bg-600);
+	--tmp-bg-700: var(--color-bg-700);
+	--tmp-bg-800: var(--color-bg-800);
+	--tmp-bg-900: var(--color-bg-900);
+	--tmp-bg-950: var(--color-bg-950);
+}
+
+.tooltip {
+	display: flex;
+	position: absolute;
+	background: var(--color-bg-50);
+	filter: drop-shadow(var(--drop-shadow-xl));
+	border-radius: var(--radius-md);
+
+	gap: --spacing(1);
+	width: max-content;
+	max-width: calc(100vw - var(--layout-padding-x) * 2);
+	max-height: calc(100vh - var(--header-height) - --spacing(24));
+	height: fit-content;
+	/* above other editor content but below header */
+	z-index: 2;
+
+	--color-bg-50: var(--tmp-bg-100);
+	--color-bg-100: var(--tmp-bg-200);
+	--color-bg-200: var(--tmp-bg-300);
+	--color-bg-300: var(--tmp-bg-400);
+	--color-bg-400: var(--tmp-bg-500);
+	--color-bg-500: var(--tmp-bg-600);
+	--color-bg-600: var(--tmp-bg-700);
+	--color-bg-700: var(--tmp-bg-800);
+	--color-bg-800: var(--tmp-bg-900);
+	--color-bg-900: var(--tmp-bg-950);
+}
+
+.fadedown {
+	background: linear-gradient(
+		to bottom,
+		var(--color-bg-50) 0 calc(100% - --spacing(2)),
+		#0000 100%
+	);
 }

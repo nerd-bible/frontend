@@ -1,25 +1,42 @@
 <script lang="ts">
 // TODO: keyboard controls
 // inspiration: https://codepen.io/roblevin/pen/qBXmvoL
-type Props = { items: { label: string; component: any }[]; active?: number };
-let { items = [], active = $bindable(0) }: Props = $props();
+type Props = {
+	items: { label: string; component: any }[];
+	active?: number;
+	class?: string;
+};
+let {
+	items = [],
+	active = $bindable(0),
+	class: className = "",
+}: Props = $props();
 
 const uid = $props.id();
 </script>
 
-<section>
-	<div role="tablist">
+<section class={className}>
+	<ul
+		class="scrollable fadedown"
+		role="tablist"
+		onwheel={(ev) => {
+			ev.preventDefault();
+			ev.currentTarget.scrollBy({ left: ev.deltaY });
+		}}
+	>
 		{#each items as item, i}
-			<button
-				role="tab"
-				aria-controls={uid}
-				aria-selected={i === active}
-				onclick={() => {
-					active = i;
-				}}>{item.label}</button
-			>
+			<li>
+				<button
+					role="tab"
+					aria-controls={uid}
+					aria-selected={i === active}
+					onclick={() => {
+						active = i;
+					}}>{item.label}</button
+				>
+			</li>
 		{/each}
-	</div>
+	</ul>
 	<div id={uid} role="tabpanel">
 		{@render items[active].component()}
 	</div>
@@ -27,34 +44,42 @@ const uid = $props.id();
 
 <style>
 section {
-	--border-size: 2px;
+	--border-size: --spacing(1);
 	--border-color: var(--color-bg-200);
 	--border: var(--border-size) solid var(--border-color);
+	height: fit-content; /** fix sticky */
 }
 [role="tablist"] {
 	position: sticky;
 	top: 0;
 	z-index: 1;
-	background: var(--color-bg-50);
 	display: flex;
 	flex-wrap: wrap;
-	border-radius: 0;
-
-	& > button:focus {
-		outline-offset: calc(-1 * var(--outline-width));
-	}
+	overflow: auto;
+	flex-wrap: nowrap;
+	padding-bottom: --spacing(4);
 }
 [role="tabpanel"] {
 	padding: --spacing(4);
+					padding-top: 0;
+}
+li {
+	padding: --spacing(1);
+
+	&:has(button[aria-selected="true"]) {
+		color: var(--color-fg-50);
+		margin-bottom: calc(-1 * var(--border-size));
+		border-bottom: var(--border-size) solid var(--color-focus-200);
+		border-radius: 0;
+	}
 }
 button {
+	padding: --spacing(1);
 	background: none;
-	border-radius: 0;
 	color: var(--color-fg-200);
-	&[aria-selected="true"] {
-		color: var(--color-fg-50);
-		margin-bottom: -2px;
-		border-bottom: 2px solid var(--color-focus-200);
+	outline-offset: 0;
+	&:where(:focus, :hover) {
+		background: var(--color-bg-100);
 	}
 }
 </style>

@@ -9,15 +9,17 @@
 	color: var(--color-fg-50);
 
 	/* for sticky sidebars and scroll margin */
-	--header-height: calc(1lh + --spacing(12));
+	--header-height: calc(1rem + --spacing(14));
 }
 
 :root, .scrollable {
 	overflow: auto;
-	scrollbar-color: var(--color-fg-50) var(--color-bg-100);
-	scrollbar-gutter: stable;
-	scroll-padding-top: var(--header-height);
+	scrollbar-color: var(--color-fg-400) var(--color-bg-100);
 	scroll-behavior: smooth;
+
+	[id] {
+		scroll-margin-top: var(--header-height);
+	}
 }
 
 body {

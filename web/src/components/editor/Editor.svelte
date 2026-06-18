@@ -12,10 +12,11 @@ import "./content.css";
 // import { docFromBookLang } from "./tree.svelte.ts";
 
 // https://github.com/aleventhal/aria-annotations/blob/master/README.md#simplified-aria-annotations-proposal--explainer
-// interface Props {
-// 	book: string;
-// }
-// const { book }: Props = $props();
+interface Props {
+	// book: string;
+	main: boolean;
+}
+const { main = false }: Props = $props();
 let dir = $state<"ltr" | "rtl">("ltr");
 let tooltipRef: HTMLDivElement;
 let tooltipPos = $state({ left: 0, top: -100 });
@@ -93,72 +94,64 @@ function highlightNote(ele: HTMLElement) {
 		tooltipPos.top = -100;
 	}}
 />
-{#snippet col1()}
-	<Tabs
-		items={[
-			{ label: t("Outline"), component: Outline },
-			{ label: t("View"), component: View },
-			{ label: t("Layers"), component: Layers },
-		]}
-	/>
-{/snippet}
-{#snippet col2()}
-	<div
-		class="editor"
-		{dir}
-		class:hide-verse={!settings.showVerseNum}
-		class:hide-chapter={!settings.showChapterNum}
-		class:hide-outline={!settings.showOutline}
-		class:drop-caps={settings.showDropCaps}
-		class:justify-text={settings.justifyText}
-	>
-		<h1>Genesis</h1>
-		{@html sample}
-	</div>
-{/snippet}
-{#snippet col3()}
-	<div role="note" class="notes">
-		<a class="footnote" id="pnote1">
-			Literally <i>day one</i>
-		</a>
-		<a class="footnote" id="pnote2">
-			Or a canopy or a firmament or a vault and the rest of this is a long
-			sentence to test line wrapping because width is finite
-		</a>
-	</div>
-{/snippet}
-<Layout
-	--line-height={settings.lineHeight}
-	--font-size={settings.fontSize + "px"}
-	{col1}
-	{col2}
-	{col3}
-></Layout>
 
 <div
-	class="tooltip"
-	bind:this={tooltipRef}
-	style:top={tooltipPos.top + "px"}
-	style:left={tooltipPos.left + "px"}
-></div>
+	class="editor"
+	style={[
+		`--line-height:${settings.lineHeight}`,
+		`--font-size:${settings.fontSize}px`,
+	].join(";")}
+>
+	{#snippet col1()}
+		<Tabs
+			items={[
+				{ label: t("Outline"), component: Outline },
+				{ label: t("View"), component: View },
+				{ label: t("Layers"), component: Layers },
+			]}
+		/>
+	{/snippet}
+	{#snippet col2()}
+		<div
+			class="content"
+			{dir}
+			class:hide-verse={!settings.showVerseNum}
+			class:hide-chapter={!settings.showChapterNum}
+			class:hide-outline={!settings.showOutline}
+			class:drop-caps={settings.showDropCaps}
+			class:justify-text={settings.justifyText}
+		>
+			<h1>Genesis</h1>
+			{@html sample}
+		</div>
+	{/snippet}
+	{#snippet col3()}
+		<div role="note" class="notes">
+			<a class="footnote" id="pnote1">
+				Literally <i>day one</i>
+			</a>
+			<a class="footnote" id="pnote2">
+				Or a canopy or a firmament or a vault and the rest of this is a long
+				sentence to test line wrapping because width is finite
+			</a>
+		</div>
+	{/snippet}
+	<Layout {col1} {col2} {col3} {main} />
+
+	<div
+		class="tooltip"
+		bind:this={tooltipRef}
+		style:top={tooltipPos.top + "px"}
+		style:left={tooltipPos.left + "px"}
+	></div>
+</div>
 
 <style>
-.tooltip {
-	display: flex;
-	position: absolute;
-	background: var(--color-bg-300);
-	filter: drop-shadow(var(--drop-shadow-xl));
-	border-radius: var(--radius-md);
-
-	gap: --spacing(1);
-	padding: --spacing(2);
-	width: max-content;
-	max-width: calc(100vw - var(--layout-padding-x) * 2);
-	/* above other editor content but below header */
-	z-index: 2;
+.editor {
+	font-size: var(--font-size);
+	line-height: var(--line-height);
 }
-
-.editor :global(mark),
+.content :global(mark),
 .notes > * {
 	&:global(.focus) {
 		animation: focus 1s ease forwards;

@@ -3,7 +3,6 @@ import Menu from "virtual:icons/lucide/menu";
 import Dropdown from "./Dropdown.svelte";
 import QuickSettings from "./QuickSettings.svelte";
 import { t } from "../l10n.svelte.ts";
-import { p } from "../routes.ts";
 import Logo from "../../img/logo.svg?raw";
 
 let headerRef: HTMLElement;
@@ -24,13 +23,15 @@ function onScroll() {
 <svelte:document onscroll={onScroll} />
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <header
+	class="fadedown"
 	bind:this={headerRef}
 	onpointerenter={() => (pointerOver = true)}
 	onpointerleave={() => (pointerOver = false)}
 >
-	<span class="logo">
+	<div class="l">
+		<div id="headerLeft"></div>
 		{@html Logo}
-	</span>
+	</div>
 	<search>
 		<!-- svelte-ignore a11y_autofocus -->
 		<input
@@ -43,7 +44,7 @@ function onScroll() {
 	{#snippet icon()}
 		<Menu />
 	{/snippet}
-	<Dropdown label={t("Main menu")} {icon}>
+	<Dropdown label={t("Main menu")} placement="bottom-end" {icon}>
 		<QuickSettings />
 	</Dropdown>
 </header>
@@ -53,27 +54,27 @@ header {
 	display: grid;
 	grid-template-columns: var(--grid-template-columns);
 	grid-template-areas: var(--grid-template-areas);
+	background: var(--color-bg-50);
 	/* dont affect selection in body */
 	user-select: none;
 	/* create stacking context above main */
 	z-index: 10;
-	height: var(--header-height);
 	width: 100%;
 
 	position: sticky;
 	top: 0;
-	background: var(--color-bg-50);
 	padding: --spacing(4) 0;
 	border-radius: 0;
 
-	& > .logo {
+	& > .l {
 		grid-area: l;
 		justify-self: start;
-		height: 100%;
+		display: flex;
+		align-items: center;
+		gap: --spacing(2);
 
-		& > :global(svg) {
-			height: 100%;
-			width: auto;
+		:global(svg) {
+			height: 90%;
 		}
 	}
 
@@ -88,7 +89,6 @@ header {
 			&:focus {
 				text-align: start;
 			}
-			background: var(--color-bg-100);
 			width: 100%;
 			padding: --spacing(2);
 		}

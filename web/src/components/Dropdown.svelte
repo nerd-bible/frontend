@@ -1,21 +1,51 @@
 <script lang="ts">
 // https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/
 import type { Snippet } from "svelte";
+import { computePosition, shift, flip, type Placement } from "@floating-ui/dom";
 
 let {
 	label,
 	icon,
 	expanded = $bindable(false),
 	children,
+	placement = "bottom-start",
 }: {
 	label: string;
 	icon: Snippet;
 	expanded?: boolean;
 	children: Snippet;
+	placement?: Placement
 } = $props();
 
 const id = $props.id();
 let div: HTMLDivElement;
+let pos = $state({ left: 0, top: 0 });
+
+$effect(() => {
+	if (!expanded) return;
+
+	const computed = getComputedStyle(document.body);
+	const remToPx = (rem: string) =>
+		parseFloat(rem) * parseFloat(computed.fontSize);
+	const spacing = remToPx(computed.getPropertyValue("--spacing-inc"));
+
+	const reference = div.firstElementChild as HTMLButtonElement;
+	const floating = div.lastElementChild as HTMLDivElement;
+
+	computePosition(reference, floating, {
+		placement,
+		middleware: [
+			flip(),
+			shift({
+				padding: spacing * 4,
+				mainAxis: true,
+				crossAxis: true,
+			}),
+		],
+	}).then(({ x, y }) => {
+		pos = { left: x, top: y };
+	});
+});
 </script>
 
 <svelte:document
@@ -54,26 +84,18 @@ let div: HTMLDivElement;
 	>
 		{@render icon()}
 	</button>
-	<div class="content scrollable" {id}>
+	<div
+		class="scrollable tooltip"
+		{id}
+		style:top={pos.top + "px"}
+		style:left={pos.left + "px"}
+	>
 		{@render children()}
 	</div>
 </div>
 
 <style>
-.dropdown {
-	position: relative;
-	translate: 0 0;
-
-	& > .content {
-		position: absolute;
-		border-radius: var(--radius-md);
-		background: var(--color-bg-200);
-		top: auto;
-		inset-inline-end: 0;
-	}
-
-	& > button[aria-expanded="false"] ~ .content {
-		display: none;
-	}
+.dropdown > button[aria-expanded="false"] ~ .tooltip {
+	display: none;
 }
 </style>

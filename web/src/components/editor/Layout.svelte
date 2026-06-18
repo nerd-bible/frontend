@@ -6,16 +6,19 @@ import Toc from "virtual:icons/lucide/table-of-contents";
 import Dropdown from "../Dropdown.svelte";
 import { t } from "../../l10n.svelte.ts";
 import type { Snippet } from "svelte";
+import { Portal } from "@jsrob/svelte-portal";
 
 const {
 	col1,
 	col2,
 	col3,
+	main = false,
 	...rest
 }: SvelteHTMLElements["div"] & {
 	col1: Snippet;
 	col2: Snippet;
 	col3: Snippet;
+	main: boolean;
 } = $props();
 
 let hideLeft = $state(false);
@@ -64,15 +67,30 @@ const layout: Attachment = (div) => {
 };
 </script>
 
-<div class="grid" class:two={hideLeft} class:one={hideRight} {...rest} {@attach layout}>
+<div
+	class="grid"
+	class:two={hideLeft}
+	class:one={hideRight}
+	{...rest}
+	{@attach layout}
+>
 	<aside class="left" class:scrollable={!hideLeft}>
 		{#if hideLeft}
 			{#snippet icon()}
 				<Toc />
 			{/snippet}
-			<Dropdown label={t("Reader menu")} {icon}>
-				{@render col1()}
-			</Dropdown>
+			{#snippet dropdown()}
+				<Dropdown label={t("Reader menu")} {icon}>
+					{@render col1()}
+				</Dropdown>
+			{/snippet}
+			{#if main}
+				<Portal target="#headerLeft">
+					{@render dropdown()}
+				</Portal>
+			{:else}
+				{@render dropdown()}
+			{/if}
 		{:else}
 			{@render col1()}
 		{/if}
@@ -89,8 +107,6 @@ const layout: Attachment = (div) => {
 
 <style>
 .grid {
-	font-size: var(--font-size);
-	line-height: var(--line-height);
 	display: grid;
 	grid-template-columns: var(--grid-template-columns);
 	position: relative;
@@ -100,16 +116,7 @@ const layout: Attachment = (div) => {
 		top: var(--header-height);
 		max-height: calc(100vh - var(--header-height));
 		z-index: 2;
-		height: 100%;
 		padding: 0 --spacing(2);
-
-		:global(.dropdown) {
-			& > :global(.content) {
-				inset-inline-start: 0;
-				inset-inline-end: auto;
-				width: max-content;
-			}
-		}
 	}
 
 	& > .right {
@@ -118,14 +125,12 @@ const layout: Attachment = (div) => {
 }
 
 .two {
-	--grid-template-columns: 0px 0px minmax(auto, 80ch) --spacing(8) minmax(20ch, 1fr);
+	--grid-template-columns: 0px 0px minmax(auto, 80ch) --spacing(8)
+		minmax(20ch, 1fr);
 
 	& > .left {
 		width: max-content;
 		overflow: initial;
-		& > :global(.dropdown > .content) {
-			max-height: calc(100vh - var(--header-height) - --spacing(24));
-		}
 	}
 }
 

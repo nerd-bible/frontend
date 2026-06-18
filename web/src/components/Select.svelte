@@ -10,36 +10,35 @@ let {
 }: HTMLSelectAttributes = $props();
 </script>
 
-<div>
-	<select bind:value={value} {...props}>
+<div class="select">
+	<select bind:value {...props}>
 		{@render children?.()}
 	</select>
-	<Down />
+	<span>
+		<Down />
+	</span>
 </div>
 
 <style>
 div {
-	position: relative;
-	display: inline-block;
-	background: var(--select-bg);
-	& > :global(svg) {
-		position: absolute;
-		pointer-events: none;
-		top: 0.5lh;
-		right: --spacing(2);
+	display: inline-grid;
+	grid-template-areas: "overlay";
+	gap: --spacing(2);
+
+	& > * {
+		grid-area: overlay;
 	}
+}
+span {
+	justify-self: end;
+	align-self: center;
+	margin-inline-end: --spacing(1);
+	pointer-events: none;
 }
 select {
 	appearance: none;
-	background: none;
 	min-width: 10ch;
-	width: 100%;
 	padding: --spacing(2);
 	cursor: pointer;
-
-	:global(option) {
-		color: inherit;
-		background-color: var(--select-bg);
-	}
 }
 </style>

@@ -64,7 +64,6 @@ through IndexedDb polling. This would support since 2018.
 | [font-synthesis](https://caniuse.com/wf-font-synthesis)                         | 2022     | no             |
 | [lh](https://caniuse.com/wf-lh)                                                 | 2023     | maybe          |
 | [:has](https://caniuse.com/css-has)                                             | 2023     | no             |
-| [scrollbar-gutter](https://caniuse.com/wf-scrollbar-gutter)                     | 2024     | no             |
 | [scrollbar-color](https://caniuse.com/wf-scrollbar-color)                       | 2025     | no             |
 
 ## Browserstack

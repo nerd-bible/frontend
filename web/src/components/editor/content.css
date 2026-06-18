@@ -1,4 +1,4 @@
-.editor {
+.content {
 	counter-reset: chapter;
 	padding-bottom: --spacing(4);
 
@@ -160,4 +160,3 @@
 		}
 	}
 }
-
