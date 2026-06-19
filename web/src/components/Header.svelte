@@ -41,16 +41,15 @@ let tmpFontSize = $state(settings.fontSize);
 			id="search"
 		/>
 	</search>
-	{#snippet icon()}
-		<Menu />
-	{/snippet}
 	<div>
 		<Dropdown
 			label={t("Main menu")}
 			placement="bottom-end"
-			{icon}
 			relayout={tmpFontSize}
 		>
+			{#snippet icon()}
+				<Menu />
+			{/snippet}
 			<QuickSettings bind:tmpFontSize />
 		</Dropdown>
 	</div>

@@ -18,7 +18,8 @@ let title = $derived.by(() => titleFromRoute(route.params, route.meta));
 
 <style>
 :global(body > *) {
-	padding-inline: var(--layout-padding-x);
+	/* margin doesn't count toward clientWidth for ThreeCol's Resizer */
+	margin-inline: var(--layout-padding-x);
 	font-size: var(--font-size);
 }
 

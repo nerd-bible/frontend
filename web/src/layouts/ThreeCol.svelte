@@ -8,103 +8,101 @@ import Dropdown from "../components/Dropdown.svelte";
 import { t } from "../l10n.svelte.ts";
 import type { Snippet } from "svelte";
 import { Portal } from "@jsrob/svelte-portal";
+import Resizer from "../components/Resizer.svelte";
 
 let {
 	left,
 	hideLeft = $bindable(false),
+	leftWidth = $bindable(0.2),
+	leftMinPx = 250,
 	children,
 	right,
 	hideRight = $bindable(false),
+	rightWidth = $bindable(0.2),
+	rightMinPx = 300,
+	layout: userLayout = () => {},
 	...rest
 }: SvelteHTMLElements["div"] & {
 	left?: Snippet;
 	hideLeft?: boolean;
+	leftWidth?: number;
+	leftMinPx?: number;
 	children?: Snippet;
 	right?: Snippet;
 	hideRight?: boolean;
+	rightWidth?: number;
+	rightMinPx?: number;
+	layout?: (div: HTMLDivElement) => void;
 } = $props();
+// svelte-ignore non_reactive_update
+let div: HTMLDivElement;
+
+const leftWidthVisible = $derived(hideLeft ? 0 : leftWidth);
+const rightWidthVisible = $derived(hideRight ? 0 : rightWidth);
+
+function showHide() {
+	hideLeft = div.clientWidth * leftWidth < leftMinPx;
+	hideRight = div.clientWidth * rightWidth < rightMinPx;
+	userLayout(div);
+}
 
 const layout: Attachment = (div) => {
-	const parentRect = div.getBoundingClientRect();
-	const sameLineNoteStyles = ["wavy", "dashed", "dotted", "none"];
-
-	function layoutNotes() {
-		let lastY = 0;
-		let lastHeight = 0;
-		let overlapping = 0;
-		const ch = 11.43;
-		hideLeft = div.clientWidth < 130 * ch;
-		hideRight = div.clientWidth < 80 * ch;
-		if (!hideRight) {
-			div.querySelectorAll("mark").forEach((mark) => {
-				const fromRects = mark.getClientRects();
-				const rect = fromRects[fromRects.length - 1];
-				const y = Math.max(lastY + lastHeight, rect.top - parentRect.top);
-				const note = mark.ariaDetailsElements![0] as HTMLElement;
-
-				let style = "solid";
-				if (y === lastY + lastHeight)
-					style = sameLineNoteStyles[overlapping++ % sameLineNoteStyles.length];
-				else overlapping = 0;
-				mark.style.textDecorationStyle = style;
-				note.style.textDecorationStyle = style;
-				note.style.top = y + "px";
-				note.style.position = "absolute";
-
-				lastY = y;
-				lastHeight = note.clientHeight;
-			});
-		}
-	}
-
-	// layoutNotes();
-	// const obs = new ResizeObserver(layoutNotes);
-	// obs.observe(div);
-	//
-	// return () => {
-	// 	obs.disconnect();
-	// };
+	const obs = new ResizeObserver(showHide);
+	obs.observe(div);
+	return () => (obs.disconnect());
 };
+
+$effect(() => showHide());
 </script>
 
 <div
 	class="grid"
-	class:two={hideLeft}
-	class:one={hideRight}
+	style:--left-width={leftWidthVisible * 100 + "%"}
+	style:--left-resizer-width={4}
+	style:--right-width={rightWidthVisible * 100 + "%"}
+	style:--right-resizer-width={4}
 	{...rest}
+	bind:this={div}
 	{@attach layout}
 >
-	<aside class="left" class:scrollable={!hideLeft}>
-		{#if hideLeft}
-			{#snippet icon()}
-				<Toc />
-			{/snippet}
-			{#snippet dropdown()}
-				<Dropdown label={t("Left column")} {icon}>
-					{@render left?.()}
-				</Dropdown>
-			{/snippet}
-			<Portal target="#headerLeft">
-				{@render dropdown()}
-			</Portal>
-		{:else}
+	{#if hideLeft}
+		<Portal target="#headerLeft">
+			<Dropdown label={t("Left column")}>
+				{#snippet icon()}
+					<Toc />
+				{/snippet}
+				{@render left?.()}
+			</Dropdown>
+		</Portal>
+	{:else}
+		<aside class="left">
 			{@render left?.()}
-		{/if}
-	</aside>
-	<div></div>
+		</aside>
+	{/if}
+	<div class="resizer-left">
+		<Resizer bind:value={leftWidth} min={leftMinPx} context={div} />
+	</div>
 	<main>
 		{@render children?.()}
 	</main>
-	<div></div>
-	<aside class="right">
-		{@render right?.()}
-	</aside>
+	{#if !hideRight}
+		<aside class="right">
+			{@render right?.()}
+		</aside>
+	{/if}
+	<div class="resizer-right">
+		<Resizer bind:value={rightWidth} context={div} multiplier={-1} />
+	</div>
 </div>
 
 <style>
 .grid {
 	display: grid;
-	grid-template-columns: 1fr --spacing(8) 55% --spacing(8) 1fr;
+	grid-template-columns:
+		var(--left-width) --spacing(var(--left-resizer-width))
+		1fr
+		--spacing(var(--right-resizer-width)) var(--right-width);
+	grid-template-areas: "left leftResizer main rightResizer right";
 	position: relative;
 
 	& > .left {
@@ -113,29 +111,25 @@ const layout: Attachment = (div) => {
 		max-height: calc(100vh - var(--header-height) - --spacing(2));
 		z-index: 2;
 		padding: 0 --spacing(2);
+		grid-area: left;
+	}
+
+	.resizer-left {
+		grid-area: leftResizer;
+	}
+
+	.resizer-right {
+		grid-area: rightResizer;
+	}
+
+	& > main {
+		grid-area: main;
 	}
 
 	& > .right {
 		margin-right: --spacing(4);
+		grid-area: right;
 	}
 }
 
-.two {
-	--grid-template-columns: 0px 0px minmax(auto, 80ch) --spacing(8)
-		minmax(20ch, 1fr);
-
-	& > .left {
-		width: max-content;
-		overflow: initial;
-	}
-}
-
-.one {
-	--grid-template-columns: 0px 0px 1fr;
-
-	& > :global(.main-resizer),
-	& > .right {
-		display: none;
-	}
-}
 </style>

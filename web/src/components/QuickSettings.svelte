@@ -7,7 +7,7 @@ import Select from "./Select.svelte";
 let { tmpFontSize = $bindable(settings.fontSize) } = $props();
 </script>
 
-<form class="table" style={`--font-size:${tmpFontSize}px`}>
+<form class="table" style:--font-size="${tmpFontSize + 'px'}">
 	<!-- <label> -->
 	<!-- 	<span>{t("Language")}</span> -->
 	<!-- 	<Select name="locale" bind:value={settings.locale}> -->
@@ -36,7 +36,7 @@ let { tmpFontSize = $bindable(settings.fontSize) } = $props();
 				max="48"
 				step="2"
 				bind:value={settings.fontSize}
-				onchange={ev => (tmpFontSize = +ev.currentTarget.value)}
+				onchange={(ev) => (tmpFontSize = +ev.currentTarget.value)}
 			/>
 		</div>
 	</label>

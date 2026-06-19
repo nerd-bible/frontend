@@ -61,6 +61,33 @@ function highlightNote(ele: HTMLElement) {
 	for (let i = 0; i < referencedBy.length; i++)
 		highlight(referencedBy[i] as HTMLElement);
 }
+
+function layoutNotes(div: HTMLElement) {
+	const parentRect = div.getBoundingClientRect();
+	const sameLineNoteStyles = ["wavy", "dashed", "dotted", "none"];
+	let lastY = 0;
+	let lastHeight = 0;
+	let overlapping = 0;
+	div.querySelectorAll("mark").forEach((mark) => {
+		const fromRects = mark.getClientRects();
+		const rect = fromRects[fromRects.length - 1];
+		const y = Math.max(lastY + lastHeight, rect.top - parentRect.top);
+		const note = mark.ariaDetailsElements![0] as HTMLElement;
+		if (!note) return;
+
+		let style = "solid";
+		if (y === lastY + lastHeight)
+			style = sameLineNoteStyles[overlapping++ % sameLineNoteStyles.length];
+		else overlapping = 0;
+		mark.style.textDecorationStyle = style;
+		note.style.textDecorationStyle = style;
+		note.style.top = y + "px";
+		note.style.position = "absolute";
+
+		lastY = y;
+		lastHeight = note.clientHeight;
+	});
+}
 </script>
 
 <svelte:document
@@ -95,7 +122,7 @@ function highlightNote(ele: HTMLElement) {
 	}}
 />
 
-<ThreeCol>
+<ThreeCol layout={layoutNotes}>
 	{#snippet left()}
 		<Tabs
 			items={[
@@ -125,7 +152,7 @@ function highlightNote(ele: HTMLElement) {
 	></div>
 
 	{#snippet right()}
-		<div role="note" class="notes">
+		<div class="notes">
 			<a class="footnote" id="pnote1">
 				Literally <i>day one</i>
 			</a>
@@ -147,8 +174,11 @@ function highlightNote(ele: HTMLElement) {
 	text-decoration-line: underline;
 }
 
-.notes a {
-	color: var(--color-fg-200);
+.notes {
+	position: relative;
+	a {
+		color: var(--color-fg-200);
+	}
 }
 
 @keyframes focus {
