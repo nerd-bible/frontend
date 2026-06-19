@@ -1,6 +1,6 @@
 import Reader from "./routes/Reader.svelte";
 import Catalog from "./routes/Catalog.svelte";
-import Main from "./layouts/Main.svelte";
+import Header from "./layouts/Header.svelte";
 // import Settings from "./layouts/Settings.svelte";
 // import Sql from "./routes/settings/Sql.svelte";
 // import Storage from "./routes/settings/Storage.svelte";
@@ -42,7 +42,7 @@ export const routes: Routes = {
 	// 	layout: Settings,
 	// 	meta: { title: t("Settings") },
 	// },
-	layout: Main,
+	layout: Header,
 	hooks: {
 		beforeLoad(ctx) {
 			if (ctx.pathname === "/settings") navigate("/settings/sql");

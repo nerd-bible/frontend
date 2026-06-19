@@ -61,6 +61,7 @@ $effect.root(() => {
 	}
 	$effect(() => {
 		document.documentElement.className = settings.theme.toLowerCase();
+		document.documentElement.style.setProperty("--font-size", settings.fontSize + "px");
 	});
 });
 

@@ -1,0 +1,17 @@
+:root, .scrollable {
+	overflow: auto;
+	scrollbar-color: var(--color-fg-400) var(--color-bg-100);
+	scroll-behavior: smooth;
+
+	[id] {
+		scroll-margin-top: var(--header-height);
+	}
+}
+
+.fadedown {
+	background: linear-gradient(
+		to bottom,
+		var(--color-bg-100) 0 calc(100% - --spacing(2)),
+		#0000 100%
+	);
+}

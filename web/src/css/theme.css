@@ -2,7 +2,7 @@
 	--font-sans: "Noto Sans", "Noto Sans Hebrew", sans;
 	--font-serif: "Noto Serif", "Noto Serif Hebrew", sans-serif;
 	--font-cursive: "Gloria Hallelujah", cursive;
-	--spacing-inc: 0.25rem;
+	--spacing-inc: 0.25em;
 
 	--radius-xs: 0.125em;
 	--radius-sm: 0.25em;
@@ -13,14 +13,14 @@
 	--radius-3xl: 1.5em;
 	--radius-4xl: 2em;
 
-	--outline-width: 0.15rem;
-	--outline-offset: 0.05rem;
+	--outline-width: 2px;
+	--outline-offset: -2px;
 
 	--drop-shadow-xl: 0 9px 7px rgb(0 0 0 / 0.1);
 
 	--layout-padding-x: calc(max(0px, calc((100vw - 1600px) / 2)) + --spacing(4));
 	/* for sticky sidebars and scroll margin */
-	--header-height: calc(1rem + --spacing(12));
+	--header-height: calc(1em + --spacing(12));
 
 	/* light */
 	--color-fg-50: var(--color-gray-950);
@@ -56,6 +56,7 @@
 
 .dark {
 	--color-fg-50: var(--color-gray-50);
+	--color-fg-100: var(--color-gray-100);
 	--color-fg-200: var(--color-gray-200);
 	--color-fg-300: var(--color-gray-300);
 	--color-fg-400: var(--color-gray-400);

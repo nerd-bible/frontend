@@ -2,23 +2,7 @@
 @import "./pallette.css";
 @import "./theme.css";
 @import "./reset.css";
-
-:root {
-	font-family: var(--font-sans);
-	background: var(--color-bg-100);
-	color: var(--color-fg-100);
-	scrollbar-gutter: stable;
-}
-
-:root, .scrollable {
-	overflow: auto;
-	scrollbar-color: var(--color-fg-400) var(--color-bg-100);
-	scroll-behavior: smooth;
-
-	[id] {
-		scroll-margin-top: var(--header-height);
-	}
-}
+@import "./util.css";
 
 noscript > h1 {
 	display: block;

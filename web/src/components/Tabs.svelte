@@ -67,16 +67,18 @@ li {
 	padding: --spacing(1);
 
 	&:has(button[aria-selected="true"]) {
-		color: var(--color-fg-50);
 		margin-bottom: calc(-1 * var(--border-size));
 		border-bottom: var(--border-size) solid var(--color-focus-200);
 		border-radius: 0;
+	}
+
+	&:has(button[aria-selected="false"]) {
+		color: var(--color-fg-200);
 	}
 }
 button {
 	padding: --spacing(1);
 	background: none;
-	color: var(--color-fg-200);
 	outline-offset: 0;
 	&:where(:focus, :hover) {
 		background: var(--color-bg-100);

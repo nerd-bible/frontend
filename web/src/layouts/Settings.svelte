@@ -1,6 +1,8 @@
 <script lang="ts">
 import type { Snippet } from "svelte";
 import { routes, p } from "../routes.ts";
+import HeaderLayout from "./Header.svelte";
+import ThreeCol from "./ThreeCol.svelte";
 
 let { children }: { children: Snippet } = $props();
 
@@ -9,39 +11,21 @@ const settingsRoutes = Object.keys(routes["/settings"]).filter((r) =>
 );
 </script>
 
-<div class="settings">
-	<nav>
-		<ul>
-			{#each settingsRoutes as r}
-				<li>
-					<a href={p(`/settings${r}`)}>
-						{routes["/settings"][r].meta.title}
-					</a>
-				</li>
-			{/each}
-		</ul>
-	</nav>
-	<main>
+<HeaderLayout>
+	<ThreeCol hideRight>
+		{#snippet left()}
+			<nav>
+				<ul>
+					{#each settingsRoutes as r}
+						<li>
+							<a href={p(`/settings${r}`)}>
+								{routes["/settings"][r].meta.title}
+							</a>
+						</li>
+					{/each}
+				</ul>
+			</nav>
+		{/snippet}
 		{@render children()}
-	</main>
-</div>
-
-<style>
-.settings {
-	display: flex;
-	gap: --spacing(8);
-	padding: --spacing(4);
-
-	> main {
-		flex-grow: 1;
-	}
-
-	> nav > ul {
-		background: var(--color-bg-100);
-		li > a {
-			display: block;
-			padding: --spacing(4);
-		}
-	}
-}
-</style>
+	</ThreeCol>
+</HeaderLayout>

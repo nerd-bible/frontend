@@ -1,4 +1,7 @@
 <script lang="ts">
+// Our router does not allow passing multiple components to a route nor passing
+// components as layout parameters. For this reason we have to split HolyGrail
+// and Header.
 import Header from "../components/Header.svelte";
 import type { Snippet } from "svelte";
 import { route, titleFromRoute } from "../routes.ts";
@@ -10,12 +13,16 @@ let title = $derived.by(() => titleFromRoute(route.params, route.meta));
 <svelte:head>
 	<title>{title}</title>
 </svelte:head>
-<div>
-	<Header />
-	{@render children()}
-</div>
+<Header />
+{@render children()}
+
 <style>
-div > :global(*) {
+:global(body > *) {
 	padding-inline: var(--layout-padding-x);
+	font-size: var(--font-size);
+}
+
+:global(body > *:not(.header)) {
+	line-height: var(--line-height);
 }
 </style>

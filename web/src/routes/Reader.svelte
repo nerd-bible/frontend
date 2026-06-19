@@ -6,4 +6,4 @@ const docId = $derived(route.getParams("/:docId").docId);
 const ref = $derived(route.getParams("/:ref").ref);
 </script>
 
-<Editor main />
+<Editor />

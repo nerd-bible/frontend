@@ -7,16 +7,16 @@ import Layers from "./Layers.svelte";
 import View from "./View.svelte";
 import { computePosition, offset, flip, inline, shift } from "@floating-ui/dom";
 import { t } from "../../l10n.svelte";
-import Layout from "./Layout.svelte";
+import ThreeCol from "../../layouts/ThreeCol.svelte";
 import "./content.css";
 // import { docFromBookLang } from "./tree.svelte.ts";
 
 // https://github.com/aleventhal/aria-annotations/blob/master/README.md#simplified-aria-annotations-proposal--explainer
-interface Props {
-	// book: string;
-	main: boolean;
-}
-const { main = false }: Props = $props();
+// interface Props {
+// 	// book: string;
+// 	main: boolean;
+// }
+// const { main = false }: Props = $props();
 let dir = $state<"ltr" | "rtl">("ltr");
 let tooltipRef: HTMLDivElement;
 let tooltipPos = $state({ left: 0, top: -100 });
@@ -95,14 +95,8 @@ function highlightNote(ele: HTMLElement) {
 	}}
 />
 
-<div
-	class="editor"
-	style={[
-		`--line-height:${settings.lineHeight}`,
-		`--font-size:${settings.fontSize}px`,
-	].join(";")}
->
-	{#snippet col1()}
+<ThreeCol>
+	{#snippet left()}
 		<Tabs
 			items={[
 				{ label: t("Outline"), component: Outline },
@@ -111,21 +105,26 @@ function highlightNote(ele: HTMLElement) {
 			]}
 		/>
 	{/snippet}
-	{#snippet col2()}
-		<div
-			class="content"
-			{dir}
-			class:hide-verse={!settings.showVerseNum}
-			class:hide-chapter={!settings.showChapterNum}
-			class:hide-outline={!settings.showOutline}
-			class:drop-caps={settings.showDropCaps}
-			class:justify-text={settings.justifyText}
-		>
-			<h1>Genesis</h1>
-			{@html sample}
-		</div>
-	{/snippet}
-	{#snippet col3()}
+	<div
+		class="content"
+		{dir}
+		class:hide-verse={!settings.showVerseNum}
+		class:hide-chapter={!settings.showChapterNum}
+		class:hide-outline={!settings.showOutline}
+		class:drop-caps={settings.showDropCaps}
+		class:justify-text={settings.justifyText}
+	>
+		<h1>Genesis</h1>
+		{@html sample}
+	</div>
+	<div
+		role="tooltip"
+		bind:this={tooltipRef}
+		style:top={tooltipPos.top + "px"}
+		style:left={tooltipPos.left + "px"}
+	></div>
+
+	{#snippet right()}
 		<div role="note" class="notes">
 			<a class="footnote" id="pnote1">
 				Literally <i>day one</i>
@@ -136,21 +135,9 @@ function highlightNote(ele: HTMLElement) {
 			</a>
 		</div>
 	{/snippet}
-	<Layout {col1} {col2} {col3} {main} />
-
-	<div
-		role="tooltip"
-		bind:this={tooltipRef}
-		style:top={tooltipPos.top + "px"}
-		style:left={tooltipPos.left + "px"}
-	></div>
-</div>
+</ThreeCol>
 
 <style>
-.editor {
-	font-size: var(--font-size);
-	line-height: var(--line-height);
-}
 .content :global(mark),
 .notes > * {
 	&:global(.focus) {

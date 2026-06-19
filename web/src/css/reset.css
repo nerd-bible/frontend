@@ -35,16 +35,17 @@
  * 6. Use the user's configured `sans` font-variation-settings by default.
  * 7. Disable tap highlights on iOS.
  */
-:host {
+:root {
 	line-height: 1.5; /* 1 */
 	-webkit-text-size-adjust: 100%; /* 2 */
 	tab-size: 4; /* 3 */
-	font-family:
-		"Noto Sans", "Noto Sans Hebrew", ui-sans, system-ui, sans,
-		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; /* 4 */
+	font-family: var(--font-sans); /* 4 */
 	font-feature-settings: normal; /* 5 */
 	font-variation-settings: normal; /* 6 */
 	-webkit-tap-highlight-color: transparent; /* 7 */
+	background: var(--color-bg-100);
+	color: var(--color-fg-100);
+	scrollbar-gutter: stable;
 }
 
 /**
@@ -227,11 +228,15 @@ option,
 	color: inherit; /* 1 */
 	background-color: transparent; /* 3 */
 	opacity: 1; /* 4 */
-	background: var(--color-bg-100);
 
 	&:hover, &:focus, &.active {
-		background: var(--color-bg-200);
+		background: inherit;
+		@apply box-focus;
 	}
+}
+
+input, textarea, select, option {
+	background: var(--color-bg-200);
 }
 
 /** Prevent resizing textareas horizontally by default. */
@@ -379,7 +384,6 @@ mark {
 }
 
 :root {
-	--tmp-bg-100: var(--color-bg-100);
 	--tmp-bg-200: var(--color-bg-200);
 	--tmp-bg-300: var(--color-bg-300);
 	--tmp-bg-400: var(--color-bg-400);
@@ -388,13 +392,12 @@ mark {
 	--tmp-bg-700: var(--color-bg-700);
 	--tmp-bg-800: var(--color-bg-800);
 	--tmp-bg-900: var(--color-bg-900);
-	--tmp-bg-950: var(--color-bg-950);
 }
 
 [role='tooltip'] {
 	display: flex;
 	position: absolute;
-	background: var(--color-bg-50);
+	background: var(--color-bg-100);
 	filter: drop-shadow(var(--drop-shadow-xl));
 	border-radius: var(--radius-md);
 
@@ -413,13 +416,4 @@ mark {
 	--color-bg-500: var(--tmp-bg-600);
 	--color-bg-600: var(--tmp-bg-700);
 	--color-bg-700: var(--tmp-bg-800);
-	--color-bg-800: var(--tmp-bg-900);
-}
-
-.fadedown {
-	background: linear-gradient(
-		to bottom,
-		var(--color-bg-50) 0 calc(100% - --spacing(2)),
-		#0000 100%
-	);
 }

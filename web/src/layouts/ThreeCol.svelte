@@ -1,28 +1,28 @@
 <script lang="ts">
 // Reponsive 3-column layout with features
+// https://en.wikipedia.org/wiki/Holy_grail_(web_design)
 import type { SvelteHTMLElements } from "svelte/elements";
 import type { Attachment } from "svelte/attachments";
 import Toc from "virtual:icons/lucide/table-of-contents";
-import Dropdown from "../Dropdown.svelte";
-import { t } from "../../l10n.svelte.ts";
+import Dropdown from "../components/Dropdown.svelte";
+import { t } from "../l10n.svelte.ts";
 import type { Snippet } from "svelte";
 import { Portal } from "@jsrob/svelte-portal";
 
-const {
-	col1,
-	col2,
-	col3,
-	main = false,
+let {
+	left,
+	hideLeft = $bindable(false),
+	children,
+	right,
+	hideRight = $bindable(false),
 	...rest
 }: SvelteHTMLElements["div"] & {
-	col1: Snippet;
-	col2: Snippet;
-	col3: Snippet;
-	main: boolean;
+	left?: Snippet;
+	hideLeft?: boolean;
+	children?: Snippet;
+	right?: Snippet;
+	hideRight?: boolean;
 } = $props();
-
-let hideLeft = $state(false);
-let hideRight = $state(false);
 
 const layout: Attachment = (div) => {
 	const parentRect = div.getBoundingClientRect();
@@ -57,13 +57,13 @@ const layout: Attachment = (div) => {
 		}
 	}
 
-	layoutNotes();
-	const obs = new ResizeObserver(layoutNotes);
-	obs.observe(div);
-
-	return () => {
-		obs.disconnect();
-	};
+	// layoutNotes();
+	// const obs = new ResizeObserver(layoutNotes);
+	// obs.observe(div);
+	//
+	// return () => {
+	// 	obs.disconnect();
+	// };
 };
 </script>
 
@@ -80,41 +80,37 @@ const layout: Attachment = (div) => {
 				<Toc />
 			{/snippet}
 			{#snippet dropdown()}
-				<Dropdown label={t("Reader menu")} {icon}>
-					{@render col1()}
+				<Dropdown label={t("Left column")} {icon}>
+					{@render left?.()}
 				</Dropdown>
 			{/snippet}
-			{#if main}
-				<Portal target="#headerLeft">
-					{@render dropdown()}
-				</Portal>
-			{:else}
+			<Portal target="#headerLeft">
 				{@render dropdown()}
-			{/if}
+			</Portal>
 		{:else}
-			{@render col1()}
+			{@render left?.()}
 		{/if}
 	</aside>
 	<div></div>
 	<main>
-		{@render col2()}
+		{@render children?.()}
 	</main>
 	<div></div>
 	<aside class="right">
-		{@render col3()}
+		{@render right?.()}
 	</aside>
 </div>
 
 <style>
 .grid {
 	display: grid;
-	grid-template-columns: var(--grid-template-columns);
+	grid-template-columns: 1fr --spacing(8) 55% --spacing(8) 1fr;
 	position: relative;
 
 	& > .left {
 		position: sticky;
-		top: var(--header-height);
-		max-height: calc(100vh - var(--header-height));
+		top: calc(var(--header-height) + --spacing(2));
+		max-height: calc(100vh - var(--header-height) - --spacing(2));
 		z-index: 2;
 		padding: 0 --spacing(2);
 	}

@@ -1,20 +1,30 @@
 <script lang="ts">
 // https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/
 import type { Snippet } from "svelte";
-import { computePosition, shift, flip, type Placement } from "@floating-ui/dom";
+import {
+	computePosition,
+	shift,
+	flip,
+	autoUpdate,
+	type Placement,
+} from "@floating-ui/dom";
 
 let {
 	label,
 	icon,
 	expanded = $bindable(false),
+	relayout = $bindable(1),
 	children,
 	placement = "bottom-start",
+	autoUpdate: doAutoUpdate = false,
 }: {
 	label: string;
 	icon: Snippet;
 	expanded?: boolean;
+	relayout?: number;
 	children: Snippet;
-	placement?: Placement
+	placement?: Placement;
+	autoUpdate?: boolean;
 } = $props();
 
 const id = $props.id();
@@ -23,28 +33,34 @@ let pos = $state({ left: 0, top: 0 });
 
 $effect(() => {
 	if (!expanded) return;
-
-	const computed = getComputedStyle(document.body);
-	const remToPx = (rem: string) =>
-		parseFloat(rem) * parseFloat(computed.fontSize);
-	const spacing = remToPx(computed.getPropertyValue("--spacing-inc"));
+	relayout;
 
 	const reference = div.firstElementChild as HTMLButtonElement;
 	const floating = div.lastElementChild as HTMLDivElement;
 
-	computePosition(reference, floating, {
-		placement,
-		middleware: [
-			flip(),
-			shift({
-				padding: spacing * 4,
-				mainAxis: true,
-				crossAxis: true,
-			}),
-		],
-	}).then(({ x, y }) => {
-		pos = { left: x, top: y };
-	});
+	function updatePosition() {
+		const computed = getComputedStyle(document.body);
+		const remToPx = (rem: string) =>
+			parseFloat(rem) * parseFloat(computed.fontSize);
+		const spacing = remToPx(computed.getPropertyValue("--spacing-inc"));
+
+		computePosition(reference, floating, {
+			placement,
+			middleware: [
+				flip(),
+				shift({
+					padding: spacing * 4,
+					mainAxis: true,
+					crossAxis: true,
+				}),
+			],
+		}).then(({ x, y }) => {
+			pos = { left: x, top: y };
+		});
+	}
+
+	if (doAutoUpdate) return autoUpdate(reference, floating, updatePosition);
+	else updatePosition();
 });
 </script>
 
@@ -96,7 +112,7 @@ $effect(() => {
 </div>
 
 <style>
-.dropdown > button[aria-expanded="false"] ~ [role='tooltip'] {
+.dropdown > button[aria-expanded="false"] ~ [role="tooltip"] {
 	display: none;
 }
 </style>

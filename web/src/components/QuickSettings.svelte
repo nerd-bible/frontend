@@ -1,11 +1,13 @@
 <script lang="ts">
 import { settings, themes } from "../settings.svelte";
 import { t } from "../l10n.svelte.ts";
-import { p, route } from "../routes.ts";
+import { p } from "../routes.ts";
 import Select from "./Select.svelte";
+
+let { tmpFontSize = $bindable(settings.fontSize) } = $props();
 </script>
 
-<form class="table">
+<form class="table" style={`--font-size:${tmpFontSize}px`}>
 	<!-- <label> -->
 	<!-- 	<span>{t("Language")}</span> -->
 	<!-- 	<Select name="locale" bind:value={settings.locale}> -->
@@ -34,6 +36,7 @@ import Select from "./Select.svelte";
 				max="48"
 				step="2"
 				bind:value={settings.fontSize}
+				onchange={ev => (tmpFontSize = +ev.currentTarget.value)}
 			/>
 		</div>
 	</label>
@@ -61,6 +64,7 @@ import Select from "./Select.svelte";
 
 <style>
 form {
+	font-size: var(--font-size);
 	padding: --spacing(2) 0;
 	width: --spacing(84);
 }

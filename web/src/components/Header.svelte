@@ -4,6 +4,7 @@ import Dropdown from "./Dropdown.svelte";
 import QuickSettings from "./QuickSettings.svelte";
 import { t } from "../l10n.svelte.ts";
 import Logo from "../../img/logo.svg?raw";
+import { settings } from "../settings.svelte.ts";
 
 let headerRef: HTMLElement;
 let lastScrollY = window.scrollY;
@@ -18,6 +19,7 @@ function onScroll() {
 	);
 	lastScrollY = window.scrollY;
 }
+let tmpFontSize = $state(settings.fontSize);
 </script>
 
 <svelte:document onscroll={onScroll} />
@@ -43,8 +45,13 @@ function onScroll() {
 		<Menu />
 	{/snippet}
 	<div>
-		<Dropdown label={t("Main menu")} placement="bottom-end" {icon}>
-			<QuickSettings />
+		<Dropdown
+			label={t("Main menu")}
+			placement="bottom-end"
+			{icon}
+			relayout={tmpFontSize}
+		>
+			<QuickSettings bind:tmpFontSize />
 		</Dropdown>
 	</div>
 </header>
@@ -88,10 +95,6 @@ header {
 		& > input {
 			width: 100%;
 			padding: --spacing(2) --spacing(3.2);
-			background: var(--color-bg-200);
-			&:hover, &:focus {
-				border-color: var(--color-focus-200);
-			}
 		}
 	}
 }
