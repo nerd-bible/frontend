@@ -18,6 +18,10 @@
 
 	--drop-shadow-xl: 0 9px 7px rgb(0 0 0 / 0.1);
 
+	--layout-padding-x: calc(max(0px, calc((100vw - 1600px) / 2)) + --spacing(4));
+	/* for sticky sidebars and scroll margin */
+	--header-height: calc(1rem + --spacing(12));
+
 	/* light */
 	--color-fg-50: var(--color-gray-950);
 	--color-fg-100: var(--color-gray-900);

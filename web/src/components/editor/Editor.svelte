@@ -139,7 +139,7 @@ function highlightNote(ele: HTMLElement) {
 	<Layout {col1} {col2} {col3} {main} />
 
 	<div
-		class="tooltip"
+		role="tooltip"
 		bind:this={tooltipRef}
 		style:top={tooltipPos.top + "px"}
 		style:left={tooltipPos.left + "px"}

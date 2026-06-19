@@ -85,7 +85,8 @@ $effect(() => {
 		{@render icon()}
 	</button>
 	<div
-		class="scrollable tooltip"
+		role="tooltip"
+		class="scrollable"
 		{id}
 		style:top={pos.top + "px"}
 		style:left={pos.left + "px"}
@@ -95,7 +96,7 @@ $effect(() => {
 </div>
 
 <style>
-.dropdown > button[aria-expanded="false"] ~ .tooltip {
+.dropdown > button[aria-expanded="false"] ~ [role='tooltip'] {
 	display: none;
 }
 </style>

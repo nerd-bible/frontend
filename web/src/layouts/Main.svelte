@@ -14,20 +14,8 @@ let title = $derived.by(() => titleFromRoute(route.params, route.meta));
 	<Header />
 	{@render children()}
 </div>
-
 <style>
-div {
-	--layout-padding-x: --spacing(4);
-	padding: 0 var(--layout-padding-x);
-	width: calc(150ch + --spacing(16));
-
-	--grid-template-columns: 1fr --spacing(8) 55% --spacing(8) 1fr;
-	--grid-template-areas: "l s1 m s2 r";
-}
-
-@media (width > 150ch) {
-	:global(body) {
-		justify-content: center;
-	}
+div > :global(*) {
+	padding-inline: var(--layout-padding-x);
 }
 </style>

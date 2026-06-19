@@ -227,7 +227,6 @@ option,
 	color: inherit; /* 1 */
 	background-color: transparent; /* 3 */
 	opacity: 1; /* 4 */
-	border: 0.1rem solid var(--color-fg-600);
 	background: var(--color-bg-100);
 
 	&:hover, &:focus, &.active {
@@ -379,7 +378,7 @@ mark {
 	color: inherit;
 }
 
-*:has(.tooltip) {
+:root {
 	--tmp-bg-100: var(--color-bg-100);
 	--tmp-bg-200: var(--color-bg-200);
 	--tmp-bg-300: var(--color-bg-300);
@@ -392,7 +391,7 @@ mark {
 	--tmp-bg-950: var(--color-bg-950);
 }
 
-.tooltip {
+[role='tooltip'] {
 	display: flex;
 	position: absolute;
 	background: var(--color-bg-50);
@@ -407,7 +406,6 @@ mark {
 	/* above other editor content but below header */
 	z-index: 2;
 
-	--color-bg-50: var(--tmp-bg-100);
 	--color-bg-100: var(--tmp-bg-200);
 	--color-bg-200: var(--tmp-bg-300);
 	--color-bg-300: var(--tmp-bg-400);
@@ -416,7 +414,6 @@ mark {
 	--color-bg-600: var(--tmp-bg-700);
 	--color-bg-700: var(--tmp-bg-800);
 	--color-bg-800: var(--tmp-bg-900);
-	--color-bg-900: var(--tmp-bg-950);
 }
 
 .fadedown {

@@ -28,10 +28,8 @@ function onScroll() {
 	onpointerenter={() => (pointerOver = true)}
 	onpointerleave={() => (pointerOver = false)}
 >
-	<div class="l">
-		<div id="headerLeft"></div>
-		{@html Logo}
-	</div>
+	<div id="headerLeft"></div>
+	{@html Logo}
 	<search>
 		<!-- svelte-ignore a11y_autofocus -->
 		<input
@@ -44,63 +42,56 @@ function onScroll() {
 	{#snippet icon()}
 		<Menu />
 	{/snippet}
-	<Dropdown label={t("Main menu")} placement="bottom-end" {icon}>
-		<QuickSettings />
-	</Dropdown>
+	<div>
+		<Dropdown label={t("Main menu")} placement="bottom-end" {icon}>
+			<QuickSettings />
+		</Dropdown>
+	</div>
 </header>
 
 <style>
 header {
+	height: var(--header-height);
+
+	place-items: center;
 	display: grid;
-	grid-template-columns: var(--grid-template-columns);
-	grid-template-areas: var(--grid-template-areas);
-	background: var(--color-bg-50);
+	grid-template-columns: min-content min-content 1fr min-content;
+	background: var(--color-bg-100);
 	/* dont affect selection in body */
 	user-select: none;
 	/* create stacking context above main */
 	z-index: 10;
-	width: 100%;
 
 	position: sticky;
 	top: 0;
-	padding: --spacing(4) 0;
 	border-radius: 0;
+	border-bottom: 1px solid var(--color-fg-800);
 
-	& > .l {
-		grid-area: l;
-		justify-self: start;
-		display: flex;
-		align-items: center;
-		gap: --spacing(2);
-
-		:global(svg) {
-			height: 90%;
+	& > div > :global(.dropdown > button) {
+		padding: --spacing(1);
+		& > :global(svg) {
+			width: 1.6em;
+			height: 1.6em;
 		}
+	}
+
+	& > :global(svg) {
+		height: 2.5em;
+		padding-inline-start: --spacing(3);
 	}
 
 	& > search {
-		display: flex;
-		align-items: center;
-		grid-area: m;
+		width: 100%;
+		max-width: 1000px;
+		padding: 0 --spacing(4);
 
 		& > input {
-			text-align: center;
-
-			&:focus {
-				text-align: start;
-			}
 			width: 100%;
-			padding: --spacing(2);
-		}
-	}
-
-	& > :global(.dropdown) {
-		height: 100%;
-		justify-self: end;
-		grid-area: r;
-
-		& > :global(button) {
-			height: 100%;
+			padding: --spacing(2) --spacing(3.2);
+			background: var(--color-bg-200);
+			&:hover, &:focus {
+				border-color: var(--color-focus-200);
+			}
 		}
 	}
 }

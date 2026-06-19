@@ -5,11 +5,9 @@
 
 :root {
 	font-family: var(--font-sans);
-	background: var(--color-bg-50);
-	color: var(--color-fg-50);
-
-	/* for sticky sidebars and scroll margin */
-	--header-height: calc(1rem + --spacing(14));
+	background: var(--color-bg-100);
+	color: var(--color-fg-100);
+	scrollbar-gutter: stable;
 }
 
 :root, .scrollable {
@@ -20,10 +18,6 @@
 	[id] {
 		scroll-margin-top: var(--header-height);
 	}
-}
-
-body {
-	display: flex;
 }
 
 noscript > h1 {
