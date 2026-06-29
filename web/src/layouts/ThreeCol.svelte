@@ -71,11 +71,13 @@ $effect(() => showHide());
 				{#snippet icon()}
 					<Toc />
 				{/snippet}
-				{@render left?.()}
+				<div class="scrollable">
+					{@render left?.()}
+				</div>
 			</Dropdown>
 		</Portal>
 	{:else}
-		<aside class="left">
+		<aside class="left scrollable">
 			{@render left?.()}
 		</aside>
 	{/if}
@@ -131,5 +133,7 @@ $effect(() => showHide());
 		grid-area: right;
 	}
 }
-
+.scrollable {
+	margin: --spacing(2);
+}
 </style>

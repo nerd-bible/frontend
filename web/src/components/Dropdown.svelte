@@ -102,7 +102,6 @@ $effect(() => {
 	</button>
 	<div
 		role="tooltip"
-		class="scrollable"
 		{id}
 		style:top={pos.top + "px"}
 		style:left={pos.left + "px"}

@@ -47,7 +47,6 @@ section {
 	--border-size: --spacing(1);
 	--border-color: var(--color-bg-200);
 	--border: var(--border-size) solid var(--border-color);
-	height: fit-content; /** fix sticky */
 }
 [role="tablist"] {
 	position: sticky;
@@ -60,8 +59,7 @@ section {
 	padding-bottom: --spacing(4);
 }
 [role="tabpanel"] {
-	padding: --spacing(4);
-					padding-top: 0;
+	padding: 0 --spacing(4);
 }
 li {
 	padding: --spacing(1);
