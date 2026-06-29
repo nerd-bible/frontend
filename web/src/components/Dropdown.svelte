@@ -8,6 +8,7 @@ import {
 	autoUpdate,
 	type Placement,
 } from "@floating-ui/dom";
+import { spacing } from "../helpers.ts";
 
 let {
 	label,
@@ -39,17 +40,12 @@ $effect(() => {
 	const floating = div.lastElementChild as HTMLDivElement;
 
 	function updatePosition() {
-		const computed = getComputedStyle(document.body);
-		const remToPx = (rem: string) =>
-			parseFloat(rem) * parseFloat(computed.fontSize);
-		const spacing = remToPx(computed.getPropertyValue("--spacing-inc"));
-
 		computePosition(reference, floating, {
 			placement,
 			middleware: [
 				flip(),
 				shift({
-					padding: spacing * 4,
+					padding: spacing(4),
 					mainAxis: true,
 					crossAxis: true,
 				}),

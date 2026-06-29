@@ -71,7 +71,9 @@ header {
 	position: sticky;
 	top: 0;
 	border-radius: 0;
-	border-bottom: 1px solid var(--color-fg-800);
+	border-bottom: 1px solid var(--color-fg-700);
+	margin-inline: 0;
+	padding-inline: var(--layout-padding-x);
 
 	& > div > :global(.dropdown > button) {
 		padding: --spacing(1);

@@ -1,12 +1,23 @@
 <script lang="ts">
 let {
 	value = $bindable(),
-	context,
+	min = $bindable(0),
+	max = $bindable(Number.MAX_VALUE),
 	multiplier = 1,
-}: { value: number; context: HTMLDivElement; multiplier?: number } = $props();
+}: {
+	value: number;
+	min?: number;
+	max?: number;
+	context: HTMLDivElement;
+	multiplier?: number;
+} = $props();
 
 let start: undefined | number;
 let startValue: undefined | number;
+
+function clamp(n: number) {
+	return Math.max(Math.min(n, max), min);
+}
 
 function onpointerdown(ev: PointerEvent) {
 	ev.preventDefault();
@@ -18,11 +29,10 @@ function onpointerdown(ev: PointerEvent) {
 function onpointermove(ev: PointerEvent) {
 	if (start == null || startValue == null) return;
 	const dPx = (ev.clientX - start) * multiplier;
-	const dPercent = dPx / context.clientWidth;
-	value = Math.max(0, startValue + dPercent);
+	value = clamp(startValue + dPx);
 }
 
-function onpointerup(ev: PointerEvent) {
+function onpointerup() {
 	start = undefined;
 	document.body.style.cursor = "";
 }

@@ -1,84 +1,90 @@
 <script lang="ts">
 // Reponsive 3-column layout with features
 // https://en.wikipedia.org/wiki/Holy_grail_(web_design)
+import { untrack, type Snippet } from "svelte";
 import type { SvelteHTMLElements } from "svelte/elements";
 import type { Attachment } from "svelte/attachments";
 import Toc from "virtual:icons/lucide/table-of-contents";
 import Dropdown from "../components/Dropdown.svelte";
 import { t } from "../l10n.svelte.ts";
-import type { Snippet } from "svelte";
 import { Portal } from "@jsrob/svelte-portal";
 import Resizer from "../components/Resizer.svelte";
+import { spacing } from "../helpers.ts";
+
+type Col = {
+	value: number;
+	min: number;
+	max?: number;
+};
 
 let {
 	left,
-	hideLeft = $bindable(false),
-	leftWidth = $bindable(0.2),
-	leftMinPx = 250,
+	leftCol = $bindable({ min: 270, value: 300 }),
 	children,
 	centerMinPx = 300,
 	right,
-	hideRight = $bindable(false),
-	rightWidth = $bindable(0.2),
-	rightMinPx = 300,
+	rightCol = $bindable({ min: 300, value: 400 }),
 	layout: userLayout = () => {},
 	...rest
 }: SvelteHTMLElements["div"] & {
 	left?: Snippet;
-	hideLeft?: boolean;
-	leftWidth?: number;
-	leftMinPx?: number;
+	leftCol?: Col;
 	children?: Snippet;
 	centerMinPx?: number;
 	right?: Snippet;
-	hideRight?: boolean;
-	rightWidth?: number;
-	rightMinPx?: number;
+	rightCol?: Col;
 	layout?: (div: HTMLDivElement) => void;
 } = $props();
 // svelte-ignore non_reactive_update
 let div: HTMLDivElement;
 
-const leftWidthVisible = $derived(hideLeft ? 0 : leftWidth);
-const rightWidthVisible = $derived(hideRight ? 0 : rightWidth);
-const centerWidthVisible = $derived(1 - leftWidth - rightWidth);
+let leftDividerWidth = $state(0);
+let rightDividerWidth = $state(0);
+let available = $state(0);
 
-let showLeftDivider = $state(false);
-let showRightDivider = $state(false);
-
-function showHide() {
+function layout() {
 	const { clientWidth } = div;
-	hideLeft = clientWidth * leftWidth < leftMinPx;
-	hideRight = clientWidth * rightWidth < rightMinPx;
-	let available = clientWidth - centerMinPx;
-	if (!hideLeft) available -= leftWidthVisible * clientWidth;
-	if (!hideRight) available -= rightWidthVisible * clientWidth;
+	const dividerWidth = untrack(() => spacing(4));
+	leftDividerWidth = rightDividerWidth = dividerWidth;
 
-	showLeftDivider = Boolean(leftWidthVisible) || available > leftMinPx;
-	showRightDivider = Boolean(rightWidthVisible) || available > rightMinPx;
+	let nextAvailable = clientWidth - centerMinPx;
+	if (leftCol.value && nextAvailable >= leftCol.value) {
+		nextAvailable -= leftCol.value - leftDividerWidth;
+	} else leftCol.value = 0;
+	if (rightCol.value && nextAvailable >= rightCol.value) {
+		nextAvailable -= rightCol.value - rightDividerWidth;
+	} else rightCol.value = 0;
+
+	if (!leftCol.value && nextAvailable <= leftCol.min + dividerWidth) leftDividerWidth = 0;
+	else nextAvailable -= dividerWidth;
+	if (!rightCol.value && nextAvailable <= rightCol.min + dividerWidth) rightDividerWidth = 0;
+	else nextAvailable -= dividerWidth;
+
+	available = nextAvailable;
 	userLayout(div);
 }
 
-const layout: Attachment = (div) => {
-	const obs = new ResizeObserver(showHide);
+const attachment: Attachment = (div) => {
+	const obs = new ResizeObserver(layout);
 	obs.observe(div);
-	return () => (obs.disconnect());
+	return () => obs.disconnect();
 };
 
-$effect(() => showHide());
+$effect(() => layout());
 </script>
 
 <div
 	class="grid"
-	style:--left-width={leftWidthVisible * 100 + "%"}
-	style:--left-resizer-width={showLeftDivider ? 4 : 0}
-	style:--right-width={rightWidthVisible * 100 + "%"}
-	style:--right-resizer-width={showRightDivider ? 4 : 0}
+	style:grid-template-columns={`${leftCol.value}px ${leftDividerWidth}px 1fr ${rightDividerWidth}px ${rightCol.value}px`}
 	{...rest}
 	bind:this={div}
-	{@attach layout}
+	{@attach attachment}
 >
-	{#if hideLeft}
+	{#if leftCol.value}
+		<aside class="left scrollable">
+			{@render left?.()}
+		</aside>
+	{:else}
 		<Portal target="#headerLeft">
 			<Dropdown label={t("Left column")}>
 				{#snippet icon()}
@@ -89,34 +95,35 @@ $effect(() => showHide());
 				</div>
 			</Dropdown>
 		</Portal>
-	{:else}
-		<aside class="left scrollable">
-			{@render left?.()}
-		</aside>
 	{/if}
 	<div class="resizer-left">
-		<Resizer bind:value={leftWidth} min={leftMinPx} context={div} />
+		<Resizer
+			bind:value={() => leftCol.value, v => leftCol.value = v < leftCol.min ? 0 : v}
+			context={div}
+			max={leftCol.value + available}
+		/>
 	</div>
 	<main>
 		{@render children?.()}
 	</main>
-	{#if !hideRight}
+	{#if rightCol.value}
 		<aside class="right">
 			{@render right?.()}
 		</aside>
 	{/if}
 	<div class="resizer-right">
-		<Resizer bind:value={rightWidth} context={div} multiplier={-1} />
+		<Resizer
+			bind:value={() => rightCol.value, v => rightCol.value = v < rightCol.min ? 0 : v}
+			context={div}
+			max={rightCol.value + available}
+			multiplier={-1}
+		/>
 	</div>
 </div>
 
 <style>
 .grid {
 	display: grid;
-	grid-template-columns:
-		var(--left-width) --spacing(var(--left-resizer-width))
-		1fr
-		--spacing(var(--right-resizer-width)) var(--right-width);
 	grid-template-areas: "left leftResizer main rightResizer right";
 	position: relative;
 
