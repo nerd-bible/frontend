@@ -16,6 +16,7 @@ let {
 	leftWidth = $bindable(0.2),
 	leftMinPx = 250,
 	children,
+	centerMinPx = 300,
 	right,
 	hideRight = $bindable(false),
 	rightWidth = $bindable(0.2),
@@ -28,6 +29,7 @@ let {
 	leftWidth?: number;
 	leftMinPx?: number;
 	children?: Snippet;
+	centerMinPx?: number;
 	right?: Snippet;
 	hideRight?: boolean;
 	rightWidth?: number;
@@ -39,10 +41,21 @@ let div: HTMLDivElement;
 
 const leftWidthVisible = $derived(hideLeft ? 0 : leftWidth);
 const rightWidthVisible = $derived(hideRight ? 0 : rightWidth);
+const centerWidthVisible = $derived(1 - leftWidth - rightWidth);
+
+let showLeftDivider = $state(false);
+let showRightDivider = $state(false);
 
 function showHide() {
-	hideLeft = div.clientWidth * leftWidth < leftMinPx;
-	hideRight = div.clientWidth * rightWidth < rightMinPx;
+	const { clientWidth } = div;
+	hideLeft = clientWidth * leftWidth < leftMinPx;
+	hideRight = clientWidth * rightWidth < rightMinPx;
+	let available = clientWidth - centerMinPx;
+	if (!hideLeft) available -= leftWidthVisible * clientWidth;
+	if (!hideRight) available -= rightWidthVisible * clientWidth;
+
+	showLeftDivider = Boolean(leftWidthVisible) || available > leftMinPx;
+	showRightDivider = Boolean(rightWidthVisible) || available > rightMinPx;
 	userLayout(div);
 }
 
@@ -58,9 +71,9 @@ $effect(() => showHide());
 <div
 	class="grid"
 	style:--left-width={leftWidthVisible * 100 + "%"}
-	style:--left-resizer-width={4}
+	style:--left-resizer-width={showLeftDivider ? 4 : 0}
 	style:--right-width={rightWidthVisible * 100 + "%"}
-	style:--right-resizer-width={4}
+	style:--right-resizer-width={showRightDivider ? 4 : 0}
 	{...rest}
 	bind:this={div}
 	{@attach layout}
@@ -71,7 +84,7 @@ $effect(() => showHide());
 				{#snippet icon()}
 					<Toc />
 				{/snippet}
-				<div class="scrollable">
+				<div class="scrollable m2">
 					{@render left?.()}
 				</div>
 			</Dropdown>
@@ -133,7 +146,7 @@ $effect(() => showHide());
 		grid-area: right;
 	}
 }
-.scrollable {
+.m2 {
 	margin: --spacing(2);
 }
 </style>

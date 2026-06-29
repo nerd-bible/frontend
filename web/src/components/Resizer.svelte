@@ -16,7 +16,7 @@ function onpointerdown(ev: PointerEvent) {
 }
 
 function onpointermove(ev: PointerEvent) {
-	if (start == null) return;
+	if (start == null || startValue == null) return;
 	const dPx = (ev.clientX - start) * multiplier;
 	const dPercent = dPx / context.clientWidth;
 	value = Math.max(0, startValue + dPercent);
@@ -24,7 +24,7 @@ function onpointermove(ev: PointerEvent) {
 
 function onpointerup(ev: PointerEvent) {
 	start = undefined;
-	document.body.style.cursor = undefined;
+	document.body.style.cursor = "";
 }
 </script>
 

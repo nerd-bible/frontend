@@ -7,7 +7,7 @@ import Select from "./Select.svelte";
 let { tmpFontSize = $bindable(settings.fontSize) } = $props();
 </script>
 
-<form class="table" style:--font-size="${tmpFontSize + 'px'}">
+<form class="table" style:--font-size={tmpFontSize + 'px'}>
 	<!-- <label> -->
 	<!-- 	<span>{t("Language")}</span> -->
 	<!-- 	<Select name="locale" bind:value={settings.locale}> -->
