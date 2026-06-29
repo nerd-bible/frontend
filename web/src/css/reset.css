@@ -230,7 +230,6 @@ option,
 	opacity: 1; /* 4 */
 
 	&:hover, &:focus, &.active {
-		background: inherit;
 		@apply box-focus;
 	}
 }
@@ -366,7 +365,7 @@ form.table {
 	}
 
 	& > *:hover {
-		background: var(--color-bg-100);
+		background: var(--color-bg-200);
 	}
 
 	input {

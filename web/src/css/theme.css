@@ -92,11 +92,11 @@
 	}
 }
 
-@media (prefers-reduced-motion: no-preference) {
-	* {
-		transition: background 200ms linear;
-	}
-}
+/* @media (prefers-reduced-motion: no-preference) { */
+/* 	* { */
+/* 		transition: background 200ms linear; */
+/* 	} */
+/* } */
 
 /* .sr-only { */
 /* 	position:absolute; */

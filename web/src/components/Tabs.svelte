@@ -78,8 +78,5 @@ button {
 	padding: --spacing(1);
 	background: none;
 	outline-offset: 0;
-	&:where(:focus, :hover) {
-		background: var(--color-bg-100);
-	}
 }
 </style>
