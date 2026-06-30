@@ -373,7 +373,7 @@ form.table {
 		min-width: 2ch;
 	}
 	input:not([type='checkbox']), select {
-		width: 12ch;
+		min-width: 12ch;
 	}
 }
 

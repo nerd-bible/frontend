@@ -4,12 +4,14 @@ let {
 	min = $bindable(0),
 	max = $bindable(Number.MAX_VALUE),
 	multiplier = 1,
+	disabled = false,
 }: {
 	value: number;
 	min?: number;
 	max?: number;
 	context: HTMLDivElement;
 	multiplier?: number;
+	disabled?: boolean;
 } = $props();
 
 let start: undefined | number;
@@ -21,6 +23,7 @@ function clamp(n: number) {
 
 function onpointerdown(ev: PointerEvent) {
 	ev.preventDefault();
+	if (disabled) return;
 	start = ev.clientX;
 	startValue = value;
 	document.body.style.cursor = "ew-resize";
@@ -40,19 +43,21 @@ function onpointerup() {
 
 <svelte:document {onpointermove} {onpointerup} onpointercancel={onpointerup} />
 
-<div class="resizer" role="separator" {onpointerdown}></div>
+<div class:disabled={disabled} class="resizer" role="separator" {onpointerdown}></div>
 
 <style>
 .resizer {
 	width: 100%;
 	height: 100%;
-	cursor: ew-resize;
-	background: linear-gradient(
-		to right,
-		transparent 45%,
-		var(--color-bg-200) 50%,
-		transparent 55%
-	);
+	&:not(.disabled) {
+		cursor: ew-resize;
+		background: linear-gradient(
+			to right,
+			transparent 45%,
+			var(--color-bg-200) 50%,
+			transparent 55%
+		);
+	}
 	position: sticky;
 	top: 0;
 	touch-action: none;

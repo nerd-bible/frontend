@@ -18,7 +18,8 @@
 
 	--drop-shadow-xl: 0 9px 7px rgb(0 0 0 / 0.1);
 
-	--layout-padding-x: calc(max(0px, calc((100vw - 1600px) / 2)) + --spacing(4));
+	--page-width: 1600px;
+	--layout-padding-x: calc(max(0px, calc((100vw - var(--page-width)) / 2)) + --spacing(4));
 	/* for sticky sidebars and scroll margin */
 	--header-height: calc(1rem + --spacing(12));
 

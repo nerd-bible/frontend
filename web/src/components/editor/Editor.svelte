@@ -122,7 +122,11 @@ function layoutNotes(div: HTMLElement) {
 	}}
 />
 
-<ThreeCol layout={layoutNotes}>
+<ThreeCol
+	layout={layoutNotes}
+	bind:leftCol={settings.leftCol}
+	bind:rightCol={settings.rightCol}
+>
 	{#snippet left()}
 		<Tabs
 			items={[

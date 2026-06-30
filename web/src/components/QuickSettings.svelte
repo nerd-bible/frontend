@@ -53,6 +53,19 @@ let { tmpFontSize = $bindable(settings.fontSize) } = $props();
 			/>
 		</div>
 	</label>
+	<label>
+		<span>{t("Page width")}</span>
+		<div class="io">
+			<output>{settings.pageWidth}</output>
+			<input
+				type="range"
+				min="600"
+				max="3000"
+				step="1"
+				bind:value={settings.pageWidth}
+			/>
+		</div>
+	</label>
 	<a href={p("/catalog")}>
 		<span>{t("Catalog")}</span>
 	</a>

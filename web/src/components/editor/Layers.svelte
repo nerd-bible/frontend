@@ -1,18 +1,23 @@
 <script lang="ts">
 import { settings } from "../../settings.svelte";
 import { t } from "../../l10n.svelte";
-import Plus from "virtual:icons/lucide/plus";
+import Select from "../Select.svelte";
+// import Plus from "virtual:icons/lucide/plus";
 // import Trash from "virtual:icons/lucide/trash";
-
-const notesId = $props.id();
 </script>
 
 <form class="table">
-	<label for={notesId}>
-		<h2>{t("Notes")}</h2>
-		<!-- <button type="button">+</button> -->
-	</label>
-	<ul id={notesId}>
+	<h2>{t("Outline")}</h2>
+	<!-- <button type="button">+</button> -->
+	<Select bind:value={settings.showOutline} name="outline">
+		<option value={true}>Publisher</option>
+		<option value={false}>{t("None")}</option>
+	</Select>
+
+	<h2>{t("Notes")}</h2>
+	<!-- <button type="button">+</button> -->
+
+	<ul>
 		{#each ["Publisher"] as r}
 			<li>
 				<label>
@@ -26,7 +31,7 @@ const notesId = $props.id();
 
 <style>
 form {
-	& > *[for]:hover {
+	h2:hover, :global(.select:hover) {
 		background: none;
 	}
 	h2 {

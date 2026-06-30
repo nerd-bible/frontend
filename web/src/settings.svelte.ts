@@ -14,6 +14,7 @@ export const initial = {
 	theme: "System",
 	fontSize: parseFloat(getComputedStyle(document.body).fontSize),
 	lineHeight: 1.5,
+	pageWidth: 1600,
 	// Reader settings
 	showDropCaps: true,
 	showOutline: true,
@@ -21,6 +22,9 @@ export const initial = {
 	showVerseNum: false,
 	showFootnotes: true,
 	justifyText: false,
+	lockLayout: false,
+	leftCol: 300,
+	rightCol: 400,
 };
 export const length = $state({ n: storage.length });
 
@@ -61,7 +65,15 @@ $effect.root(() => {
 	}
 	$effect(() => {
 		document.documentElement.className = settings.theme.toLowerCase();
+	});
+	$effect(() => {
 		document.documentElement.style.setProperty("--font-size", settings.fontSize + "px");
+	});
+	$effect(() => {
+		document.documentElement.style.setProperty("--line-height", settings.lineHeight.toString());
+	});
+	$effect(() => {
+		document.documentElement.style.setProperty("--page-width", settings.pageWidth + "px");
 	});
 });
 

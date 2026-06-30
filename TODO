@@ -31,14 +31,16 @@
 			- [x] mobile
 			- [x] sticky header
 			- [x] sticky sidebar
-			- [ ] cleanup
+			- [~] cleanup
 				- [x] borders
 				- [x] bigger header buttons
-				- [ ] outline selection to layers
-				- [ ] line height
-				- [ ] adjust page width
-				- [ ] lock layout
-				- [ ] autosave layout
+				- [x] outline selection to layers
+				- [x] fix view+layers extra padding
+				- [x] line height
+				- [x] adjust page width
+				- [x] lock layout
+				- [x] autosave layout
+				- [ ] ghost resizer for collapsing/uncollapsing
 		- [x] quick settings
 			- [x] convert dropdown
 			- [x] reusable responsive table layout w/o compromise

@@ -23,6 +23,7 @@ let {
 div {
 	display: inline-grid;
 	grid-template-areas: "overlay";
+	grid-template-columns: 1fr;
 	gap: --spacing(2);
 
 	& > * {
@@ -37,7 +38,7 @@ span {
 }
 select {
 	appearance: none;
-	min-width: 10ch;
+	min-width: 12ch;
 	padding: --spacing(2);
 	cursor: pointer;
 }

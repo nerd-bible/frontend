@@ -58,9 +58,6 @@ section {
 	flex-wrap: nowrap;
 	padding-bottom: --spacing(4);
 }
-[role="tabpanel"] {
-	padding: 0 --spacing(4);
-}
 li {
 	padding: --spacing(1);
 

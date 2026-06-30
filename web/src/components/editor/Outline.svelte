@@ -1,7 +1,6 @@
 <script lang="ts">
-import { settings } from "../../settings.svelte";
 import { t } from "../../l10n.svelte";
-import Select from "../Select.svelte";
+import { settings } from "../../settings.svelte";
 
 type Container = [string, (string | Container)[]];
 const toc: (string | Container)[] = [
@@ -173,29 +172,19 @@ const toc: (string | Container)[] = [
 {/snippet}
 
 <div class="outline">
-	<form>
-		<Select bind:value={settings.showOutline} name="outline">
-			<option value={true}>Publisher</option>
-			<option value={false}>{t("None")}</option>
-		</Select>
-	</form>
 	<nav>
 		{#if settings.showOutline}
 			{@render outlineItem(toc)}
+		{:else}
+			{t("Choose an outline in Layers")}
 		{/if}
 	</nav>
 </div>
 
 <style>
-form {
-	padding: --spacing(2) 0 --spacing(4) 0;
+.outline {
+	padding: 0 --spacing(4);
 }
-
-form,
-form > :global(*) {
-	width: 100%;
-}
-
 nav > ul > li {
 	text-indent: --spacing(-2);
 	padding-inline-start: --spacing(2);

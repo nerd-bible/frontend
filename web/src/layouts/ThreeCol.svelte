@@ -9,29 +9,28 @@ import Dropdown from "../components/Dropdown.svelte";
 import { t } from "../l10n.svelte.ts";
 import { Portal } from "@jsrob/svelte-portal";
 import Resizer from "../components/Resizer.svelte";
-
-type Col = {
-	value: number;
-	min: number;
-	max?: number;
-};
+import { settings } from "../settings.svelte.ts";
 
 let {
 	left,
-	leftCol = $bindable({ min: 270, value: 300 }),
+	leftColMin = 270,
+	leftCol = $bindable(300),
 	children,
 	centerMinPx = 300,
 	right,
-	rightCol = $bindable({ min: 300, value: 400 }),
+	rightColMin = 300,
+	rightCol = $bindable(400),
 	layout: userLayout = () => {},
 	...rest
 }: SvelteHTMLElements["div"] & {
 	left?: Snippet;
-	leftCol?: Col;
+	leftColMin?: number;
+	leftCol?: number;
 	children?: Snippet;
 	centerMinPx?: number;
 	right?: Snippet;
-	rightCol?: Col;
+	rightColMin?: number;
+	rightCol?: number;
 	layout?: (div: HTMLDivElement) => void;
 } = $props();
 // svelte-ignore non_reactive_update
@@ -47,17 +46,17 @@ function layout() {
 	leftResizerWidth = rightResizerWidth = dividerWidth;
 
 	let nextAvailable = clientWidth - centerMinPx;
-	if (leftCol.value && nextAvailable >= leftCol.value) {
-		nextAvailable -= leftCol.value - leftResizerWidth;
-	} else leftCol.value = 0;
-	if (rightCol.value && nextAvailable >= rightCol.value) {
-		nextAvailable -= rightCol.value - rightResizerWidth;
-	} else rightCol.value = 0;
+	if (leftCol && nextAvailable >= leftCol) {
+		nextAvailable -= leftCol - leftResizerWidth;
+	} else leftCol = 0;
+	if (rightCol && nextAvailable >= rightCol) {
+		nextAvailable -= rightCol - rightResizerWidth;
+	} else rightCol = 0;
 
-	if (!leftCol.value && nextAvailable <= leftCol.min + dividerWidth)
+	if (!leftCol && nextAvailable <= leftColMin + dividerWidth)
 		leftResizerWidth = 0;
 	else nextAvailable -= dividerWidth;
-	if (!rightCol.value && nextAvailable <= rightCol.min + dividerWidth)
+	if (!rightCol && nextAvailable <= rightColMin + dividerWidth)
 		rightResizerWidth = 0;
 	else nextAvailable -= dividerWidth;
 
@@ -76,15 +75,15 @@ $effect(() => layout());
 
 <div
 	class="grid"
-	style:--left-width={leftCol.value + "px"}
+	style:--left-width={leftCol + "px"}
 	style:--left-resizer-width={leftResizerWidth + "px"}
-	style:--right-width={rightCol.value + "px"}
+	style:--right-width={rightCol + "px"}
 	style:--right-resizer-width={rightResizerWidth + "px"}
 	{...rest}
 	bind:this={div}
 	{@attach attachment}
 >
-	{#if leftCol.value}
+	{#if leftCol}
 		<aside class="left scrollable">
 			{@render left?.()}
 		</aside>
@@ -103,18 +102,19 @@ $effect(() => layout());
 	{#if leftResizerWidth}
 		<div class="resizer-left">
 			<Resizer
+				disabled={settings.lockLayout}
 				bind:value={
-					() => leftCol.value, (v) => (leftCol.value = v < leftCol.min ? 0 : v)
+					() => leftCol, (v) => (leftCol = v < leftColMin ? 0 : v)
 				}
 				context={div}
-				max={leftCol.value + available}
+				max={leftCol + available}
 			/>
 		</div>
 	{/if}
 	<main>
 		{@render children?.()}
 	</main>
-	{#if rightCol.value}
+	{#if rightCol}
 		<aside class="right">
 			{@render right?.()}
 		</aside>
@@ -122,12 +122,13 @@ $effect(() => layout());
 	{#if rightResizerWidth}
 		<div class="resizer-right">
 			<Resizer
+				disabled={settings.lockLayout}
 				bind:value={
-					() => rightCol.value,
-					(v) => (rightCol.value = v < rightCol.min ? 0 : v)
+					() => rightCol,
+					(v) => (rightCol = v < rightColMin ? 0 : v)
 				}
 				context={div}
-				max={rightCol.value + available}
+				max={rightCol + available}
 				multiplier={-1}
 			/>
 		</div>

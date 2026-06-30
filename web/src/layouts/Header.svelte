@@ -23,7 +23,7 @@ let title = $derived.by(() => titleFromRoute(route.params, route.meta));
 	font-size: var(--font-size);
 }
 
-:global(body > *:not(.header)) {
+:global(body > *:not(header)) {
 	line-height: var(--line-height);
 }
 </style>
