@@ -26,15 +26,22 @@
 	- [ ] reactive database
 	- [ ] PRETTY
 		- [ ] arbitrary CSS
-		- [ ] text-align justify
-		- [ ] layout!
+		- [x] text-align justify
+		- [x] layout!
 			- [x] mobile
 			- [x] sticky header
 			- [x] sticky sidebar
 			- [ ] cleanup
-		- [ ] quick settings
-			- [ ] convert dropdown
-			- [ ] reusable responsive table layout w/o compromise
+				- [x] borders
+				- [x] bigger header buttons
+				- [ ] outline selection to layers
+				- [ ] line height
+				- [ ] adjust page width
+				- [ ] lock layout
+				- [ ] autosave layout
+		- [x] quick settings
+			- [x] convert dropdown
+			- [x] reusable responsive table layout w/o compromise
 	- [ ] user notes
 	- [ ] word tooltip
 
@@ -52,10 +59,10 @@ fix browsers.md
 - [ ] get free browserstack
 
 add a11y.md and fix
+- [ ] keyboard controls
 - [ ] osx chrome/safari/firefox
 	- [ ] voiceover 
 - [ ] linux chrome/firefox
 	- [ ] orca
 - [ ] windows chrome/firefox
 	- [ ] nvda
-

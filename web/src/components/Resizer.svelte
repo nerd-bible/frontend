@@ -49,9 +49,9 @@ function onpointerup() {
 	cursor: ew-resize;
 	background: linear-gradient(
 		to right,
-		transparent 40%,
-		var(--color-bg-300) 50%,
-		transparent 60%
+		transparent 45%,
+		var(--color-bg-200) 50%,
+		transparent 55%
 	);
 	position: sticky;
 	top: 0;

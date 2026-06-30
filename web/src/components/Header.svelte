@@ -71,20 +71,26 @@ header {
 	position: sticky;
 	top: 0;
 	border-radius: 0;
-	border-bottom: 1px solid var(--color-fg-700);
+	border-bottom: 1px solid var(--color-bg-200);
 	margin-inline: 0;
 	padding-inline: var(--layout-padding-x);
 
-	& > div > :global(.dropdown > button) {
-		padding: --spacing(1);
-		& > :global(svg) {
-			width: 1.6em;
-			height: 1.6em;
+	& > div > :global(.dropdown) {
+		padding: 0;
+
+		& > :global(button) {
+			width: 2.5em;
+			height: 2.5em;
+
+			& > :global(svg) {
+				height: 100%;
+				width: 100%;
+			}
 		}
 	}
 
 	& > :global(svg) {
-		height: 2.5em;
+		height: 1.65em; /* 3.2em */
 		padding-inline-start: --spacing(3);
 	}
 
