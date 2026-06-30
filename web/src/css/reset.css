@@ -353,15 +353,18 @@ input[type="checkbox"] {
 form.table {
 	& > * {
 		width: 100%;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
 		padding: --spacing(1) --spacing(4);
 
 		& > .io {
 			display: flex;
 			align-items: center;
 		}
+	}
+
+	& > *:not(.select) {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
 	}
 
 	& > *:hover {

@@ -25,7 +25,7 @@
 	- [ ] tree structure
 	- [ ] reactive database
 	- [ ] PRETTY
-		- [ ] arbitrary CSS
+		- [ ] themes builder with arbitrary CSS
 		- [x] text-align justify
 		- [x] layout!
 			- [x] mobile

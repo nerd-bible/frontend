@@ -27,6 +27,7 @@
 	"scripts": {
 		"start": "vite",
 		"build": "vite build",
+		"serve": "vite preview",
 		"preview": "vite preview"
 	},
 	"browserslist": "baseline 2023 with downstream"
