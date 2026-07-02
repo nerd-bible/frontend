@@ -36,6 +36,7 @@ const uid = $props.id();
 				>
 			</li>
 		{/each}
+		<li></li>
 	</ul>
 	<div id={uid} role="tabpanel">
 		{@render items[active].component()}
@@ -57,14 +58,19 @@ section {
 	overflow: auto;
 	flex-wrap: nowrap;
 	padding-bottom: --spacing(4);
+
+	& > *:last-child {
+		flex: 1;
+	}
 }
 li {
 	padding: --spacing(1);
+	border-radius: 0;
+	margin-bottom: calc(-1 * var(--border-size));
+	border-bottom: 1px solid var(--color-bg-200);
 
 	&:has(button[aria-selected="true"]) {
-		margin-bottom: calc(-1 * var(--border-size));
 		border-bottom: var(--border-size) solid var(--color-focus-200);
-		border-radius: 0;
 	}
 
 	&:has(button[aria-selected="false"]) {
