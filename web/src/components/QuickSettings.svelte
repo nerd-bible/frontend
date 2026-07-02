@@ -5,6 +5,10 @@ import { p } from "../routes.ts";
 import Select from "./Select.svelte";
 
 let { tmpFontSize = $bindable(settings.fontSize) } = $props();
+
+const idIo1 = $props.id();
+const idIo2 = idIo1 + "2";
+const idIo3 = idIo1 + "3";
 </script>
 
 <form class="table" style:--font-size={tmpFontSize + 'px'}>
@@ -26,11 +30,12 @@ let { tmpFontSize = $bindable(settings.fontSize) } = $props();
 			{/each}
 		</Select>
 	</label>
-	<label>
+	<label for={idIo1}>
 		<span>{t("Font size")}</span>
 		<div class="io">
 			<output>{settings.fontSize}</output>
 			<input
+				id={idIo1}
 				type="range"
 				min="8"
 				max="48"
@@ -40,11 +45,12 @@ let { tmpFontSize = $bindable(settings.fontSize) } = $props();
 			/>
 		</div>
 	</label>
-	<label>
+	<label for={idIo2}>
 		<span>{t("Line height")}</span>
 		<div class="io">
 			<output>{settings.lineHeight}</output>
 			<input
+				id={idIo2}
 				type="range"
 				min="1"
 				max="2"
@@ -53,11 +59,12 @@ let { tmpFontSize = $bindable(settings.fontSize) } = $props();
 			/>
 		</div>
 	</label>
-	<label>
+	<label for={idIo3}>
 		<span>{t("Page width")}</span>
 		<div class="io">
 			<output>{settings.pageWidth}</output>
 			<input
+				id={idIo3}
 				type="range"
 				min="600"
 				max="3000"
