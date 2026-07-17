@@ -1,8 +1,9 @@
 .content {
+	position: static;
 	counter-reset: chapter;
 	padding-bottom: --spacing(4);
 
-	&.hide-verse .verse {
+	&.hide-verse sup {
 		display: none;
 	}
 
@@ -37,10 +38,7 @@
 		}
 	}
 
-	.verse {
-		&::before {
-			content: " ";
-		}
+	sup {
 		color: var(--color-fg-500);
 		margin-inline-end: 2px;
 		/* & ~ * { margin-inline-end: -2px; } */
@@ -123,7 +121,7 @@
 	}
 
 	&.drop-caps > .chapter > p:first-of-type {
-		& > .verse:first-of-type {
+		& > sup:first-of-type {
 			display: none;
 		}
 		&::first-letter {
@@ -158,5 +156,16 @@
 		& > p {
 			margin: 0;
 		}
+	}
+
+	.wg-panels-top {
+		top: var(--header-height);
+		z-index: 1;
+	}
+	& > wordgard-editor {
+		--wg-border-color: transparent;
+		--wg-dialog-font: inherit;
+		--wg-menu-color: var(--color-fg-100);
+		--wg-panel-color: var(--color-bg-200);
 	}
 }

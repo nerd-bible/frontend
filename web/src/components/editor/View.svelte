@@ -23,10 +23,6 @@ import { t } from "../../l10n.svelte.ts";
 		<span>{t("Justify text")}</span>
 		<input type="checkbox" bind:checked={settings.justifyText} />
 	</label>
-	<label>
-		<span>{t("Lock layout")}</span>
-		<input type="checkbox" bind:checked={settings.lockLayout} />
-	</label>
 </form>
 
 <style>

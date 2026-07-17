@@ -1,5 +1,6 @@
 <script lang="ts">
 import { settings } from "../../settings.svelte";
+import type { Attachment } from "svelte/attachments";
 import sample from "../../genesis.html?raw";
 import Tabs from "../Tabs.svelte";
 import Outline from "./Outline.svelte";
@@ -8,7 +9,11 @@ import View from "./View.svelte";
 import { computePosition, offset, flip, inline, shift } from "@floating-ui/dom";
 import { t } from "../../l10n.svelte";
 import ThreeCol from "../../layouts/ThreeCol.svelte";
+import { Wordgard, menuBar } from "wordgard/editor";
+import schema from "./schema.ts";
+import { history } from "wordgard/history";
 import "./content.css";
+import { GardState } from "wordgard/state";
 // import { docFromBookLang } from "./tree.svelte.ts";
 
 // https://github.com/aleventhal/aria-annotations/blob/master/README.md#simplified-aria-annotations-proposal--explainer
@@ -88,6 +93,25 @@ function layoutNotes(div: HTMLElement) {
 		lastHeight = note.clientHeight;
 	});
 }
+
+const wordgard: Attachment = (div) => {
+	const wg = Wordgard.create({
+		parent: div,
+		doc: sample,
+		config: [
+			Wordgard.label("Editor"),
+			schema,
+			history(),
+			menuBar(),
+			// GardState.readOnly.of(true),
+			// Wordgard.editable.of(false),
+			// Wordgard.contentAttributes.of({ tabindex: "0" }),
+		],
+	});
+
+	// wordgard uses a custom element that has a `disconnectedCallback`
+	return () => (div.innerHTML = "");
+};
 </script>
 
 <svelte:document
@@ -138,16 +162,14 @@ function layoutNotes(div: HTMLElement) {
 	{/snippet}
 	<div
 		class="content"
+		{@attach wordgard}
 		{dir}
 		class:hide-verse={!settings.showVerseNum}
 		class:hide-chapter={!settings.showChapterNum}
 		class:hide-outline={!settings.showOutline}
 		class:drop-caps={settings.showDropCaps}
 		class:justify-text={settings.justifyText}
-	>
-		<h1>Genesis</h1>
-		{@html sample}
-	</div>
+	></div>
 	<div
 		role="tooltip"
 		bind:this={tooltipRef}

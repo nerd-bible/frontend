@@ -73,6 +73,10 @@ const idIo3 = idIo1 + "3";
 			/>
 		</div>
 	</label>
+	<label>
+		<span>{t("Lock layout")}</span>
+		<input type="checkbox" bind:checked={settings.lockLayout} />
+	</label>
 	<a href={p("/catalog")}>
 		<span>{t("Catalog")}</span>
 	</a>

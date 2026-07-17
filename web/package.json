@@ -15,7 +15,8 @@
 		"comlink": "^4.4.2",
 		"sv-router": "^0.16.0",
 		"svelte": "^5.56.3",
-		"wa-sqlite": "git://github.com/rhashimoto/wa-sqlite#v1.1.1"
+		"wa-sqlite": "git://github.com/rhashimoto/wa-sqlite#v1.1.1",
+		"wordgard": "^0.2.0"
 	},
 	"devDependencies": {
 		"@fluent/syntax": "^0.19.0",
