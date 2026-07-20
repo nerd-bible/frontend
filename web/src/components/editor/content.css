@@ -7,7 +7,7 @@
 		display: none;
 	}
 
-	p,
+	div[role='paragraph'],
 	ol,
 	ul,
 	blockquote,
@@ -19,13 +19,18 @@
 	}
 
 	&.justify-text {
-		p,
+		div[role='paragraph'],
 		ol,
 		ul,
 		blockquote,
 		div {
 			text-align: justify;
 		}
+	}
+
+	ol, ul {
+		display: flex;
+		flex-direction: column;
 	}
 
 	ol.inline,
@@ -120,7 +125,7 @@
 		margin-bottom: 1lh;
 	}
 
-	&.drop-caps > .chapter > p:first-of-type {
+	&.drop-caps > .chapter > div[role='paragraph']:first-of-type {
 		& > sup:first-of-type {
 			display: none;
 		}
@@ -153,7 +158,7 @@
 
 	.line-group,
 	.poetry {
-		& > p {
+		& > div[role='paragraph'] {
 			margin: 0;
 		}
 	}

@@ -10,7 +10,7 @@ import { computePosition, offset, flip, inline, shift } from "@floating-ui/dom";
 import { t } from "../../l10n.svelte";
 import ThreeCol from "../../layouts/ThreeCol.svelte";
 import { Wordgard, menuBar } from "wordgard/editor";
-import schema from "./schema.ts";
+import schema from "./schemas/book.ts";
 import { history } from "wordgard/history";
 import "./content.css";
 import { GardState } from "wordgard/state";
@@ -108,6 +108,7 @@ const wordgard: Attachment = (div) => {
 			// Wordgard.contentAttributes.of({ tabindex: "0" }),
 		],
 	});
+	console.log(wg.state.doc);
 
 	// wordgard uses a custom element that has a `disconnectedCallback`
 	return () => (div.innerHTML = "");
