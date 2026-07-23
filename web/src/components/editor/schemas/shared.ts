@@ -1,3 +1,5 @@
+import { phrases } from "wordgard/phrases";
+import { Command, Menu, toggleBlock } from "wordgard/command";
 import {
 	Plot,
 	Node,
@@ -6,16 +8,15 @@ import {
 	Leaf,
 	Elt,
 	ValidationError,
+	Pos,
 } from "wordgard/doc";
+import { InputRule } from "wordgard/editor";
 import {
 	blockDoc,
-	blockquote,
 	bulletList,
 	color,
 	heading,
 	lineBreak,
-	orderedList as wOrderedList,
-	paragraph as wParagraph,
 	superscript,
 } from "wordgard/schema";
 import { GardState } from "wordgard/state";
@@ -72,7 +73,6 @@ const BlockFragment = Plot.Type.define<string>("Fragment", {
 	shape: {
 		element: "div",
 		readElement: (elt) => {
-			console.log("good", elt);
 			if (elt.role == "paragraph") return parse.Reject;
 			return elt.className;
 		},
@@ -114,4 +114,44 @@ export function verseNum() {
 	// 	// superscript.button,
 	// 	// superscript.keyBinding,
 	// ];
+}
+
+const Blockquote = Plot.define("Blockquote", {
+	blockContent: Node.Group.Content,
+	group: Node.Group.Content,
+	shape: { element: "blockquote" },
+	autoJoin: true,
+});
+
+export function blockquote() {
+	return [
+		GardState.schemaElement.of(Blockquote),
+		Menu.Button.define({
+			run: Command.bind(toggleBlock, Blockquote),
+			active: (state) => {
+				for (
+					let cur: Pos.Node | null = state.sel.head.parent;
+					cur;
+					cur = cur.parent
+				)
+					if (cur.node.type == Blockquote.type) return true;
+				return false;
+			},
+			label: {
+				icon: "M75 75a6 6 0 0 0 6-6V53a6 6 0 0 0-6-6h-9q0-3 0-7 1-3 2-6t3-4q2-2 5-2V19q-5 0-9 2a21 21 0 0 0-7 6 31 31 0 0 0-4 9A48 48 0 0 0 56 47V69a5 5 0 0 0 6 6zm-37 0a6 6 0 0 0 6-6V53a6 6 0 0 0-6-6H29q0-3 0-7 1-3 2-6 1-3 3-4 2-2 5-2V19q-5 0-9 2a21 21 0 0 0-7 6 31 31 0 0 0-4 9A48 48 0 0 0 19 47V69a6 6 0 0 0 6 6z",
+			},
+			description: phrases.ref("toggle_quote"),
+			enable: (s) => !s.readOnly,
+			parent: Menu.Group.block,
+			rank: 40,
+		}),
+		InputRule.wrapping(/^> $/, Blockquote, true),
+		// Wordgard.theme({
+		//   blockquote: {
+		//     marginInline: "3px",
+		//     paddingInlineStart: "12px",
+		//     borderInlineStart: "4px solid silver"
+		//   }
+		// })
+	];
 }

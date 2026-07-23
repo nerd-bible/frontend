@@ -1,12 +1,5 @@
 import { Plot, Node, Leaf, Elt } from "wordgard/doc";
-import {
-	blockDoc,
-	blockquote,
-	bulletList,
-	heading,
-	lineBreak,
-	paragraph as wParagraph,
-} from "wordgard/schema";
+import { blockDoc, heading, lineBreak } from "wordgard/schema";
 import { GardState } from "wordgard/state";
 import {
 	Command,
@@ -16,7 +9,7 @@ import {
 	toggleList,
 } from "wordgard/command";
 import { phrases } from "wordgard/phrases";
-import { blockFragment, section, verseNum } from "./shared";
+import { blockFragment, section, verseNum, blockquote } from "./shared";
 import { InputRule, KeyBinding } from "wordgard/editor";
 
 function selectionInType(tag: Plot.Tag) {
@@ -41,7 +34,7 @@ const Paragraph = Plot.Type.define("Paragraph", {
 		{ selector: "p", readElement: (e) => e.className },
 	],
 	shape: {
-		structure: c => Elt.mk("div", { role: "paragraph", class: c }, [0]),
+		structure: (c) => Elt.mk("div", { role: "paragraph", class: c }, [0]),
 		atom: false,
 	},
 });
@@ -72,6 +65,7 @@ const InlineListItem = Plot.define("ListItem", {
 });
 
 const Ul = Plot.Type.define("Ul", {
+	defaultParam: "",
 	inline: true,
 	inlineContent: [InlineListItem, Leaf.Text],
 	role: Node.Role.List,
@@ -88,8 +82,23 @@ function ul() {
 	return [
 		GardState.schemaElement.of(Ul),
 		GardState.schemaElement.of(InlineListItem),
-		bulletList.toggleButton,
-		bulletList.createOnDash,
+		/// This rule wraps the current textblock in a bullet list when the
+		/// user starts it by typing an optional space, a dash, and then another
+		/// space.
+		InputRule.wrapping(/^ ?- $/, Ul.default!, true),
+		/// A menu button that toggles bullet list wrapping for the selection.
+		Menu.Button.define({
+			run: Command.bind(toggleList, Ul.default!),
+			active: listIsActive(Ul.default!),
+			label: {
+				icon: "M34 75a3 3 0 0 1 0-6h56a3 3 0 0 1 0 6h-56m0-25a3 3 0 0 1 0-6h56a3 3 0 0 1 0 6h-56m0-25a3 3 0 0 1 0-6h56a3 3 0 0 1 0 6h-56m-22 3a6 6 0 1 0 0-12 6 6 0 0 0 0 12m0 25a6 6 0 1 0 0-12 6 6 0 0 0 0 12m0 25a6 6 0 1 0 0-12 6 6 0 0 0 0 12",
+				directional: true,
+			},
+			description: phrases.ref("toggle_bullet_list"),
+			enable: (s) => !s.readOnly,
+			parent: Menu.Group.block,
+			rank: 20,
+		}),
 	];
 }
 
@@ -132,7 +141,6 @@ export default [
 	blockDoc(),
 	blockFragment(),
 	paragraph(),
-	// wParagraph(),
 	section(),
 	verseNum(),
 	heading(),
