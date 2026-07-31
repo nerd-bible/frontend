@@ -12,7 +12,7 @@
 		"fmt-fix": "npm run fmt -- --write"
 	},
 	"devDependencies": {
-		"@nerd-bible/config": "^0.1.9",
+		"@nerd-bible/config": "^0.2.0",
 		"prettier-plugin-embed": "^0.5.1",
 		"prettier-plugin-sql-cst": "^0.19.3",
 		"prettier-plugin-svelte": "^3.5.1"

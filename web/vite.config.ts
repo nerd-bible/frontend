@@ -2,7 +2,7 @@ import { svelte } from "@sveltejs/vite-plugin-svelte";
 import Icons from "unplugin-icons/vite";
 import { defineConfig } from "vite";
 import { analyzer } from "vite-bundle-analyzer";
-import pkg from "./package.json";
+import pkg from "./package.json" with { type: "json" };
 import locales from "./src/locales.ts";
 
 export default defineConfig({
@@ -46,7 +46,8 @@ export default defineConfig({
 	plugins: [
 		Icons({ compiler: "svelte" }),
 		svelte({ compilerOptions: { experimental: { async: true } } }),
-		process.env["analyze"] &&
-			analyzer({ analyzerMode: "static", fileName: "stats.html" }),
+		process.env["analyze"]
+			? analyzer({ analyzerMode: "static", fileName: "stats.html" })
+			: undefined,
 	],
 });

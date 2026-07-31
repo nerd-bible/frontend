@@ -1,17 +1,5 @@
 import { phrases } from "wordgard/phrases";
-import {
-	autoJoinBlocks,
-	Command,
-	doUnwrapBlock,
-	findWrappable,
-	Menu,
-	setTextblockType,
-	splitTextblock,
-	toggleBlock,
-	unwrapBlock,
-	wrapBlock,
-	wrapBlockRange,
-} from "wordgard/command";
+import { Command, Menu, setTextblockType, toggleBlock } from "wordgard/command";
 import {
 	Plot,
 	Node,
@@ -20,10 +8,9 @@ import {
 	ValidationError,
 	Pos,
 	Leaf,
-	ChangeSet,
 } from "wordgard/doc";
 import { InputRule, KeyBinding } from "wordgard/editor";
-import { GardState, Transaction } from "wordgard/state";
+import { GardState } from "wordgard/state";
 import { PhraseSet } from "wordgard/phrases";
 
 export const LineBreak = Leaf.define("LineBreak", {
@@ -35,68 +22,6 @@ export const LineBreak = Leaf.define("LineBreak", {
 
 export function lineBreak(): GardState.Extension {
 	return GardState.schemaElement.of(LineBreak);
-}
-
-const Chapter = Plot.Type.define("Chapter", {
-	defaultParam: "chapter",
-	blockContent: Node.Group.Content,
-	group: Node.Group.Content,
-	shape: {
-		element: "section",
-		readElement: (e) => e.className,
-		attributes: (a) => ({ class: a }),
-	},
-});
-
-const insertChapter: Command.Pure<Plot.Tag> = ({ state }, wrapper) => {
-	let targets: Pos.Node[] = [],
-		changes: ChangeSet.Spec[] = [];
-	for (let { from, to } of state.selection.ranges) {
-		if (!targets.some((t) => t.after > from && t.before < to)) {
-			state.doc.iterate(
-				state.doc.resolve(from).pos,
-				state.doc.resolve(to).pos,
-				(node, p, parent) => {
-					if (
-						node.type.isBlock &&
-						node.isPlot &&
-						!node.inlineContent &&
-						parent &&
-						state.schema.matchNode(node.type, wrapper)
-					) {
-							targets.push(node);
-							changes.push(doUnwrapBlock(node, from, to));
-					}
-				},
-			);
-		}
-	}
-
-    changes.push(wrapBlockRange(range, wrapper))
-
-	return idk;
-};
-
-export function chapter() {
-	return [
-		GardState.schemaElement.of(Chapter),
-		Menu.Button.define({
-			run: Command.bind(unwrapBlock, Chapter),
-			active: selectionInType(Chapter.default!),
-			label: "Un",
-			enable: (s) => !s.readOnly,
-			parent: Menu.Group.block,
-			rank: 11,
-		}),
-		Menu.Button.define({
-			run: Command.bind(wrapBlock, Chapter.default!),
-			active: (s) => !selectionInType(Chapter.default!)(s),
-			label: "Re",
-			enable: (s) => !s.readOnly,
-			parent: Menu.Group.block,
-			rank: 11,
-		}),
-	];
 }
 
 export const Paragraph = Plot.define("Paragraph", {
@@ -190,17 +115,17 @@ export function blockquote() {
 }
 
 export const Heading = Plot.Type.define("Heading", {
-	defaultParam: 1,
+	defaultParam: 3,
 	validate: (value) => {
 		if (
 			typeof value != "number" ||
 			Math.floor(value) != value ||
 			value < 1 ||
-			value > 6
+			value > 4
 		)
 			throw new ValidationError(`Invalid heading level: ${value}`);
 	},
-	inlineContent: true,
+	inlineContent: Leaf.Text,
 	group: Node.Group.Content,
 	shape: { structure: (level) => Elt.mk("h" + level, [0]), atom: false },
 	defining: true,
@@ -209,8 +134,8 @@ export const Heading = Plot.Type.define("Heading", {
 		{ selector: "h2", param: 2 },
 		{ selector: "h3", param: 3 },
 		{ selector: "h4", param: 4 },
-		{ selector: "h5", param: 5 },
-		{ selector: "h6", param: 6 },
+		{ selector: "h5", param: 4 },
+		{ selector: "h6", param: 4 },
 	],
 });
 
@@ -227,18 +152,16 @@ function selectionInType(tag: Plot.Tag) {
 }
 
 const headingPhrases = PhraseSet.define({
-	heading_1: "Heading 1",
-	heading_2: "Heading 2",
-	heading_3: "Heading 3",
-	heading_4: "Heading 4",
-	heading_5: "Heading 5",
-	heading_6: "Heading 6",
+	heading_1: "Title",
+	heading_2: "Chapter",
+	heading_3: "Heading",
+	heading_4: "Subheading",
 });
 
 export function heading(): GardState.Extension {
 	return [
 		GardState.schemaElement.of(Heading),
-		([1, 2, 3, 4, 5, 6] as const).map((n) =>
+		([1, 2, 3, 4] as const).map((n) =>
 			Menu.Button.define({
 				run: Command.bind(setTextblockType, Heading.of(n)),
 				active: selectionInType(Heading.of(n)),
