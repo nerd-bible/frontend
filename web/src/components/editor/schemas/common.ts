@@ -225,3 +225,11 @@ export const Doc = Plot.defineDoc({
 export function blockDoc(): GardState.Extension {
 	return GardState.schemaElement.of(Doc);
 }
+
+export const punctCorrections = [
+	InputRule.define({expr: /--$/, apply: "—"}),
+	InputRule.define({expr: /(?:^|[\s\{\[\(\<'"\u2018\u201C])(")$/, apply: "“"}),
+	InputRule.define({expr: /"$/, apply: "”"}),
+	InputRule.define({expr: /(?:^|[\s\{\[\(\<'"\u2018\u201C])(')$/, apply: "‘"}),
+	InputRule.define({expr: /'$/, apply: "’"}),
+];
