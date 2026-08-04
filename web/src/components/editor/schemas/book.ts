@@ -1,5 +1,4 @@
 import { Correction, GardSelection, GardState } from "wordgard/state";
-import { chapter } from "./chapter.ts";
 import {
 	blockFragment,
 	blockquote,
@@ -12,19 +11,11 @@ import {
 	Heading,
 	punctCorrections,
 } from "./common.ts";
-import { superscript } from "wordgard/schema";
-import {
-	ChangeSet,
-	Elt,
-	Leaf,
-	Mark,
-	Plot,
-	Pos,
-	ValidationError,
-} from "wordgard/doc";
-import { Decoration, InputRule, KeyBinding, Widget } from "wordgard/editor";
-import { Command, Menu, toggleMark } from "wordgard/command";
+import { ChangeSet, Leaf, Plot } from "wordgard/doc";
+import { InputRule, KeyBinding } from "wordgard/editor";
+import { Command, Menu } from "wordgard/command";
 import { history } from "wordgard/history";
+import { patterns } from "@nerd-bible/ref";
 
 const VerseNum = Plot.define("VerseNum", {
 	inline: true,
@@ -58,25 +49,71 @@ const VerseNum = Plot.define("VerseNum", {
 // 	// inclusive: false,
 // });
 
-const verseRegex = /\d+(-\d+)?/;
+const verseRegex = new RegExp(patterns.verse);
+const verseRegexSpace = new RegExp(verseRegex + " $");
+const verseRegexInput = new RegExp(String.raw`(\^|\\?v\s*)` + verseRegex.source + " ");
+
+// function getVerseNumber(plot: Plot | null) {
+// 	if (plot?.tag.is(VerseNum.type)) {
+// 		const text = plot.textContent();
+// 		const match = text.match(verseRegex);
+// 		if (match) return Number.parseInt(match[1] ?? match[0]);
+// 	}
+// 	if (plot?.tag.is(Heading) && plot.tag.param == 2) return 0;
+// 	return null;
+// }
+
+function verseToInsert(state: GardState) {
+	const { selection, doc, sel } = state;
+
+	if (
+		sel.from.parent.node == sel.to.parent.node &&
+		doc.schema.canContain(sel.from.parent.node.type, VerseNum.type)
+	) {
+		if (selection.isCursor) return true;
+		const text = doc.textContent({
+			from: selection.from,
+			to: selection.to,
+			leafText: "?",
+		});
+		if (verseRegex.test(text)) return text;
+	}
+}
 
 export const insertVerse: Command = (wg) => {
-	let { selection, doc } = wg.state;
-	return {
-		changes: selection.ranges.map((r) => ({
-			from: r.from,
-			to: r.to,
-			insert: [VerseNum.create([Leaf.text("foo")])],
-		})),
-	};
+	const { selection } = wg.state;
+
+	const toWrap = verseToInsert(wg.state);
+	if (typeof toWrap === "string")
+		return {
+			changes: {
+				from: selection.from,
+				to: selection.to,
+				insert: [VerseNum.create([Leaf.text(toWrap)])],
+			},
+		};
+	else if (toWrap) {
+		// TODO: iterate backwards thru doc looking for closest verse or chapter
+		// number and increment
+		const num = "1";
+		return {
+			changes: {
+				from: selection.from,
+				to: selection.to,
+				insert: [VerseNum.create([Leaf.text(num)])],
+			},
+			selection: (cx, changes) =>
+				GardSelection.near(cx, changes.mapPos(selection.to, 1), -1),
+		};
+	}
+	return false;
 };
 
 export function verseNum() {
 	return [
 		GardState.schemaElement.of(VerseNum),
-
 		InputRule.define({
-			expr: new RegExp("\\^" + verseRegex.source + " "),
+			expr: verseRegexInput,
 			apply(state, matches) {
 				const m = matches[0];
 				let changes = ChangeSet.create(state.doc, {
@@ -95,10 +132,7 @@ export function verseNum() {
 				};
 			},
 		}),
-		// KeyBinding.of({
-		// 	key: "Mod-.",
-		// 	run: Command.bind(toggleMark, VerseNum),
-		// }),
+		KeyBinding.of({ key: "Mod-.", run: insertVerse }),
 		// Menu.Button.toggleMark({
 		// 	mark: VerseNum,
 		// 	parent: Menu.Group.inline,
@@ -110,21 +144,7 @@ export function verseNum() {
 		// }),
 		Menu.Button.define({
 			run: insertVerse,
-			active(state) {
-				let { selection } = state;
-
-				return !selection.ranges.some((r) => {
-					let found = false;
-					state.doc.iterate(r.from, r.to, (node) => {
-						if (node.tag == VerseNum) {
-							found = true;
-							return false;
-						}
-						return true;
-					});
-				});
-			},
-			enable: (s) => !s.readOnly,
+			enable: (s) => !s.readOnly && Boolean(verseToInsert(s)),
 			parent: Menu.Group.insert,
 			description: () => "Insert verse number",
 			label: {
@@ -146,6 +166,7 @@ const ensureTitle = Correction.onChildList(Doc, ({ node }) => {
 function getChapterNumber(heading: Plot | null) {
 	if (heading?.tag.is(Heading) && heading.tag.param == 2) {
 		const text = heading.textContent();
+		if (text == "") return text;
 		const match = text.match(/\d+/);
 		if (match) return Number.parseInt(match[0]);
 	}
@@ -176,11 +197,12 @@ export const correctChapters = Correction.onContent(Heading, (heading) => {
 
 export const correctVerseNum = Correction.onContent(VerseNum, (node) => {
 	const content = node.node.textContent();
-	if (!content.endsWith(" ")) {
+	if (!verseRegexSpace.test(content)) {
+		const match = content.match(verseRegex);
 		return {
-			from: node.end,
+			from: node.start,
 			to: node.end,
-			insert: [Leaf.Text.of(" ")],
+			insert: [Leaf.Text.of((match?.[0] ?? "") + " ")],
 		};
 	}
 	return null;

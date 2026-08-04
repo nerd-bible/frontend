@@ -121,12 +121,12 @@ export const Heading = Plot.Type.define("Heading", {
 			typeof value != "number" ||
 			Math.floor(value) != value ||
 			value < 1 ||
-			value > 4
+			value > 6
 		)
 			throw new ValidationError(`Invalid heading level: ${value}`);
 	},
 	inlineContent: Leaf.Text,
-	group: Node.Group.Content,
+	group: Node.Group.Block,
 	shape: { structure: (level) => Elt.mk("h" + level, [0]), atom: false },
 	defining: true,
 	parseRules: [
@@ -134,8 +134,8 @@ export const Heading = Plot.Type.define("Heading", {
 		{ selector: "h2", param: 2 },
 		{ selector: "h3", param: 3 },
 		{ selector: "h4", param: 4 },
-		{ selector: "h5", param: 4 },
-		{ selector: "h6", param: 4 },
+		{ selector: "h5", param: 5 },
+		{ selector: "h6", param: 6 },
 	],
 });
 
@@ -154,14 +154,16 @@ function selectionInType(tag: Plot.Tag) {
 const headingPhrases = PhraseSet.define({
 	heading_1: "Title",
 	heading_2: "Chapter",
-	heading_3: "Heading",
-	heading_4: "Subheading",
+	heading_3: "Heading 1",
+	heading_4: "Heading 2",
+	heading_5: "Heading 3",
+	heading_6: "Heading 4",
 });
 
 export function heading(): GardState.Extension {
 	return [
 		GardState.schemaElement.of(Heading),
-		([1, 2, 3, 4] as const).map((n) =>
+		([1, 2, 3, 4, 5, 6] as const).map((n) =>
 			Menu.Button.define({
 				run: Command.bind(setTextblockType, Heading.of(n)),
 				active: selectionInType(Heading.of(n)),
@@ -195,6 +197,7 @@ export function heading(): GardState.Extension {
 			key: "Ctrl-Shift-6",
 			run: Command.bind(setTextblockType, Heading.of(6)),
 		}),
+		InputRule.textblockType(/^\\c $/, Heading.of(2), true),
 		InputRule.textblockType(
 			/^(#{1,6}) $/,
 			(m) => Heading.of(m[1]!.to.pos - m[1]!.from.pos),
@@ -206,7 +209,7 @@ export function heading(): GardState.Extension {
 export const Div = Plot.Type.define("Iso", {
 	defaultParam: "",
 	blockContent: Node.Group.Content,
-	group: Node.Group.Content,
+	group: Node.Group.Block,
 	shape: {
 		element: "div",
 		readElement: (e) => e.className,
@@ -219,7 +222,7 @@ export function div() {
 }
 
 export const Doc = Plot.defineDoc({
-	blockContent: Node.Group.Content,
+	blockContent: Node.Group.Block,
 });
 
 export function blockDoc(): GardState.Extension {
@@ -227,9 +230,15 @@ export function blockDoc(): GardState.Extension {
 }
 
 export const punctCorrections = [
-	InputRule.define({expr: /--$/, apply: "—"}),
-	InputRule.define({expr: /(?:^|[\s\{\[\(\<'"\u2018\u201C])(")$/, apply: "“"}),
-	InputRule.define({expr: /"$/, apply: "”"}),
-	InputRule.define({expr: /(?:^|[\s\{\[\(\<'"\u2018\u201C])(')$/, apply: "‘"}),
-	InputRule.define({expr: /'$/, apply: "’"}),
+	InputRule.define({ expr: /--$/, apply: "—" }),
+	InputRule.define({
+		expr: /(?:^|[\s\{\[\(\<'"\u2018\u201C])(")$/,
+		apply: "“",
+	}),
+	InputRule.define({ expr: /"$/, apply: "”" }),
+	InputRule.define({
+		expr: /(?:^|[\s\{\[\(\<'"\u2018\u201C])(')$/,
+		apply: "‘",
+	}),
+	InputRule.define({ expr: /'$/, apply: "’" }),
 ];
