@@ -1,8 +1,10 @@
-:root, .scrollable {
+:root, .scrollable, [role="tooltip"] {
 	overflow: auto;
 	scrollbar-color: var(--color-fg-400) var(--color-bg-100);
 	scroll-behavior: smooth;
 
+}
+:root, .scrollable {
 	[id] {
 		scroll-margin-top: var(--header-height);
 	}
