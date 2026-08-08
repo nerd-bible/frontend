@@ -32,6 +32,11 @@ const id = $props.id();
 let div: HTMLDivElement;
 let pos = $state({ left: 0, top: 0 });
 
+const preventParentScroll = () =>
+	(document.documentElement.style.overflow = "clip");
+const allowParentScroll = () =>
+	document.documentElement.style.removeProperty("overflow");
+
 $effect(() => {
 	if (!expanded) return;
 	relayout;
@@ -101,6 +106,10 @@ $effect(() => {
 		{id}
 		style:top={pos.top + "px"}
 		style:left={pos.left + "px"}
+		onmouseenter={preventParentScroll}
+		onmouseleave={allowParentScroll}
+		ontouchstart={preventParentScroll}
+		ontouchend={allowParentScroll}
 	>
 		{@render children()}
 	</div>
