@@ -232,6 +232,9 @@ option,
 	&:hover, &:focus, &.active {
 		@apply box-focus;
 	}
+	&:hover:not(&:focus, &.active) {
+		outline-style: dashed;
+	}
 }
 
 input, textarea, select, option {
@@ -406,7 +409,7 @@ mark {
 	gap: --spacing(1);
 	width: max-content;
 	max-width: calc(100vw - var(--layout-padding-x) * 2);
-	max-height: calc(100vh - var(--header-height));
+	max-height: calc(100vh - var(--header-height) - --spacing(32));
 	height: fit-content;
 	/* above other editor content but below header */
 	z-index: 2;
