@@ -74,12 +74,15 @@ li {
 	}
 
 	&:has(button[aria-selected="false"]) {
-		color: var(--color-fg-200);
+		color: var(--color-fg-400);
 	}
 }
 button {
 	padding: --spacing(1);
 	background: none;
 	outline-offset: 0;
+	&:hover {
+		color: var(--color-fg-100);
+	}
 }
 </style>
