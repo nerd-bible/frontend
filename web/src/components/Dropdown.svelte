@@ -32,13 +32,19 @@ const id = $props.id();
 let div: HTMLDivElement;
 let pos = $state({ left: 0, top: 0 });
 
-const preventParentScroll = () =>
-	(document.documentElement.style.overflow = "clip");
-const allowParentScroll = () =>
+const preventParentScroll = (ev: PointerEvent) => {
+	document.documentElement.style.overflow = "hidden";
+	ev.stopImmediatePropagation();
+}
+const allowParentScroll = () => {
 	document.documentElement.style.removeProperty("overflow");
+}
 
 $effect(() => {
-	if (!expanded) return;
+	if (!expanded) {
+		allowParentScroll();
+		return;
+	}
 	relayout;
 
 	const reference = div.firstElementChild as HTMLButtonElement;
@@ -75,6 +81,7 @@ $effect(() => {
 			ev.stopImmediatePropagation();
 		}
 	}}
+	onpointermove={allowParentScroll}
 />
 
 <div
@@ -106,10 +113,7 @@ $effect(() => {
 		{id}
 		style:top={pos.top + "px"}
 		style:left={pos.left + "px"}
-		onmouseenter={preventParentScroll}
-		onmouseleave={allowParentScroll}
-		ontouchstart={preventParentScroll}
-		ontouchend={allowParentScroll}
+		onpointermove={preventParentScroll}
 	>
 		{@render children()}
 	</div>
