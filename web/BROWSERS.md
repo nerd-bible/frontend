@@ -60,7 +60,6 @@ through IndexedDb polling. This would support since 2018.
 | [Logical props](https://caniuse.com/css-logical-props)                          | 2019     | lang selectors |
 | [Focus-within](https://caniuse.com/css-focus-within)                            | 2019     | more js        |
 | [scroll-padding-top](https://caniuse.com/mdn-css_properties_scroll-padding-top) | 2020     | yes            |
-| [Logical properties](https://caniuse.com/css-logical-props)                     | 2021     | no             |
 | [font-synthesis](https://caniuse.com/wf-font-synthesis)                         | 2022     | no             |
 | [lh](https://caniuse.com/wf-lh)                                                 | 2023     | maybe          |
 | [:has](https://caniuse.com/css-has)                                             | 2023     | no             |
