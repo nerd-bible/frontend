@@ -206,7 +206,7 @@ export function heading(): GardState.Extension {
 	];
 }
 
-export const Div = Plot.Type.define("Iso", {
+export const Div = Plot.Type.define("Div", {
 	defaultParam: "",
 	blockContent: Node.Group.Content,
 	group: Node.Group.Block,

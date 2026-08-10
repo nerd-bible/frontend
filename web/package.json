@@ -13,10 +13,11 @@
 		"@nerd-bible/ref": "^0.1.4",
 		"@tauri-apps/api": "^2.10.1",
 		"comlink": "^4.4.2",
+		"fast-myers-diff": "^3.2.0",
 		"sv-router": "^0.16.0",
 		"svelte": "^5.56.3",
 		"wa-sqlite": "git://github.com/rhashimoto/wa-sqlite#v1.1.1",
-		"wordgard": "npm:@nerd-bible/wordgard@^0.3.4"
+		"wordgard": "npm:@nerd-bible/wordgard@^0.3.5"
 	},
 	"devDependencies": {
 		"@fluent/syntax": "^0.19.0",

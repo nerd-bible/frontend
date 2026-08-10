@@ -16,6 +16,7 @@ import { InputRule, KeyBinding } from "wordgard/editor";
 import { Command, Menu } from "wordgard/command";
 import { history } from "wordgard/history";
 import { patterns } from "@nerd-bible/ref";
+import { calcPatch, calcSlices, diff } from "fast-myers-diff";
 
 const VerseNum = Plot.define("VerseNum", {
 	inline: true,
@@ -50,8 +51,10 @@ const VerseNum = Plot.define("VerseNum", {
 // });
 
 const verseRegex = new RegExp(patterns.verse);
-const verseRegexSpace = new RegExp(verseRegex + " $");
-const verseRegexInput = new RegExp(String.raw`(\^|\\?v\s*)` + verseRegex.source + " ");
+const verseRegexSpace = new RegExp("^" + verseRegex.source + " $");
+const verseRegexInput = new RegExp(
+	String.raw`(\^|\\?v\s*)` + verseRegex.source + " ",
+);
 
 // function getVerseNumber(plot: Plot | null) {
 // 	if (plot?.tag.is(VerseNum.type)) {
@@ -196,23 +199,26 @@ export const correctChapters = Correction.onContent(Heading, (heading) => {
 });
 
 export const correctVerseNum = Correction.onContent(VerseNum, (node) => {
+	const changes: ChangeSet.Spec[] = [];
 	const content = node.node.textContent();
+
 	if (!verseRegexSpace.test(content)) {
-		const match = content.match(verseRegex);
-		return {
-			from: node.start,
-			to: node.end,
-			insert: [Leaf.Text.of((match?.[0] ?? "") + " ")],
-		};
+		const replacement = content.replace(/[^\d]/g, "") + " ";
+		// "12a3" -> "123 "
+		for (const [sx, ex, sy, ey] of diff(content, replacement))
+			changes.push({
+				from: node.start + sx,
+				to: node.start + ex,
+				insert: [Leaf.Text.of(replacement.substring(sy, ey))],
+			});
 	}
-	return null;
+	return changes;
 });
 
 export default [
 	blockDoc(),
 	blockFragment(),
 	paragraph(),
-	// chapter(),
 	verseNum(),
 	heading(),
 	blockquote(),
