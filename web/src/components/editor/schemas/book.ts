@@ -51,7 +51,7 @@ const VerseNum = Plot.define("VerseNum", {
 // });
 
 const verseRegex = new RegExp(patterns.verse);
-const verseRegexSpace = new RegExp("^" + verseRegex.source + " $");
+const verseRegexSpace = new RegExp("^ " + verseRegex.source + " $");
 const verseRegexInput = new RegExp(
 	String.raw`(\^|\\?v\s*)` + verseRegex.source + " ",
 );
@@ -203,7 +203,7 @@ export const correctVerseNum = Correction.onContent(VerseNum, (node) => {
 	const content = node.node.textContent();
 
 	if (!verseRegexSpace.test(content)) {
-		const replacement = content.replace(/[^\d]/g, "") + " ";
+		const replacement = " " + content.replace(/[^\d]/g, "") + " ";
 		// "12a3" -> "123 "
 		for (const [sx, ex, sy, ey] of diff(content, replacement))
 			changes.push({
