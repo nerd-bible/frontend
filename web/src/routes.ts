@@ -1,9 +1,8 @@
 import Reader from "./routes/Reader.svelte";
 import Catalog from "./routes/Catalog.svelte";
 import Header from "./layouts/Header.svelte";
-// import Settings from "./layouts/Settings.svelte";
-// import Sql from "./routes/settings/Sql.svelte";
-// import Storage from "./routes/settings/Storage.svelte";
+import Settings from "./layouts/Settings.svelte";
+import Storage from "./routes/settings/Storage.svelte";
 import { t } from "./l10n.svelte";
 import { createRouter, type RouteMeta, type Routes } from "sv-router";
 import * as r from "@nerd-bible/ref";
@@ -30,22 +29,18 @@ export const routes: Routes = {
 		"/": Catalog,
 		meta: { title: t("Catalog") },
 	},
-	// "/settings": {
-	// 	"/sql": {
-	// 		"/": Sql,
-	// 		meta: { title: t("SQL") },
-	// 	},
-	// 	"/storage": {
-	// 		"/": Storage,
-	// 		meta: { title: t("Storage") },
-	// 	},
-	// 	layout: Settings,
-	// 	meta: { title: t("Settings") },
-	// },
+	"/settings": {
+		"/storage": {
+			"/": Storage,
+			meta: { title: t("Storage") },
+		},
+		layout: Settings,
+		meta: { title: t("Settings") },
+	},
 	layout: Header,
 	hooks: {
 		beforeLoad(ctx) {
-			if (ctx.pathname === "/settings") navigate("/settings/sql");
+			if (ctx.pathname === "/settings") navigate("/settings/storage");
 		},
 		afterLoad(ctx) {
 			if (ctx.pathname === "/") navigate("/bsb/gen");

@@ -8,7 +8,6 @@ import locales from "./src/locales.ts";
 export default defineConfig({
 	resolve: {
 		conditions: [
-			"nbsource",
 			"module",
 			"browser",
 			"development",

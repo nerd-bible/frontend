@@ -3,7 +3,6 @@ import { Command, Menu, setTextblockType, toggleBlock } from "wordgard/command";
 import {
 	Plot,
 	Node,
-	parse,
 	Elt,
 	ValidationError,
 	Pos,
@@ -13,7 +12,7 @@ import { InputRule, KeyBinding } from "wordgard/editor";
 import { GardState } from "wordgard/state";
 import { PhraseSet } from "wordgard/phrases";
 
-export const LineBreak = Leaf.define("LineBreak", {
+export const LineBreak = Leaf.define("br", {
 	inline: true,
 	role: Node.Role.LineBreak,
 	toText: () => "\n",
@@ -24,7 +23,7 @@ export function lineBreak(): GardState.Extension {
 	return GardState.schemaElement.of(LineBreak);
 }
 
-export const Paragraph = Plot.define("Paragraph", {
+export const Paragraph = Plot.define("p", {
 	inlineContent: true,
 	group: Node.Group.Content,
 	defaultBlock: true,
@@ -49,23 +48,19 @@ export function paragraph() {
 	];
 }
 
-const BlockFragment = Plot.Type.define<string>("Fragment", {
+export const Div = Plot.Type.define("div", {
 	defaultParam: "",
 	blockContent: Node.Group.Content,
-	group: Node.Group.Content,
+	group: Node.Group.Block,
 	shape: {
 		element: "div",
-		readElement: (elt) => {
-			if (elt.role == "paragraph") return parse.Reject;
-			return elt.className;
-		},
-		attributes: (n) => ({ class: n }),
+		readElement: (e) => e.className,
+		attributes: (a) => ({ class: a }),
 	},
-	autoJoin: true,
 });
 
-export function blockFragment() {
-	return [GardState.schemaElement.of(BlockFragment)];
+export function div() {
+	return [GardState.schemaElement.of(Div)];
 }
 
 // const InlineFragment = Plot.define("Fragment", {
@@ -74,7 +69,7 @@ export function blockFragment() {
 //   inlineContent: true
 // })
 
-const Blockquote = Plot.define("Blockquote", {
+const Blockquote = Plot.define("bq", {
 	blockContent: Node.Group.Content,
 	group: Node.Group.Content,
 	shape: { element: "blockquote" },
@@ -114,7 +109,7 @@ export function blockquote() {
 	];
 }
 
-export const Heading = Plot.Type.define("Heading", {
+export const Heading = Plot.Type.define("h", {
 	defaultParam: 3,
 	validate: (value) => {
 		if (
@@ -127,7 +122,9 @@ export const Heading = Plot.Type.define("Heading", {
 	},
 	inlineContent: Leaf.Text,
 	group: Node.Group.Block,
-	shape: { structure: (level) => Elt.mk("h" + level, [0]), atom: false },
+	shape: {
+		structure: (level) => Elt.mk("h" + level, [0]), atom: false,
+	},
 	defining: true,
 	parseRules: [
 		{ selector: "h1", param: 1 },
@@ -152,7 +149,6 @@ function selectionInType(tag: Plot.Tag) {
 }
 
 const headingPhrases = PhraseSet.define({
-	heading_1: "Title",
 	heading_2: "Chapter",
 	heading_3: "Heading 1",
 	heading_4: "Heading 2",
@@ -163,7 +159,7 @@ const headingPhrases = PhraseSet.define({
 export function heading(): GardState.Extension {
 	return [
 		GardState.schemaElement.of(Heading),
-		([1, 2, 3, 4, 5, 6] as const).map((n) =>
+		([2, 3, 4, 5, 6] as const).map((n) =>
 			Menu.Button.define({
 				run: Command.bind(setTextblockType, Heading.of(n)),
 				active: selectionInType(Heading.of(n)),
@@ -173,10 +169,6 @@ export function heading(): GardState.Extension {
 				rank: 50 + n,
 			}),
 		),
-		KeyBinding.of({
-			key: "Ctrl-Shift-1",
-			run: Command.bind(setTextblockType, Heading.of(1)),
-		}),
 		KeyBinding.of({
 			key: "Ctrl-Shift-2",
 			run: Command.bind(setTextblockType, Heading.of(2)),
@@ -199,26 +191,11 @@ export function heading(): GardState.Extension {
 		}),
 		InputRule.textblockType(/^\\c $/, Heading.of(2), true),
 		InputRule.textblockType(
-			/^(#{1,6}) $/,
+			/^(#{2,6}) $/,
 			(m) => Heading.of(m[1]!.to.pos - m[1]!.from.pos),
 			true,
 		),
 	];
-}
-
-export const Div = Plot.Type.define("Div", {
-	defaultParam: "",
-	blockContent: Node.Group.Content,
-	group: Node.Group.Block,
-	shape: {
-		element: "div",
-		readElement: (e) => e.className,
-		attributes: (a) => ({ class: a }),
-	},
-});
-
-export function div() {
-	return [GardState.schemaElement.of(Div)];
 }
 
 export const Doc = Plot.defineDoc({

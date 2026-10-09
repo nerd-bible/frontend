@@ -44,9 +44,9 @@ through IndexedDb polling. This would support since 2018.
 | [Wasm](https://caniuse.com/wasm)                                                                             | 2018     | no       |
 | [Web lock](https://caniuse.com/mdn-api_navigator_locks)                                                      | 2022     | no       |
 | [Atomics](https://caniuse.com/mdn-javascript_builtins_atomics)                                               | 2022     | no       |
+| [SharedArrayBuffer (needs COEP+COOP headers)](https://caniuse.com/mdn-javascript_builtins_sharedarraybuffer) | 2022     | no       |
 | [OPFS](https://caniuse.com/wf-origin-private-file-system)                                                    | 2023     | no       |
 | [Shared worker](https://caniuse.com/mdn-api_sharedworker)                                                    | 2023     | no       |
-| [SharedArrayBuffer (needs COEP+COOP headers)](https://caniuse.com/mdn-javascript_builtins_sharedarraybuffer) | 2026     | no       |
 | [JSPI](https://caniuse.com/wf-wasm-jspi)                                                                     | N/A      | no       |
 
 ## CSS

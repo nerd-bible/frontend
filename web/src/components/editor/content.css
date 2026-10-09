@@ -81,7 +81,6 @@
 	}
 	h2 {
 		counter-increment: chapter;
-		text-align: center;
 		font-size: 1.75em;
 	}
 	h3 {

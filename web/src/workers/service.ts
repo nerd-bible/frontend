@@ -1,5 +1,9 @@
-/// <reference lib="WebWorker" />
-declare let self: ServiceWorkerGlobalScope;
+// This worker caches web assets so the app can work offline.
+
+// force treating as module despite isolatedModules
+export type {};
+// ...so we can get good types
+declare const self: ServiceWorkerGlobalScope;
 
 // only happens once
 self.addEventListener("install", (e: ExtendableEvent) => {

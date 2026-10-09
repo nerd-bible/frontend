@@ -19,7 +19,8 @@ let {
 	centerMinPx = 300,
 	right,
 	rightColMin = 300,
-	rightCol = $bindable(400),
+	hideRight = false,
+	rightCol = $bindable(hideRight ? 0 : 400),
 	layout: userLayout = () => {},
 	...rest
 }: SvelteHTMLElements["div"] & {
@@ -31,6 +32,7 @@ let {
 	right?: Snippet;
 	rightColMin?: number;
 	rightCol?: number;
+	hideRight?: boolean;
 	layout?: (div: HTMLDivElement) => void;
 } = $props();
 // svelte-ignore non_reactive_update
@@ -44,6 +46,7 @@ function layout() {
 	const { clientWidth } = div;
 	const dividerWidth = 32;
 	leftResizerWidth = rightResizerWidth = dividerWidth;
+	if (hideRight) rightResizerWidth = 0;
 
 	let nextAvailable = clientWidth - centerMinPx;
 	if (leftCol && nextAvailable >= leftCol) {
